@@ -1,6 +1,6 @@
-# mern-auth
+# Kin Affaires
 
-Kin Affaires
+
 Minimal full-stack MERN app with authentication using passport and JWTs.
 
 This project uses the following technologies:
