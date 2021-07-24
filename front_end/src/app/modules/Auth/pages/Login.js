@@ -19,8 +19,8 @@ import { colors } from "@material-ui/core";
 */
 
 const initialValues = {
-  email: "admin@demo.com",
-  password: "demo",
+  email: "",
+  password: "",
 };
 
 function Login(props) {
@@ -73,10 +73,10 @@ function Login(props) {
       enableLoading();
       setTimeout(() => {
         login(values.email, values.password)
-          .then(({ data: { accessToken } }) => {
+          .then(({ data: { token } }) => {
             disableLoading();
-            console.log(accessToken);
-            props.login(accessToken);
+            console.log(token);
+            props.login(token);
           })
           .catch(() => {
             disableLoading();
@@ -105,16 +105,17 @@ function Login(props) {
         className="form fv-plugins-bootstrap fv-plugins-framework"
       >
 
-        <div className="form-group fv-plugins-icon-container" >
+        <div className="form-group fv-plugins-icon-container">
+          <h2 className="text-center mb-2 text-white-50">CONNEXION</h2>
           <input
-            placeholder="Email"
+            placeholder="Utilisateur"
             type="email"
-            className={`form-control form-control-solid h-auto py-5 px-6 ${getInputClasses(
+            className={`form-control form-control-solid text-center h-auto py-5 px-6 ${getInputClasses(
               "email"
             )}`}
             name="email"
             {...formik.getFieldProps("email")}
-            style={{backgroundColor:"#384553" ,borderColor:"#384553",color:"#ACBEE2"}}
+            style={{ backgroundColor: "#384553", borderColor: "#384553", color: "#ACBEE2" }}
           />
           {formik.touched.email && formik.errors.email ? (
             <div className="fv-plugins-message-container">
@@ -124,14 +125,14 @@ function Login(props) {
         </div>
         <div className="form-group fv-plugins-icon-container">
           <input
-            placeholder="Password"
+            placeholder="Mot de passe"
             type="password"
-            className={`form-control form-control-solid h-auto py-5 px-6 ${getInputClasses(
+            className={`form-control form-control-solid text-center h-auto py-5 px-6 ${getInputClasses(
               "password"
             )}`}
             name="password"
             {...formik.getFieldProps("password")}
-            style={{backgroundColor:"#384553" ,borderColor:"#384553",color:"#ACBEE2"}}
+            style={{ backgroundColor: "#384553", borderColor: "#384553", color: "#ACBEE2" }}
           />
           {formik.touched.password && formik.errors.password ? (
             <div className="fv-plugins-message-container">
@@ -148,18 +149,29 @@ function Login(props) {
             <span>Mot de passe oublié?</span>
           </Link>
         </div>
-        <div style={{textAlign:"center"}}>
+
+        {/* begin::Mobile footer */}
+        <div className="d-flex d-lg-none flex-column-auto flex-column flex-sm-row justify-content-between align-items-center mt-5 p-5">
+          <div className="d-flex">
+            <p className="font-weight-lighter opacity-80" style={{ borderColor: "#384553", color: "#ACBEE2", wordBreak: "break-all" }}>
+              Pulitzer Ce nter on Crisis Reporting – Fellow/Correspondent. Traveled across Congo for several weeks to report on election developments, and to raise awareness of the Congo conflict in US media. Embedded with Moroccan, Pakistani and Uruguayan United Nations peacekeepers in Ituri, Lake Albert and South Kivu. Accredited with Ministry of Information and United Nations Mission in Congo (Summer 2006). ntary report on the relation between the Congo conflict and the scramble for mineral resources (Fall 2006).<br /> Aired on PBS’ Foreign Exchange with Fareed Zakaria. Guest appearances on BBC’s World News
+            </p>
+          </div>
+        </div>
+        {/* end::Mobile footer */}
+
+        <div style={{ textAlign: "center" }}>
           <button
             id="kt_login_signin_submit"
             type="submit"
             disabled={formik.isSubmitting}
             className={`btn btn-primary font-weight-bold px-9 py-4 my-3`}
-            style={{backgroundColor:"#384553" ,borderColor:"#384553",color:"#ACBEE2"}}
+            style={{ backgroundColor: "#384553", borderColor: "#384553", color: "#ACBEE2" }}
           >
             <span>Joindre le réseau</span>
             {loading && <span className="ml-3 spinner spinner-white"></span>}
           </button>
-          </div>
+        </div>
       </form>
       {/*end::Form*/}
     </div>

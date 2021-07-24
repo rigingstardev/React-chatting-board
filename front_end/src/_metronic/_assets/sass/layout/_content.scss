@@ -5,13 +5,19 @@
 // Desktop Mode
 @include media-breakpoint-up(lg) {
 	.content {
-		padding: get($page-padding, desktop) 0;
+		padding: 120px 0 20px;
 
 		// Fixed Footer Mode
 		.footer-fixed & {
 			padding-bottom: get($footer-config, fixed, height);
 		}
 	}
+}
+
+.register-content {
+	max-width: 683px;
+	background-color: #1D2D3F;
+
 }
 
 // Tablet & Mobile Modes

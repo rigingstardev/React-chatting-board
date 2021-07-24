@@ -13,7 +13,8 @@
 @include media-breakpoint-down(md) {
 	.header-mobile {
 		display: flex;
-		justify-content: space-between;
+		justify-content: space-around;
+		flex-direction: column;
 		align-items: center;
 		padding: 0 get($page-padding, tablet-and-mobile);
 		height: get($header-config, tablet-and-mobile, default, height);

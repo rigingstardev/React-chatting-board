@@ -58,6 +58,27 @@ body {
 	.container,
 	.container-fluid {
 		max-width: none;
-		padding: 0 get($page-padding, tablet-and-mobile);
+		padding: 70px get($page-padding, tablet-and-mobile) 0;
+	}
+}
+
+// .container-contact {
+// 	width: ;
+// }
+
+.chat-view {
+	height: calc(100vh - 120px);
+	display: flex;
+	flex-direction: column;
+
+	.message-list {
+		background-color: #93999F;
+		padding: 10px 20px;
+		flex: 1;
+	}
+
+	.message-input {
+		background-color: #3F5060;
+		height: 150px;
 	}
 }

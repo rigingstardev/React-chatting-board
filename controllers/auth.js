@@ -1,21 +1,21 @@
-const express = require("express");
-const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const keys = require("../../config/keys");
-const passport = require("passport");
+const keys = require("../config/keys");
 
 // Load input validation
-const validateRegisterInput = require("../../validation/register");
-const validateLoginInput = require("../../validation/login");
+const validateRegisterInput = require("../validation/register");
+const validateLoginInput = require("../validation/login");
 
 // Load User model
-const User = require("../../models/User");
+const User = require("../models/User");
 
-// @route POST api/users/register
-// @desc Register user
-// @access Public
-router.post("/register", (req, res) => {
+/**
+ * @route POST api/auth/register
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
+exports.register = (req, res) => {
   // Form validation
 
   const { errors, isValid } = validateRegisterInput(req.body);
@@ -48,12 +48,15 @@ router.post("/register", (req, res) => {
       });
     }
   });
-});
+}
 
-// @route POST api/users/login
-// @desc Login user and return JWT token
-// @access Public
-router.post("/login", (req, res) => {
+/**
+ * @route POST api/auth/login
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
+exports.login = (req, res) => {
   // Form validation
 
   const { errors, isValid } = validateLoginInput(req.body);
@@ -104,6 +107,28 @@ router.post("/login", (req, res) => {
       }
     });
   });
-});
+}
 
-module.exports = router;
+/**
+ * @route GET api/auth/me
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
+exports.verifyToken = (req, res) => {
+  var token = req.headers['Authorization'];
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
+
+  jwt.verify(token, config.secret, function (err, decoded) {
+    if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+
+    User.findById(decoded.id,
+      { password: 0 }, // projection
+      function (err, user) {
+        if (err) return res.status(500).send("There was a problem finding the user.");
+        if (!user) return res.status(404).send("No user found.");
+
+        res.status(200).send(user);
+      });
+  });
+}

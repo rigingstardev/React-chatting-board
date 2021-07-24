@@ -1,9 +1,9 @@
-import React, {useMemo} from "react";
+import React, { useMemo } from "react";
 import objectPath from "object-path";
-import {Link} from "react-router-dom";
-import {toAbsoluteUrl} from "../../../../_helpers";
-import {useHtmlClassService} from "../../../_core/MetronicLayout";
-import {HeaderMenu} from "./HeaderMenu";
+import { Link } from "react-router-dom";
+import { toAbsoluteUrl } from "../../../../_helpers";
+import { useHtmlClassService } from "../../../_core/MetronicLayout";
+import { HeaderMenu } from "./HeaderMenu";
 
 export function HeaderMenuWrapper() {
     const uiService = useHtmlClassService();
@@ -34,17 +34,6 @@ export function HeaderMenuWrapper() {
     return <>
         {/*begin::Header Menu Wrapper*/}
         <div className="header-menu-wrapper header-menu-wrapper-left" id="kt_header_menu_wrapper">
-            {layoutProps.disabledAsideSelfDisplay && (
-                <>
-                    {/*begin::Header Logo*/}
-                    <div className="header-logo">
-                        <Link to="/">
-                            <img alt="logo" src={getHeaderLogo()}/>
-                        </Link>
-                    </div>
-                    {/*end::Header Logo*/}
-                </>
-            )}
             {/*begin::Header Menu*/}
             <HeaderMenu layoutProps={layoutProps} />
             {/*end::Header Menu*/}

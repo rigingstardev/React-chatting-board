@@ -1,10 +1,10 @@
 import axios from "axios";
 
-export const LOGIN_URL = "/api/users/login";
-export const REGISTER_URL = "/api/users/register";
-export const REQUEST_PASSWORD_URL = "/api/users/forgot-password";
+export const LOGIN_URL = "http://localhost:5000/api/users/login";
+export const REGISTER_URL = "http://localhost:5000/api/users/register";
+export const REQUEST_PASSWORD_URL = "http://localhost:5000/api/users/forgot-password";
 
-export const ME_URL = "api/me";
+export const ME_URL = "http://localhost:5000/api/users/me";
 
 export function login(email, password) {
   // console.log(LOGIN_URL);

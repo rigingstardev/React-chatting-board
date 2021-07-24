@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 
-const users = require("./routes/api/users");
+const api = require("./routes");
 
 const app = express();
 
@@ -30,7 +30,7 @@ mongoose
 // Passport middleware
 app.use(passport.initialize());
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   console.log("CORS deal!");
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "*");
@@ -41,7 +41,7 @@ app.use(function(req, res, next) {
 require("./config/passport")(passport);
 
 // Routes
-app.use("/api/users", users);
+app.use("/api", api);
 
 const port = process.env.PORT || 5000;
 

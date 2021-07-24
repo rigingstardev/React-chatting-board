@@ -108,3 +108,24 @@
 .display-block {
   display: block;
 }
+
+.background-auth {
+  background-color: #93999F;
+}
+
+#kt_login_signin_form {
+  
+}
+
+@media screen and (max-width: 991px) {
+  .background-auth {
+    background-color: #112233;
+  }
+
+  #kt_login_signin_form {
+    input, button:not(.send) {
+      background-color: #D9E1EA !important;
+      color: #000000 !important;
+    }
+  }
+}

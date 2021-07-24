@@ -21,7 +21,7 @@ export function getInitLayoutConfig() {
             warning: "#FFA800",
             danger: "#F64E60",
             light: "#F3F6F9",
-            dark: "#212121",
+            dark: "#112233",
           },
           light: {
             white: "#ffffff",
@@ -74,7 +74,7 @@ export function getInitLayoutConfig() {
     header: {
       self: {
         width: "fluid", // fixed|fluid
-        theme: "light", // light|dark
+        theme: "dark", // light|dark
         fixed: {
           desktop: true,
           mobile: true,
@@ -91,7 +91,7 @@ export function getInitLayoutConfig() {
           arrow: true,
           toggle: "click",
           submenu: {
-            theme: "light", // light|dark
+            theme: "dark", // light|dark
             arrow: true,
           },
         },
@@ -158,14 +158,14 @@ export function getInitLayoutConfig() {
     },
     extras: {
       search: {
-        display: true,
+        display: false,
         layout: "dropdown", // offcanvas, dropdown
         offcanvas: {
           direction: "right",
         },
       },
       notifications: {
-        display: true,
+        display: false,
         layout: "dropdown", // offcanvas, dropdown
         dropdown: {
           style: "dark", // light, dark
@@ -175,7 +175,7 @@ export function getInitLayoutConfig() {
         },
       },
       "quick-actions": {
-        display: true,
+        display: false,
         layout: "dropdown", // offcanvas, dropdown,
         dropdown: {
           style: "dark", // light, dark
@@ -195,25 +195,25 @@ export function getInitLayoutConfig() {
         },
       },
       languages: {
-        display: true,
+        display: false,
       },
       cart: {
-        display: true,
+        display: false,
         dropdown: {
           style: "dark", // ligth, dark
         },
       },
       "quick-panel": {
-        display: true,
+        display: false,
         offcanvas: {
           directions: "right",
         },
       },
       chat: {
-        display: true,
+        display: false,
       },
       toolbar: {
-        display: true,
+        display: false,
       },
       scrolltop: {
         display: true,

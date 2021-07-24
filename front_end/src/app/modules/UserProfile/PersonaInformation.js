@@ -14,8 +14,8 @@ function PersonaInformation(props) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user, shallowEqual);
   useEffect(() => {
-    if (user.pic) {
-      setPic(user.pic);
+    if (user?.pic) {
+      setPic(user?.pic);
     }
   }, [user]);
   // Methods
@@ -41,13 +41,13 @@ function PersonaInformation(props) {
   };
   // UI Helpers
   const initialValues = {
-    pic: user.pic,
-    firstname: user.firstname,
-    lastname: user.lastname,
-    companyName: user.companyName,
-    phone: user.phone,
-    email: user.email,
-    website: user.website,
+    pic: user?.pic,
+    firstname: user?.firstname,
+    lastname: user?.lastname,
+    companyName: user?.companyName,
+    phone: user?.phone,
+    email: user?.email,
+    website: user?.website,
   };
   const Schema = Yup.object().shape({
     pic: Yup.string(),
@@ -166,7 +166,7 @@ function PersonaInformation(props) {
                     type="file"
                     // name="pic"
                     accept=".png, .jpg, .jpeg"
-                    // {...formik.getFieldProps("pic")}
+                  // {...formik.getFieldProps("pic")}
                   />
                   <input type="hidden" name="profile_avatar_remove" />
                 </label>

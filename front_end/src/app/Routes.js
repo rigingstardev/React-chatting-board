@@ -8,10 +8,11 @@
 import React from "react";
 import { Redirect, Switch, Route } from "react-router-dom";
 import { shallowEqual, useSelector } from "react-redux";
-import { Layout } from "../_metronic/layout";
+import { ContentRoute, Layout } from "../_metronic/layout";
 import BasePage from "./BasePage";
 import { Logout, AuthPage } from "./modules/Auth";
 import ErrorsPage from "./modules/ErrorsExamples/ErrorsPage";
+import Registration from './modules/Auth/pages/Registration'
 
 export function Routes() {
   const { isAuthorized } = useSelector(
@@ -23,10 +24,18 @@ export function Routes() {
 
   return (
     <Switch>
-      {!isAuthorized ? (
+      {isAuthorized ? (
         /*Render auth page when user at `/auth` and not authorized.*/
         <Route>
-          <AuthPage />
+          <Switch>
+            {/* <Layout> */}
+            <ContentRoute
+              path="/auth/registration"
+              component={Registration}
+            />
+            {/* </Layout> */}
+            <AuthPage />
+          </Switch>
         </Route>
       ) : (
         /*Otherwise redirect to root page (`/`)*/
@@ -36,7 +45,7 @@ export function Routes() {
       <Route path="/error" component={ErrorsPage} />
       <Route path="/logout" component={Logout} />
 
-      {!isAuthorized ? (
+      {isAuthorized ? (
         /*Redirect to `/auth` when user is not authorized*/
         <Redirect to="/auth/login" />
       ) : (

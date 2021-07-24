@@ -1,5 +1,5 @@
 import objectPath from "object-path";
-import {toAbsoluteUrl} from "../../_helpers";
+import { toAbsoluteUrl } from "../../_helpers";
 
 export class HtmlClassService {
   // Public properties
@@ -60,7 +60,7 @@ export class HtmlClassService {
     const subheaderFixed = objectPath.get(updatedConfig, "subheader.fixed");
     if (subheaderFixed && headerSelfFixedDesktop) {
       // Page::setOption('layout', 'subheader/style', 'solid');
-      updatedConfig.subheader.style = "solid";      
+      updatedConfig.subheader.style = "solid";
     } else {
       // Page::setOption('layout', 'subheader/fixed', false);
       updatedConfig.subheader.fixed = false;
@@ -134,7 +134,7 @@ export class HtmlClassService {
   /**
    * Init Loader
    */
-  initLoader() {}
+  initLoader() { }
 
   /**
    * Init Header
@@ -149,7 +149,7 @@ export class HtmlClassService {
       document.body.classList.add("header-static");
     }
 
-    const headerSelfFixedMobile  = objectPath.get(this.config, "header.self.fixed.mobile");
+    const headerSelfFixedMobile = objectPath.get(this.config, "header.self.fixed.mobile");
     if (headerSelfFixedMobile) {
       document.body.classList.add("header-mobile-fixed");
       objectPath.push(this.classes, "header_mobile", "header-mobile-fixed");
@@ -162,7 +162,7 @@ export class HtmlClassService {
       const headerMenuLayoutCssClass = `header-menu-layout-${headerMenuSelfLayout}`;
       objectPath.push(this.classes, "header_menu", headerMenuLayoutCssClass);
 
-            if (objectPath.get(this.config, "header.menu.self.root-arrow")) {
+      if (objectPath.get(this.config, "header.menu.self.root-arrow")) {
         objectPath.push(this.classes, "header_menu", "header-menu-root-arrow");
       }
     }
@@ -244,7 +244,7 @@ export class HtmlClassService {
     }
 
     // Enable Aside
-    document.body.classList.add("aside-enabled");
+    // document.body.classList.add("aside-enabled");
 
     // Fixed Aside
     const asideSelfFixed = objectPath.get(this.config, "aside.self.fixed");
