@@ -10,6 +10,8 @@ import AddIcon from '@material-ui/icons/Add';
 import { toAbsoluteUrl } from "../../_metronic/_helpers";
 import Send from "@material-ui/icons/Send";
 import AttachFile from "@material-ui/icons/AttachFile";
+import 'react-chat-elements/dist/main.css';
+import { MessageList, MessageBox, SystemMessage, ChatItem } from 'react-chat-elements';
 
 /*
   INTL (i18n) docs:
@@ -392,7 +394,51 @@ function Chat(props) {
         </div>
         <div style={{ flex: 1 }}>
           <div className="chat-view">
-            <div className="message-list"></div>
+            <div className="message-list">
+              {/* <MessageList
+                className='message-lista'
+                lockable={true}
+                toBottomHeight={'100%'}
+                dataSource={[
+                  {
+                    position: 'right',
+                    type: 'text',
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+                    date: new Date(),
+                  },
+                ]} /> */}
+              {/* <MessageBox
+                position={'left'}
+                type={'photo'}
+                text={'react.svg'}
+                data={{
+                  uri: 'https://facebook.github.io/react/img/logo.svg',
+                  status: {
+                    click: false,
+                    loading: 0,
+                  }
+                }} /> */}
+              {/* <SystemMessage
+                text={'End of conversation'} /> */}
+              {/* <ChatItem
+                avatar={'https://facebook.github.io/react/img/logo.svg'}
+                alt={'Reactjs'}
+                title={'Facebook'}
+                subtitle={'What are you doing?'}
+                date={new Date()}
+                unread={2} /> */}
+              {/* <MessageBox
+                reply={{
+                  photoURL: 'https://facebook.github.io/react/img/logo.svg',
+                  title: 'elit magna',
+                  titleColor: '#8717ae',
+                  message: 'Aliqua amet incididunt id nostrud',
+                }}
+                onReplyMessageClick={() => console.log('reply clicked!')}
+                position={'left'}
+                type={'text'}
+                text={'Tempor duis do voluptate enim duis velit veniam aute ullamco dolore duis irure.'} /> */}
+            </div>
             <div className="message-input d-flex align-items-center">
               <AttachFile className="w-50px text-white-50" />
               <textarea
