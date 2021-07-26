@@ -22,6 +22,15 @@
 
 // Tablet & Mobile Modes
 @include media-breakpoint-down(md) {
+	
+	#kt_header {
+		height: 100px;
+	}
+
+	#kt_content {
+		padding-top: 20px;
+	}
+
 	.content {
 		padding: get($page-padding, tablet-and-mobile) 0;
 

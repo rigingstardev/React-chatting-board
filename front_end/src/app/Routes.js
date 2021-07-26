@@ -28,12 +28,10 @@ export function Routes() {
         /*Render auth page when user at `/auth` and not authorized.*/
         <Route>
           <Switch>
-            {/* <Layout> */}
             <ContentRoute
               path="/auth/registration"
               component={Registration}
             />
-            {/* </Layout> */}
             <AuthPage />
           </Switch>
         </Route>

@@ -19,6 +19,19 @@ import { Header } from './../../../../_metronic/layout/components/header/Header'
 
 const initialValues = {
   name: "",
+  job: "",
+  field: "",
+  inductry: "",
+  country: "",
+  state: "",
+  city: "",
+  note: "",
+  telephone: "",
+  phone: "",
+  fax: "",
+  website: "",
+  avatar: "",
+  photo: "",
   email: "",
   username: "",
   password: "",
@@ -356,14 +369,14 @@ function Registration(props) {
                             <input
                               type="text"
                               className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                "name"
+                                "job"
                               )}`}
-                              name="name"
-                              {...formik.getFieldProps("name")}
+                              name="job"
+                              {...formik.getFieldProps("job")}
                             />
-                            {formik.touched.name && formik.errors.name ? (
+                            {formik.touched.job && formik.errors.job ? (
                               <div className="fv-plugins-message-container">
-                                <div className="fv-help-block">{formik.errors.name}</div>
+                                <div className="fv-help-block">{formik.errors.job}</div>
                               </div>
                             ) : null}
                           </div>
@@ -371,19 +384,19 @@ function Registration(props) {
                         </div>
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Domaine d'expertise :</div>
                         <div className="col-12 col-md-8 col-sm-8">
-                          {/* begin: name */}
+                          {/* begin: field */}
                           <div className="form-group fv-plugins-icon-container">
                             <input
                               type="text"
                               className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                "name"
+                                "field"
                               )}`}
                               name="name"
-                              {...formik.getFieldProps("name")}
+                              {...formik.getFieldProps("field")}
                             />
-                            {formik.touched.name && formik.errors.name ? (
+                            {formik.touched.field && formik.errors.field ? (
                               <div className="fv-plugins-message-container">
-                                <div className="fv-help-block">{formik.errors.name}</div>
+                                <div className="fv-help-block">{formik.errors.field}</div>
                               </div>
                             ) : null}
                           </div>
@@ -396,78 +409,78 @@ function Registration(props) {
                             <input
                               type="text"
                               className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                "name"
+                                "industry"
                               )}`}
-                              name="name"
-                              {...formik.getFieldProps("name")}
+                              name="industry"
+                              {...formik.getFieldProps("industry")}
                             />
-                            {formik.touched.name && formik.errors.name ? (
+                            {formik.touched.industry && formik.errors.industry ? (
                               <div className="fv-plugins-message-container">
-                                <div className="fv-help-block">{formik.errors.name}</div>
+                                <div className="fv-help-block">{formik.errors.industry}</div>
                               </div>
                             ) : null}
                           </div>
-                          {/* end: name */}
+                          {/* end: industry */}
                         </div>
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Pays :</div>
                         <div className="col-12 col-md-8 col-sm-8">
-                          {/* begin: name */}
+                          {/* begin: country */}
                           <div className="form-group fv-plugins-icon-container">
                             <input
                               type="text"
                               className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                "name"
+                                "country"
                               )}`}
-                              name="name"
-                              {...formik.getFieldProps("name")}
+                              name="country"
+                              {...formik.getFieldProps("country")}
                             />
-                            {formik.touched.name && formik.errors.name ? (
+                            {formik.touched.country && formik.errors.country ? (
                               <div className="fv-plugins-message-container">
-                                <div className="fv-help-block">{formik.errors.name}</div>
+                                <div className="fv-help-block">{formik.errors.country}</div>
                               </div>
                             ) : null}
                           </div>
-                          {/* end: name */}
+                          {/* end: country */}
                         </div>
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Etat :</div>
                         <div className="col-12 col-md-8 col-sm-8">
-                          {/* begin: name */}
+                          {/* begin: state */}
                           <div className="form-group fv-plugins-icon-container">
                             <input
                               type="text"
                               className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                "name"
+                                "state"
                               )}`}
-                              name="name"
-                              {...formik.getFieldProps("name")}
+                              name="state"
+                              {...formik.getFieldProps("state")}
                             />
-                            {formik.touched.name && formik.errors.name ? (
+                            {formik.touched.state && formik.errors.state ? (
                               <div className="fv-plugins-message-container">
-                                <div className="fv-help-block">{formik.errors.name}</div>
+                                <div className="fv-help-block">{formik.errors.state}</div>
                               </div>
                             ) : null}
                           </div>
-                          {/* end: name */}
+                          {/* end: state */}
                         </div>
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Ville :</div>
                         <div className="col-12 col-md-8 col-sm-8">
-                          {/* begin: name */}
+                          {/* begin: city */}
                           <div className="form-group fv-plugins-icon-container">
                             <input
                               type="text"
                               className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                "name"
+                                "city"
                               )}`}
-                              name="name"
-                              {...formik.getFieldProps("name")}
+                              name="city"
+                              {...formik.getFieldProps("city")}
                             />
-                            {formik.touched.name && formik.errors.name ? (
+                            {formik.touched.city && formik.errors.city ? (
                               <div className="fv-plugins-message-container">
-                                <div className="fv-help-block">{formik.errors.name}</div>
+                                <div className="fv-help-block">{formik.errors.city}</div>
                               </div>
                             ) : null}
                           </div>
-                          {/* end: name */}
+                          {/* end: city */}
                         </div>
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">
                           A propos de vous :
@@ -476,159 +489,159 @@ function Registration(props) {
                             texte dans ce champ)</p>
                         </div>
                         <div className="col-12 col-md-8 col-sm-8">
-                          {/* begin: name */}
+                          {/* begin: note */}
                           <div className="form-group fv-plugins-icon-container">
                             <textarea
                               className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                "name"
+                                "note"
                               )}`}
-                              name="name"
+                              name="note"
                               rows="10"
-                              {...formik.getFieldProps("name")}
+                              {...formik.getFieldProps("note")}
                             />
-                            {formik.touched.name && formik.errors.name ? (
+                            {formik.touched.note && formik.errors.note ? (
                               <div className="fv-plugins-message-container">
-                                <div className="fv-help-block">{formik.errors.name}</div>
+                                <div className="fv-help-block">{formik.errors.note}</div>
                               </div>
                             ) : null}
                           </div>
-                          {/* end: name */}
+                          {/* end: note */}
                         </div>
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Tél. bureau :</div>
                         <div className="col-12 col-md-8 col-sm-8">
-                          {/* begin: name */}
+                          {/* begin: telephone */}
                           <div className="form-group fv-plugins-icon-container">
                             <input
                               type="text"
                               className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                "name"
+                                "telephone"
                               )}`}
-                              name="name"
-                              {...formik.getFieldProps("name")}
+                              name="telephone"
+                              {...formik.getFieldProps("telephone")}
                             />
-                            {formik.touched.name && formik.errors.name ? (
+                            {formik.touched.telephone && formik.errors.telephone ? (
                               <div className="fv-plugins-message-container">
-                                <div className="fv-help-block">{formik.errors.name}</div>
+                                <div className="fv-help-block">{formik.errors.telephone}</div>
                               </div>
                             ) : null}
                           </div>
-                          {/* end: name */}
+                          {/* end: telephone */}
                         </div>
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Tél. portable :</div>
                         <div className="col-12 col-md-8 col-sm-8">
-                          {/* begin: name */}
+                          {/* begin: phone */}
                           <div className="form-group fv-plugins-icon-container">
                             <input
                               type="text"
                               className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                "name"
+                                "phone"
                               )}`}
-                              name="name"
-                              {...formik.getFieldProps("name")}
+                              name="phone"
+                              {...formik.getFieldProps("phone")}
                             />
-                            {formik.touched.name && formik.errors.name ? (
+                            {formik.touched.phone && formik.errors.phone ? (
                               <div className="fv-plugins-message-container">
-                                <div className="fv-help-block">{formik.errors.name}</div>
+                                <div className="fv-help-block">{formik.errors.phone}</div>
                               </div>
                             ) : null}
                           </div>
-                          {/* end: name */}
+                          {/* end: phone */}
                         </div>
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Fax :</div>
                         <div className="col-12 col-md-8 col-sm-8">
-                          {/* begin: name */}
+                          {/* begin: fax */}
                           <div className="form-group fv-plugins-icon-container">
                             <input
                               type="text"
                               className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                "name"
+                                "fax"
                               )}`}
-                              name="name"
-                              {...formik.getFieldProps("name")}
+                              name="fax"
+                              {...formik.getFieldProps("fax")}
                             />
-                            {formik.touched.name && formik.errors.name ? (
+                            {formik.touched.fax && formik.errors.fax ? (
                               <div className="fv-plugins-message-container">
-                                <div className="fv-help-block">{formik.errors.name}</div>
+                                <div className="fv-help-block">{formik.errors.fax}</div>
                               </div>
                             ) : null}
                           </div>
-                          {/* end: name */}
+                          {/* end: fax */}
                         </div>
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Adresse électronique :</div>
                         <div className="col-12 col-md-8 col-sm-8">
-                          {/* begin: name */}
+                          {/* begin: email */}
                           <div className="form-group fv-plugins-icon-container">
                             <input
                               type="text"
                               className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                "name"
+                                "email"
                               )}`}
-                              name="name"
-                              {...formik.getFieldProps("name")}
+                              name="email"
+                              {...formik.getFieldProps("email")}
                             />
-                            {formik.touched.name && formik.errors.name ? (
+                            {formik.touched.email && formik.errors.email ? (
                               <div className="fv-plugins-message-container">
-                                <div className="fv-help-block">{formik.errors.name}</div>
+                                <div className="fv-help-block">{formik.errors.email}</div>
                               </div>
                             ) : null}
                           </div>
-                          {/* end: name */}
+                          {/* end: email */}
                         </div>
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Site Web :</div>
                         <div className="col-12 col-md-8 col-sm-8">
-                          {/* begin: name */}
+                          {/* begin: website */}
                           <div className="form-group fv-plugins-icon-container">
                             <input
                               type="text"
                               className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                "name"
+                                "website"
                               )}`}
-                              name="name"
-                              {...formik.getFieldProps("name")}
+                              name="website"
+                              {...formik.getFieldProps("website")}
                             />
-                            {formik.touched.name && formik.errors.name ? (
+                            {formik.touched.website && formik.errors.website ? (
                               <div className="fv-plugins-message-container">
-                                <div className="fv-help-block">{formik.errors.name}</div>
+                                <div className="fv-help-block">{formik.errors.website}</div>
                               </div>
                             ) : null}
                           </div>
-                          {/* end: name */}
+                          {/* end: website */}
                         </div>
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Photo  identifiant :</div>
                         <div className="col-12 col-md-8 col-sm-8">
-                          {/* begin: name */}
+                          {/* begin: avatar */}
                           <div className="form-group fv-plugins-icon-container">
                             <input
                               type="text"
                               className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                "name"
+                                "avatar"
                               )}`}
-                              name="name"
-                              {...formik.getFieldProps("name")}
+                              name="avatar"
+                              {...formik.getFieldProps("avatar")}
                             />
-                            {formik.touched.name && formik.errors.name ? (
+                            {formik.touched.avatar && formik.errors.avatar ? (
                               <div className="fv-plugins-message-container">
-                                <div className="fv-help-block">{formik.errors.name}</div>
+                                <div className="fv-help-block">{formik.errors.avatar}</div>
                               </div>
                             ) : null}
                           </div>
-                          {/* end: name */}
+                          {/* end: avatar */}
                         </div>
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Photo pour votre page :</div>
                         <div className="col-12 col-md-8 col-sm-8">
-                          {/* begin: name */}
+                          {/* begin: photo */}
                           <div className="form-group fv-plugins-icon-container">
                             <input
                               type="text"
                               className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                "name"
+                                "photo"
                               )}`}
-                              name="name"
-                              {...formik.getFieldProps("name")}
+                              name="photo"
+                              {...formik.getFieldProps("photo")}
                             />
-                            {formik.touched.name && formik.errors.name ? (
+                            {formik.touched.photo && formik.errors.photo ? (
                               <div className="fv-plugins-message-container">
-                                <div className="fv-help-block">{formik.errors.name}</div>
+                                <div className="fv-help-block">{formik.errors.photo}</div>
                               </div>
                             ) : null}
                           </div>

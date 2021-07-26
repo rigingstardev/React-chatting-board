@@ -10,8 +10,8 @@ import AddIcon from '@material-ui/icons/Add';
 import { toAbsoluteUrl } from "../../_metronic/_helpers";
 import Send from "@material-ui/icons/Send";
 import AttachFile from "@material-ui/icons/AttachFile";
-import 'react-chat-elements/dist/main.css';
-import { MessageList, MessageBox, SystemMessage, ChatItem } from 'react-chat-elements';
+// import 'react-chat-elements-v2/dist/main.css';
+import { MessageList } from '../components/MessageList/MessageList';
 
 /*
   INTL (i18n) docs:
@@ -279,6 +279,25 @@ function Chat(props) {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [message, setMessage] = useState("");
+  const [messageData, setMessageData] = useState(
+    [
+      {
+        position: 'right',
+        type: 'text',
+        text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        date: new Date(),
+        avatar: toAbsoluteUrl('/media/users/100_1.jpg'),
+      },
+      {
+        position: 'left',
+        type: 'text',
+        text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        date: new Date(),
+        avatar: toAbsoluteUrl('/media/users/100_1.jpg'),
+      },
+    ]
+  );
 
 
   const handleSearchChange = (event) => {
@@ -302,6 +321,25 @@ function Chat(props) {
     // setData(null);
     setSearchValue("");
   };
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setMessage(value);
+  }
+
+  const handleSend = () => {
+    const data = [...messageData];
+    data.push(
+      {
+        position: 'right',
+        type: 'text',
+        text: message,
+        date: new Date(),
+        avatar: toAbsoluteUrl('/media/users/100_1.jpg'),
+      },
+    )
+    setMessageData(data);
+  }
 
   return (
     <div className="container-contact w-100">
@@ -328,13 +366,13 @@ function Chat(props) {
             CONVERSATIONS
           </Typography>
           <List className={classes.listRoot}>
-            {users.map((users, i) => (
+            {users.map((user, i) => (
               <ListItem key={i}>
                 <ListItemAvatar>
-                  <Avatar alt="Remy Sharp" src={toAbsoluteUrl(users.avatar)} />
+                  <Avatar alt="Remy Sharp" src={toAbsoluteUrl(user.avatar)} />
                 </ListItemAvatar>
                 <ListItemText
-                  primary={users.name}
+                  primary={user.name}
                   secondary={
                     <>
                       <Typography
@@ -342,13 +380,13 @@ function Chat(props) {
                         variant="body2"
                         color="textPrimary"
                       >
-                        {users.subname}
+                        {user.subname}
                       </Typography>
                     </>
                   }
                 />
                 <ListItemSecondaryAction>
-                  {users.date}
+                  {user.date}
                 </ListItemSecondaryAction>
               </ListItem>
             ))}
@@ -395,59 +433,23 @@ function Chat(props) {
         <div style={{ flex: 1 }}>
           <div className="chat-view">
             <div className="message-list">
-              {/* <MessageList
-                className='message-lista'
+              <MessageList
+                className='message-list'
                 lockable={true}
                 toBottomHeight={'100%'}
-                dataSource={[
-                  {
-                    position: 'right',
-                    type: 'text',
-                    text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-                    date: new Date(),
-                  },
-                ]} /> */}
-              {/* <MessageBox
-                position={'left'}
-                type={'photo'}
-                text={'react.svg'}
-                data={{
-                  uri: 'https://facebook.github.io/react/img/logo.svg',
-                  status: {
-                    click: false,
-                    loading: 0,
-                  }
-                }} /> */}
-              {/* <SystemMessage
-                text={'End of conversation'} /> */}
-              {/* <ChatItem
-                avatar={'https://facebook.github.io/react/img/logo.svg'}
-                alt={'Reactjs'}
-                title={'Facebook'}
-                subtitle={'What are you doing?'}
-                date={new Date()}
-                unread={2} /> */}
-              {/* <MessageBox
-                reply={{
-                  photoURL: 'https://facebook.github.io/react/img/logo.svg',
-                  title: 'elit magna',
-                  titleColor: '#8717ae',
-                  message: 'Aliqua amet incididunt id nostrud',
-                }}
-                onReplyMessageClick={() => console.log('reply clicked!')}
-                position={'left'}
-                type={'text'}
-                text={'Tempor duis do voluptate enim duis velit veniam aute ullamco dolore duis irure.'} /> */}
+                dataSource={messageData} />
+
             </div>
             <div className="message-input d-flex align-items-center">
               <AttachFile className="w-50px text-white-50" />
               <textarea
                 className={`form-control form-control-solid h-auto px-6 bg-transparent border-0 text-white-50`}
                 name="name"
+                onChange={handleChange}
                 placeholder="Here where the users can enter their conversations et varius mi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed sit amet imperdiet quam.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. "
                 rows="4"
-              />
-              <Send className="w-50px text-white-50" />
+              >{message}</textarea>
+              <Send className="w-50px text-white-50" onClick={handleSend} />
             </div>
           </div>
         </div>
