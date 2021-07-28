@@ -22,32 +22,32 @@ export function HeaderMenu({ layoutProps }) {
         {/*begin::Header Nav*/}
         <ul className={`menu-nav ${layoutProps.ulClasses}`}>
             {/*begin::1 Level*/}
-            <li className={`menu-item menu-item-rel ${getMenuItemActive('/dashboard')}`}>
-                <NavLink className="menu-link" to="/dashboard">
+            <li className={`menu-item menu-item-rel ${getMenuItemActive('/chat')}`}>
+                <NavLink className="menu-link" to="/chat">
                     <span className="menu-text">SURFACE</span>
                     {layoutProps.rootArrowEnabled && (<i className="menu-arrow" />)}
                 </NavLink>
             </li>
             {/*end::1 Level*/}
             {/*begin::1 Level*/}
-            <li className={`menu-item menu-item-rel ${getMenuItemActive('/dashboard')}`}>
-                <NavLink className="menu-link" to="/dashboard">
+            <li className={`menu-item menu-item-rel ${getMenuItemActive('/chat')}`}>
+                <NavLink className="menu-link" to="/chat">
                     <span className="menu-text">RÉPERTOIRE</span>
                     {layoutProps.rootArrowEnabled && (<i className="menu-arrow" />)}
                 </NavLink>
             </li>
             {/*end::1 Level*/}
             {/*begin::1 Level*/}
-            <li className={`menu-item menu-item-rel ${getMenuItemActive('/dashboard')}`}>
-                <NavLink className="menu-link" to="/dashboard">
+            <li className={`menu-item menu-item-rel ${getMenuItemActive('/chat')}`}>
+                <NavLink className="menu-link" to="/chat">
                     <span className="menu-text">INFORMATIONS</span>
                     {layoutProps.rootArrowEnabled && (<i className="menu-arrow" />)}
                 </NavLink>
             </li>
             {/*end::1 Level*/}
             {/*begin::1 Level*/}
-            <li className={`menu-item menu-item-rel ${getMenuItemActive('/dashboard')}`}>
-                <NavLink className="menu-link" to="/dashboard">
+            <li className={`menu-item menu-item-rel ${getMenuItemActive('/chat')}`}>
+                <NavLink className="menu-link" to="/chat">
                     <span className="menu-text">CONTACT</span>
                     {layoutProps.rootArrowEnabled && (<i className="menu-arrow" />)}
                 </NavLink>

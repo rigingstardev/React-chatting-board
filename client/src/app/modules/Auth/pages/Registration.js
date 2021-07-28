@@ -122,8 +122,8 @@ function Registration(props) {
       enableLoading();
       register(values.email, values.name, values.username, values.password)
         .then(({ data: { accessToken } }) => {
-          props.register(accessToken);
-          // props.history.push('/');
+          // props.register(accessToken);
+          props.history.push('/auth/login');
           disableLoading();
           setSubmitting(false);
         })
