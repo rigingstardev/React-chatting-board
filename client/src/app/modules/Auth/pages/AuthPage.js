@@ -71,7 +71,7 @@ export function AuthPage(props) {
             {/*end::Content header*/}
 
             {/* begin::Content body */}
-            <div className="d-flex flex-column-fluid flex-center mt-30 mt-lg-0">
+            <div className="d-flex flex-column-fluid flex-center mt-5 mt-lg-0">
               <Switch>
                 <ContentRoute path="/auth/login" component={Login} />
                 {/* <ContentRoute
