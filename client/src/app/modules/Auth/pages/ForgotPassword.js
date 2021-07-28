@@ -16,9 +16,9 @@ function ForgotPassword(props) {
   const [isRequested, setIsRequested] = useState(false);
   const ForgotPasswordSchema = Yup.object().shape({
     email: Yup.string()
-      .email("Wrong email format")
-      .min(3, "Minimum 3 symbols")
-      .max(50, "Maximum 50 symbols")
+      .email("Format d'e-mail incorrect")
+      .min(3, "Au moins 3 symboles")
+      .max(50, "50 symboles maximum")
       .required(
         intl.formatMessage({
           id: "AUTH.VALIDATION.REQUIRED_FIELD",
@@ -63,9 +63,9 @@ function ForgotPassword(props) {
       {!isRequested && (
         <div className="login-form login-forgot" style={{ display: "block" }}>
           <div className="text-center mb-10 mb-lg-20">
-            <h3 className="font-size-h1">Forgotten Password ?</h3>
+            <h3 className="font-size-h1">mot de passe oublié ?</h3>
             <div className="text-muted font-weight-bold">
-              Enter your email to reset your password
+              Entrez votre e-mail pour réinitialiser votre mot de passe
             </div>
           </div>
           <form
@@ -101,7 +101,7 @@ function ForgotPassword(props) {
                 className="btn btn-primary font-weight-bold px-9 py-4 my-3 mx-4"
                 disabled={formik.isSubmitting}
               >
-                Submit
+                Soumettre
               </button>
               <Link to="/auth">
                 <button
@@ -109,7 +109,7 @@ function ForgotPassword(props) {
                   id="kt_login_forgot_cancel"
                   className="btn btn-light-primary font-weight-bold px-9 py-4 my-3 mx-4"
                 >
-                  Cancel
+                  Annuler
                 </button>
               </Link>
             </div>

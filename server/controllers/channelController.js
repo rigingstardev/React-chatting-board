@@ -6,10 +6,10 @@ exports.createChannel = async (req, res) => {
 
   const nameRegex = /^[A-Za-z\s]+$/;
 
-  if (!nameRegex.test(name)) throw "Channel name can contain only alphabets.";
+  if (!nameRegex.test(name)) throw "Le nom de la chaîne ne peut contenir que des lettres.";
   const channelExists = await Channel.findOne({ name });
 
-  if (channelExists) throw "Channel with that name already exists!";
+  if (channelExists) throw "La chaîne avec ce nom existe déjà!";
 
   const channel = new Channel({
     name,
@@ -27,7 +27,7 @@ exports.getChannelSentiment = async (req, res) => {
     _id: req.params.id,
   });
 
-  if (!channel) throw "This channel does not exists!";
+  if (!channel) throw "Cette chaîne n'existe pas!";
 
   res.json({
     totalSentimentScore: channel.totalSentimentScore,

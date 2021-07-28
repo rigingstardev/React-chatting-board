@@ -12,9 +12,11 @@ export class MessageList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            scrollBottom: 0,
+            scrollBottom: 100,
             downButton: false,
         };
+        this.loadRef = this.loadRef.bind(this);
+        this.onScroll = this.onScroll.bind(this);
     }
 
     checkScroll() {
@@ -32,12 +34,14 @@ export class MessageList extends Component {
         }
     }
 
-    componentWillReceiveProps() {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (!this.mlistRef)
             return;
-        this.setState({
-            scrollBottom: this.getBottom(this.mlistRef),
-        }, this.checkScroll.bind(this));
+        if (nextProps.dataSource.length !== this.props.dataSource.length) {
+            this.setState({
+                scrollBottom: this.getBottom(this.mlistRef),
+            }, this.checkScroll.bind(this));
+        }
     }
 
     getBottom(e) {
@@ -52,6 +56,11 @@ export class MessageList extends Component {
     onDownload(item, i, e) {
         if (this.props.onDownload instanceof Function)
             this.props.onDownload(item, i, e);
+    }
+
+    onPhotoError(item, i, e) {
+        if (this.props.onPhotoError instanceof Function)
+            this.props.onPhotoError(item, i, e);
     }
 
     onClick(item, i, e) {
@@ -69,6 +78,36 @@ export class MessageList extends Component {
             this.props.onForwardClick(item, i, e);
     }
 
+    onReplyClick(item, i, e) {
+        if (this.props.onReplyClick instanceof Function)
+            this.props.onReplyClick(item, i, e);
+    }
+
+    onReplyMessageClick(item, i, e) {
+        if (this.props.onReplyMessageClick instanceof Function)
+            this.props.onReplyMessageClick(item, i, e);
+    }
+
+    onRemoveMessageClick(item, i, e) {
+        if (this.props.onRemoveMessageClick instanceof Function)
+            this.props.onRemoveMessageClick(item, i, e);
+    }
+
+    onContextMenu(item, i, e) {
+        if (this.props.onContextMenu instanceof Function)
+            this.props.onContextMenu(item, i, e);
+    }
+
+    onMessageFocused(item, i, e) {
+        if (this.props.onMessageFocused instanceof Function)
+            this.props.onMessageFocused(item, i, e);
+    }
+
+    onMeetingMessageClick(item, i, e) {
+        if (this.props.onMeetingMessageClick instanceof Function)
+            this.props.onMeetingMessageClick(item, i, e);
+    }
+
     loadRef(ref) {
         this.mlistRef = ref;
         if (this.props.cmpRef instanceof Function)
@@ -84,7 +123,7 @@ export class MessageList extends Component {
                 this.setState({
                     downButton: true,
                     scrollBottom: bottom,
-                })
+                });
             }
         } else {
             if (this.state.downButton !== false) {
@@ -92,7 +131,7 @@ export class MessageList extends Component {
                 this.setState({
                     downButton: false,
                     scrollBottom: bottom,
-                })
+                });
             }
         }
 
@@ -110,24 +149,39 @@ export class MessageList extends Component {
         }
     }
 
+    onMeetingMoreSelect(item, i, e) {
+        if (this.props.onMeetingMoreSelect instanceof Function)
+            this.props.onMeetingMoreSelect(item, i, e);
+    }
+
     render() {
         return (
             <div
                 className={classNames(['rce-container-mlist', this.props.className])}>
                 <div
-                    ref={this.loadRef.bind(this)}
-                    onScroll={this.onScroll.bind(this)}
-                    className='rce-mlist'>
+                    ref={this.loadRef}
+                    onScroll={this.onScroll}
+                    className='rce-mlist' style={{ marginBottom: "calc(50vh - 325px)" }}>
                     {
                         this.props.dataSource.map((x, i) => (
                             <MessageBox
                                 key={i}
                                 {...x}
                                 onOpen={this.props.onOpen && ((e) => this.onOpen(x, i, e))}
+                                onPhotoError={this.props.onPhotoError && ((e) => this.onPhotoError(x, i, e))}
                                 onDownload={this.props.onDownload && ((e) => this.onDownload(x, i, e))}
-                                onTitleClick={this.props.onDownload && ((e) => this.onTitleClick(x, i, e))}
+                                onTitleClick={this.props.onTitleClick && ((e) => this.onTitleClick(x, i, e))}
                                 onForwardClick={this.props.onForwardClick && ((e) => this.onForwardClick(x, i, e))}
-                                onClick={this.props.onClick && ((e) => this.onClick(x, i, e))} />
+                                onReplyClick={this.props.onReplyClick && ((e) => this.onReplyClick(x, i, e))}
+                                onReplyMessageClick={this.props.onReplyMessageClick && ((e) => this.onReplyMessageClick(x, i, e))}
+                                onRemoveMessageClick={this.props.onRemoveMessageClick && ((e) => this.onRemoveMessageClick(x, i, e))}
+                                onClick={this.props.onClick && ((e) => this.onClick(x, i, e))}
+                                onContextMenu={this.props.onContextMenu && ((e) => this.onContextMenu(x, i, e))}
+                                onMeetingMoreSelect={this.props.onMeetingMoreSelect && ((e) => this.onMeetingMoreSelect(x, i, e))}
+                                onMessageFocused={((e) => this.onMessageFocused(x, i, e))}
+                                onMeetingMessageClick={this.props.onMeetingMessageClick && ((e) => this.onMeetingMessageClick(x, i, e))}
+                                onMeetingTitleClick={this.props.onMeetingTitleClick}
+                                onMeetingVideoLinkClick={this.props.onMeetingVideoLinkClick} />
                         ))
                     }
                 </div>
@@ -157,13 +211,16 @@ MessageList.defaultProps = {
     onClick: null,
     onTitleClick: null,
     onForwardClick: null,
+    onReplyClick: null,
+    onReplyMessageClick: null,
+    onMeetingMessageClick: null,
     onDownButtonClick: null,
     onOpen: null,
+    onPhotoError: null,
     onDownload: null,
     dataSource: [],
     lockable: false,
-    foucs: false,
-    toBottomHeight: 300,
+    toBottomHeight: 100,
     downButton: true,
     downButtonBadge: null,
 };

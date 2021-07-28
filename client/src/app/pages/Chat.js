@@ -309,6 +309,7 @@ function Chat(props) {
       {
         position: 'right',
         type: 'text',
+        focus: false,
         text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit',
         date: new Date(),
         avatar: toAbsoluteUrl('/media/users/100_1.jpg'),
@@ -316,6 +317,7 @@ function Chat(props) {
       {
         position: 'left',
         type: 'text',
+        focus: false,
         text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit',
         date: new Date(),
         avatar: toAbsoluteUrl('/media/users/100_1.jpg'),
@@ -373,17 +375,17 @@ function Chat(props) {
     }
   }
 
-
   const handleSend = () => {
     const data = [...messageData];
-    console.log(message);
     if (message.trim() != "") {
       data.push(
         {
           position: 'right',
           type: 'text',
+          focus: true,
           text: message.replace(/\n/g, "<br />"),
           date: new Date(),
+          copiableDate: true,
           avatar: toAbsoluteUrl('/media/users/100_1.jpg'),
         },
       )
@@ -529,7 +531,7 @@ function Chat(props) {
           <Typography className={"px-10 " + classes.color} variant="subtitle1" gutterBottom>
             CONVERSATIONS
           </Typography>
-          {isTabletDevice && <List className={classes.listRoot} style={{ height: "calc((100vh - 290px)/2)", overflowY: "auto" }}>
+          {isTabletDevice && <List className={classes.listRoot} style={{ height: "calc((100vh - 381px)/2)", overflowY: "auto" }}>
             {users.map((user, i) => (
               <ListItem key={i}>
                 <ListItemAvatar>
@@ -559,7 +561,7 @@ function Chat(props) {
           {isTabletDevice && <Typography className={"px-10 mt-5 " + classes.color} variant="subtitle1" gutterBottom>
             GROUPES DE TRAVAIL <AddIcon />
           </Typography>}
-          {isTabletDevice && <List className={classes.listRoot} style={{ height: "calc((100vh - 290px)/2)", overflowY: "auto" }}>
+          {isTabletDevice && <List className={classes.listRoot} style={{ height: "calc((100vh - 381px)/2)", overflowY: "auto" }}>
             {groups.map((group, i) => {
               return (<ListItem className="groups" key={i}>
                 <Typography variant="subtitle1" gutterBottom>
@@ -600,10 +602,9 @@ function Chat(props) {
               <MessageList
                 className='message-list'
                 lockable={true}
-                foucs={true}
+                downButton={true}
                 toBottomHeight={'100%'}
                 dataSource={messageData} />
-
             </div>
             <div className="message-input d-flex align-items-center">
               <AttachFile className="w-50px text-white-50" />

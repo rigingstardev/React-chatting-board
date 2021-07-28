@@ -11,10 +11,10 @@ exports.register = async (req, res) => {
   if (!emailRegex.test(email)) return res.status(400).json({
     success: false,
     errors: {
-      email: "Email is not supported from your domain."
+      email: "Les e-mails ne sont pas pris en charge depuis votre domaine."
     }
   });
-  if (password.length < 6) throw "Password must be atleast 6 characters long.";
+  if (password.length < 6) throw "Le mot de passe doit contenir au moins 6 caractères.";
 
   const usernameExists = await User.findOne({
     username,
@@ -23,7 +23,7 @@ exports.register = async (req, res) => {
   if (usernameExists) return res.status(400).json({
     success: false,
     errors: {
-      username: "User with same username already exits."
+      username: "Un utilisateur avec le même nom d'utilisateur existe déjà."
     }
   });
 
@@ -34,7 +34,7 @@ exports.register = async (req, res) => {
   if (emailExists) return res.status(400).json({
     success: false,
     errors: {
-      email: "User with same email already exits."
+      email: "L'utilisateur avec le même e-mail existe déjà."
     }
   });
 
@@ -49,7 +49,7 @@ exports.register = async (req, res) => {
   await user.save();
 
   res.json({
-    message: "User [" + username + "] registered successfully!",
+    message: "Utilisatrice [" + username + "] enregistré avec succès!",
   });
 };
 
@@ -62,7 +62,7 @@ exports.login = async (req, res) => {
   if (!user) return res.status(401).json({
     success: false,
     errors: {
-      email: "This credential is not correct."
+      email: "Cette information d'identification n'est pas correcte."
     }
   });
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -71,14 +71,14 @@ exports.login = async (req, res) => {
   if (!isMatch) return res.status(401).json({
     success: false,
     errors: {
-      email: "This credential is not correct."
+      email: "Cette information d'identification n'est pas correcte."
     }
   });
 
   const token = await jwt.sign({ id: user.id }, process.env.SECRET);
 
   res.json({
-    message: "Logged in successfully!",
+    message: "Connecté avec succès!",
     token,
     user
   });
@@ -91,7 +91,7 @@ exports.getUser = async (req, res) => {
     _id: req.params.id,
   });
 
-  if (!user) throw "This user does not exists!";
+  if (!user) throw "Cet utilisateur n'existe pas!";
 
   res.json(user);
 };
