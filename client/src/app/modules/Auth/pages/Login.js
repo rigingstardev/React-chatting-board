@@ -142,13 +142,13 @@ function Login(props) {
           ) : null}
         </div>
         <div className="form-group d-flex flex-wrap justify-content-between align-items-center">
-          {/* <Link
-            to="/auth/forgot-password"
+          <Link
+            to="/auth/login"
             className="text-dark-50 text-hover-primary my-3 mr-2"
             id="kt_login_forgot"
           >
             <span>Mot de passe oublié?</span>
-          </Link> */}
+          </Link>
         </div>
 
         {/* begin::Mobile footer */}
