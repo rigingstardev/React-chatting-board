@@ -69,7 +69,7 @@ function Registration(props) {
         })
       ),
     password: Yup.string()
-      .min(3, "Minimum 3 symbols")
+      .min(6, "Minimum 6 symbols")
       .max(50, "Maximum 50 symbols")
       .required(
         intl.formatMessage({
@@ -117,18 +117,19 @@ function Registration(props) {
   const formik = useFormik({
     initialValues,
     validationSchema: RegistrationSchema,
-    onSubmit: (values, { setStatus, setSubmitting }) => {
+    onSubmit: (values, { setStatus, setErrors, setSubmitting }) => {
       setSubmitting(true);
-      console.log(values)
       enableLoading();
       register(values.email, values.name, values.username, values.password)
         .then(({ data: { accessToken } }) => {
           props.register(accessToken);
+          // props.history.push('/');
           disableLoading();
           setSubmitting(false);
         })
-        .catch(() => {
+        .catch((err) => {
           setSubmitting(false);
+          setErrors(err.response.data.errors);
           setStatus(
             intl.formatMessage({
               id: "AUTH.VALIDATION.INVALID_LOGIN",
@@ -653,7 +654,7 @@ function Registration(props) {
                           {/* begin: password */}
                           <div className="form-group fv-plugins-icon-container">
                             <input
-                              type="text"
+                              type="password"
                               className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
                                 "password"
                               )}`}
@@ -673,7 +674,7 @@ function Registration(props) {
                           {/* begin: changepassword */}
                           <div className="form-group fv-plugins-icon-container">
                             <input
-                              type="text"
+                              type="password"
                               className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
                                 "changepassword"
                               )}`}

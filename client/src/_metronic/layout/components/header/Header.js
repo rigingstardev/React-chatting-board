@@ -50,7 +50,7 @@ export function Header() {
           {/*end::Header Menu Wrapper*/}
 
           {/*begin::Topbar*/}
-          <Topbar />
+          {/* <Topbar /> */}
           {/*end::Topbar*/}
         </div>
         {/*end::Container*/}

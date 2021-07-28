@@ -79,7 +79,7 @@ export function Topbar() {
 
       {layoutProps.viewLanguagesDisplay && <LanguageSelectorDropdown />}
 
-      {layoutProps.viewUserDisplay && <QuickUserToggler />}
+      {/* {layoutProps.viewUserDisplay && <QuickUserToggler />} */}
     </div>
   );
 }

@@ -439,66 +439,70 @@ function Chat(props) {
                 index={value}
                 onChangeIndex={handleChangeIndex}
               >
-                <TabContainer dir={theme.direction}><List List className={classes.listRoot} style={{ overflowY: "auto" }}>
-                  {users.map((user, i) => (
-                    <ListItem key={i}>
-                      <ListItemAvatar>
-                        <Avatar alt="Remy Sharp" src={toAbsoluteUrl(user.avatar)} />
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={user.name}
-                        secondary={
-                          <>
-                            <Typography
-                              component="span"
-                              variant="body2"
-                              color="textPrimary"
-                            >
-                              {user.subname}
-                            </Typography>
-                          </>
-                        }
-                      />
-                      <ListItemSecondaryAction>
-                        {user.date}
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                  ))}
-                </List></TabContainer>
-                <TabContainer dir={theme.direction}><List className={classes.listRoot} style={{ overflowY: "auto", marginTop: "-14px" }}>
-                  {groups.map((group, i) => {
-                    return (<ListItem className="groups" key={i}>
-                      <Typography variant="subtitle1" gutterBottom>
-                        {group.name}
-                      </Typography>
-                      <div className="group-users">
-                        {group.users.map((user, j, gUsers) => {
-                          if (gUsers.length >= 5) {
-                            if (j < 4) {
+                <TabContainer dir={theme.direction}>
+                  <List className={classes.listRoot} style={{ overflowY: "auto" }}>
+                    {users.map((user, i) => (
+                      <ListItem key={i}>
+                        <ListItemAvatar>
+                          <Avatar alt="Remy Sharp" src={toAbsoluteUrl(user.avatar)} />
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={user.name}
+                          secondary={
+                            <>
+                              <Typography
+                                component="span"
+                                variant="body2"
+                                color="textPrimary"
+                              >
+                                {user.subname}
+                              </Typography>
+                            </>
+                          }
+                        />
+                        <ListItemSecondaryAction>
+                          {user.date}
+                        </ListItemSecondaryAction>
+                      </ListItem>
+                    ))}
+                  </List>
+                </TabContainer>
+                <TabContainer dir={theme.direction}>
+                  <List className={classes.listRoot} style={{ overflowY: "auto", marginTop: "-14px" }}>
+                    {groups.map((group, i) => {
+                      return (<ListItem className="groups" key={i}>
+                        <Typography variant="subtitle1" gutterBottom>
+                          {group.name}
+                        </Typography>
+                        <div className="group-users">
+                          {group.users.map((user, j, gUsers) => {
+                            if (gUsers.length >= 5) {
+                              if (j < 4) {
+                                return (
+                                  <ListItemAvatar key={j}>
+                                    <Avatar alt="Remy Sharp" src={toAbsoluteUrl(user.avatar)} />
+                                  </ListItemAvatar>
+                                );
+                              } else if (j == 4) {
+                                let number = gUsers.length - 4;
+                                return (<ListItemAvatar key={j}>
+                                  <div className={classes.plusUsersNumber}> + {number}</div>
+                                </ListItemAvatar>);
+                              }
+                              return "";
+                            } else {
                               return (
                                 <ListItemAvatar key={j}>
                                   <Avatar alt="Remy Sharp" src={toAbsoluteUrl(user.avatar)} />
                                 </ListItemAvatar>
                               );
-                            } else if (j == 4) {
-                              let number = gUsers.length - 4;
-                              return (<ListItemAvatar key={j}>
-                                <div className={classes.plusUsersNumber}> + {number}</div>
-                              </ListItemAvatar>);
                             }
-                            return "";
-                          } else {
-                            return (
-                              <ListItemAvatar key={j}>
-                                <Avatar alt="Remy Sharp" src={toAbsoluteUrl(user.avatar)} />
-                              </ListItemAvatar>
-                            );
-                          }
-                        })}
-                      </div>
-                    </ListItem>)
-                  })}
-                </List></TabContainer>
+                          })}
+                        </div>
+                      </ListItem>)
+                    })}
+                  </List>
+                </TabContainer>
               </SwipeableViews>
             </div>
 
@@ -525,7 +529,7 @@ function Chat(props) {
           <Typography className={"px-10 " + classes.color} variant="subtitle1" gutterBottom>
             CONVERSATIONS
           </Typography>
-          {isTabletDevice && <List List className={classes.listRoot} style={{ height: "calc((100vh - 290px)/2)", overflowY: "auto" }}>
+          {isTabletDevice && <List className={classes.listRoot} style={{ height: "calc((100vh - 290px)/2)", overflowY: "auto" }}>
             {users.map((user, i) => (
               <ListItem key={i}>
                 <ListItemAvatar>

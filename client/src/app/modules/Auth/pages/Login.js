@@ -69,18 +69,19 @@ function Login(props) {
   const formik = useFormik({
     initialValues,
     validationSchema: LoginSchema,
-    onSubmit: (values, { setStatus, setSubmitting }) => {
+    onSubmit: (values, { setStatus, setErrors, setSubmitting }) => {
       enableLoading();
       setTimeout(() => {
         login(values.email, values.password)
           .then(({ data: { token } }) => {
             disableLoading();
-            console.log(token);
             props.login(token);
           })
-          .catch(() => {
+          .catch((err) => {
+            console.log(err.response)
             disableLoading();
             setSubmitting(false);
+            setErrors(err.response.data.errors);
             setStatus(
               intl.formatMessage({
                 id: "AUTH.VALIDATION.INVALID_LOGIN",
