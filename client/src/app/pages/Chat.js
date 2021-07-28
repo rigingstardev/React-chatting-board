@@ -360,13 +360,13 @@ function Chat(props) {
 
   const keyPress = (e) => {
     if (e.keyCode == 13) {
-      e.preventDefault();
       const value1 = e.target.value;
       setMessage(value1);
 
       if (e.shiftKey) {
         $('.form-control form-control-solid h-auto px-6 bg-transparent border-0 text-white-50').append("<br/>");
       } else {
+        e.preventDefault();
         handleSend();
       }
       // put the login here
