@@ -52,41 +52,26 @@ function Registration(props) {
     //     })
     //   ),
     email: Yup.string()
-      .email("Wrong email format")
-      .min(3, "Minimum 3 symbols")
-      .max(50, "Maximum 50 symbols")
-      .required(
-        intl.formatMessage({
-          id: "AUTH.VALIDATION.REQUIRED_FIELD",
-        })
+      .email("Format d'e-mail incorrect")
+      .min(3, "Au moins 3 symboles")
+      .max(50, "50 symboles maximum")
+      .required("Ce champ est requis"
       ),
     username: Yup.string()
-      .min(3, "Minimum 3 symbols")
-      .max(50, "Maximum 50 symbols")
-      .required(
-        intl.formatMessage({
-          id: "AUTH.VALIDATION.REQUIRED_FIELD",
-        })
-      ),
+      .min(3, "Au moins 3 symboles")
+      .max(50, "50 symboles maximum")
+      .required("Ce champ est requis."),
     password: Yup.string()
-      .min(6, "Minimum 6 symbols")
-      .max(50, "Maximum 50 symbols")
-      .required(
-        intl.formatMessage({
-          id: "AUTH.VALIDATION.REQUIRED_FIELD",
-        })
-      ),
+      .min(6, "Au moins 6 symboles")
+      .max(50, "50 symboles maximum")
+      .required("Ce champ est requis."),
     changepassword: Yup.string()
-      .required(
-        intl.formatMessage({
-          id: "AUTH.VALIDATION.REQUIRED_FIELD",
-        })
-      )
+      .required("Ce champ est requis.")
       .when("password", {
         is: (val) => (val && val.length > 0 ? true : false),
         then: Yup.string().oneOf(
           [Yup.ref("password")],
-          "Password and Confirm Password didn't match"
+          "Le mot de passe et la confirmation du mot de passe ne correspondent pas"
         ),
       }),
     // acceptTerms: Yup.bool().required(

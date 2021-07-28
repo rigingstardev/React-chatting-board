@@ -19,11 +19,7 @@ function ForgotPassword(props) {
       .email("Format d'e-mail incorrect")
       .min(3, "Au moins 3 symboles")
       .max(50, "50 symboles maximum")
-      .required(
-        intl.formatMessage({
-          id: "AUTH.VALIDATION.REQUIRED_FIELD",
-        })
-      ),
+      .required("Ce champ est requis."),
   });
 
   const getInputClasses = (fieldname) => {
