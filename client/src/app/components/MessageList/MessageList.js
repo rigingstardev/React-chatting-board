@@ -162,6 +162,7 @@ MessageList.defaultProps = {
     onDownload: null,
     dataSource: [],
     lockable: false,
+    foucs: false,
     toBottomHeight: 300,
     downButton: true,
     downButtonBadge: null,

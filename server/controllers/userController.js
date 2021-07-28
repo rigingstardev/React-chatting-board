@@ -44,7 +44,7 @@ exports.login = async (req, res) => {
     email,
   });
 
-  if (!user) throw "User [" + username + "] doesn't exists.";
+  if (!user) throw "User [" + email + "] doesn't exists.";
   const hashedPassword = await bcrypt.hash(password, 10);
   const isMatch = await bcrypt.compare(password, user.password);
   console.log(isMatch);

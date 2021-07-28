@@ -360,6 +360,7 @@ function Chat(props) {
 
   const keyPress = (e) => {
     if (e.keyCode == 13) {
+      e.preventDefault();
       const value1 = e.target.value;
       setMessage(value1);
 
@@ -375,17 +376,21 @@ function Chat(props) {
 
   const handleSend = () => {
     const data = [...messageData];
-    data.push(
-      {
-        position: 'right',
-        type: 'text',
-        text: message.replace(/\n/g, "<br />"),
-        date: new Date(),
-        avatar: toAbsoluteUrl('/media/users/100_1.jpg'),
-      },
-    )
-    setMessageData(data);
-    setMessage("");
+    console.log(message);
+    if (message.trim() != "") {
+      data.push(
+        {
+          position: 'right',
+          type: 'text',
+          text: message.replace(/\n/g, "<br />"),
+          date: new Date(),
+          avatar: toAbsoluteUrl('/media/users/100_1.jpg'),
+        },
+      )
+      setMessageData(data);
+      setMessage("");
+    }
+
   }
   const isTabletDevice = useMediaQuery({
     query: "(min-width:645px)",
@@ -591,6 +596,7 @@ function Chat(props) {
               <MessageList
                 className='message-list'
                 lockable={true}
+                foucs={true}
                 toBottomHeight={'100%'}
                 dataSource={messageData} />
 
