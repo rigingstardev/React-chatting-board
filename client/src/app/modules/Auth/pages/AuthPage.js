@@ -20,7 +20,7 @@ export function AuthPage({ setupSocket, socket }) {
         >
           {/*begin::Aside*/}
           <div
-            className="login-aside d-flex flex-row-auto bgi-size-cover bgi-no-repeat p-10 p-lg-10"
+            className="flex-row-fluid d-flex flex-row-auto bgi-size-cover bgi-no-repeat p-10 p-lg-10"
             style={{
               backgroundColor: '#112233',
             }}
@@ -55,7 +55,7 @@ export function AuthPage({ setupSocket, socket }) {
           {/*begin::Aside*/}
 
           {/*begin::Content*/}
-          <div className="d-flex flex-column flex-row-fluid position-relative p-7 overflow-hidden background-auth">
+          <div className="d-flex flex-column min-w-450px position-relative p-7 overflow-hidden background-auth">
             {/*begin::Content header*/}
             <div className="position-absolute top-0 right-0 text-right mt-5 mb-15 mb-lg-0 flex-column-auto justify-content-center py-5 px-10">
               <span className="font-weight-bold text-white-50">
