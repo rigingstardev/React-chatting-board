@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -24,7 +24,7 @@ const initialValues = {
 };
 
 function Login(props) {
-  const { intl } = props;
+  const { intl, setupSocket, socket } = props;
   const [loading, setLoading] = useState(false);
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
@@ -58,6 +58,12 @@ function Login(props) {
     return "";
   };
 
+  useEffect(() => {
+    if (socket) {
+      socket.disconnect();
+    }
+  }, [])
+
   const formik = useFormik({
     initialValues,
     validationSchema: LoginSchema,
@@ -68,6 +74,9 @@ function Login(props) {
           .then(({ data: { token } }) => {
             disableLoading();
             props.login(token);
+            if (setupSocket) {
+              setupSocket(token);
+            }
           })
           .catch((err) => {
             console.log(err.response)

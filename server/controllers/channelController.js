@@ -30,11 +30,7 @@ exports.getChannelSentiment = async (req, res) => {
   if (!channel) throw "Cette chaîne n'existe pas!";
 
   res.json({
-    totalSentimentScore: channel.totalSentimentScore,
     totalMessages: channel.totalMessages,
-    positive: channel.positive,
-    neutral: channel.neutral,
-    negative: channel.negative,
   });
 };
 

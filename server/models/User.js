@@ -15,25 +15,48 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: "Password is required!",
     },
-    totalSentimentScore: {
-      type: Number,
-      default: 0,
-    },
     totalMessages: {
       type: Number,
       default: 0,
     },
-    positive: {
-      type: Number,
-      default: 0,
+    country: {
+      type: String,
     },
-    neutral: {
-      type: Number,
-      default: 0,
+    avatar: {
+      type: String,
     },
-    negative: {
-      type: Number,
-      default: 0,
+    photo: {
+      type: String,
+    },
+    job: {
+      type: String,
+    },
+    field: {
+      type: String,
+    },
+    industry: {
+      type: String,
+    },
+    state: {
+      type: String,
+    },
+    note: {
+      type: String,
+    },
+    city: {
+      type: String,
+    },
+    telephone: {
+      type: String,
+    },
+    phone: {
+      type: String,
+    },
+    fax: {
+      type: String
+    },
+    website: {
+      type: String,
     },
   },
   { timestamps: true }

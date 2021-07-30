@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { connect } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Avatar, colors, Divider, InputAdornment, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, makeStyles, TextField, Typography } from "@material-ui/core";
 import SVG from 'react-inlinesvg';
 import AddIcon from '@material-ui/icons/Add';
-import { toAbsoluteUrl } from "../../_metronic/_helpers";
-import Send from "@material-ui/icons/Send";
 import AttachFile from "@material-ui/icons/AttachFile";
-// import 'react-chat-elements-v2/dist/main.css';
+import Send from "@material-ui/icons/Send";
+import { toAbsoluteUrl, toImageUrl } from "../../_metronic/_helpers";
 import { MessageList } from '../components/MessageList/MessageList';
+
 import $ from 'jquery';
 import { useMediaQuery } from 'react-responsive';
 import PropTypes from 'prop-types';
@@ -20,6 +20,8 @@ import { useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import AddChannelModal from './AddChannelModal';
+import { CreateChannel, GetChannel, GetMessage } from './_redux/chatCrud';
 /*
   INTL (i18n) docs:
   https://github.com/formatjs/react-intl/blob/master/docs/Components.md#formattedmessage
@@ -36,11 +38,11 @@ function TabContainer({ children, dir }) {
     </Typography>
   );
 }
+
 TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
   dir: PropTypes.string.isRequired,
 };
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -93,237 +95,22 @@ const useStyles = makeStyles(theme => ({
     color: '#b6ceffbd'
   }
 }));
-const users = [
-  {
-    id: 1,
-    avatar: '/media/users/100_1.jpg',
-    name: 'Dona Jossart',
-    subname: 'Volunteer USAID',
-    date: '11:00',
-  },
-  {
-    id: 2,
-    avatar: '/media/users/100_2.jpg',
-    name: 'Nadine Mila',
-    subname: 'Volunteer USAID',
-    date: '10:15',
-  },
-  {
-    id: 3,
-    avatar: '/media/users/100_3.jpg',
-    name: 'Franck Jossart',
-    subname: 'Volunteer USAID',
-    date: '15 juillet 2021',
-  },
-  {
-    id: 4,
-    avatar: '/media/users/100_4.jpg',
-    name: 'Bijou Maze',
-    subname: 'Volunteer USAID',
-    date: 'Volunteer USAID',
-  },
-];
-
-const groups = [
-  {
-    id: 1,
-    name: 'Project clean water for villages',
-    users: [{
-      id: 1,
-      avatar: '/media/users/100_1.jpg',
-      name: 'Dona Jossart',
-      subname: 'Volunteer USAID',
-      date: '11:00',
-    },
-    {
-      id: 2,
-      avatar: '/media/users/100_2.jpg',
-      name: 'Nadine Mila',
-      subname: 'Volunteer USAID',
-      date: '10:15',
-    },
-    {
-      id: 3,
-      avatar: '/media/users/100_3.jpg',
-      name: 'Franck Jossart',
-      subname: 'Volunteer USAID',
-      date: '15 juillet 2021',
-    },
-    {
-      id: 4,
-      avatar: '/media/users/100_4.jpg',
-      name: 'Bijou Maze',
-      subname: 'Volunteer USAID',
-      date: 'Volunteer USAID',
-    },
-    {
-      id: 5,
-      avatar: '/media/users/100_5.jpg',
-      name: 'Bijou Maze',
-      subname: 'Volunteer USAID',
-      date: 'Volunteer USAID',
-    },
-    {
-      id: 6,
-      avatar: '/media/users/100_6.jpg',
-      name: 'Bijou Maze',
-      subname: 'Volunteer USAID',
-      date: 'Volunteer USAID',
-    },
-    {
-      id: 7,
-      avatar: '/media/users/100_7.jpg',
-      name: 'Bijou Maze',
-      subname: 'Volunteer USAID',
-      date: 'Volunteer USAID',
-    },
-    ]
-  },
-  {
-    id: 1,
-    name: 'Project clean water for villages',
-    users: [{
-      id: 1,
-      avatar: '/media/users/100_1.jpg',
-      name: 'Dona Jossart',
-      subname: 'Volunteer USAID',
-      date: '11:00',
-    },
-    {
-      id: 2,
-      avatar: '/media/users/100_2.jpg',
-      name: 'Nadine Mila',
-      subname: 'Volunteer USAID',
-      date: '10:15',
-    },
-    {
-      id: 3,
-      avatar: '/media/users/100_3.jpg',
-      name: 'Franck Jossart',
-      subname: 'Volunteer USAID',
-      date: '15 juillet 2021',
-    },
-    {
-      id: 4,
-      avatar: '/media/users/100_4.jpg',
-      name: 'Bijou Maze',
-      subname: 'Volunteer USAID',
-      date: 'Volunteer USAID',
-    },
-    {
-      id: 5,
-      avatar: '/media/users/100_5.jpg',
-      name: 'Bijou Maze',
-      subname: 'Volunteer USAID',
-      date: 'Volunteer USAID',
-    },
-    {
-      id: 6,
-      avatar: '/media/users/100_6.jpg',
-      name: 'Bijou Maze',
-      subname: 'Volunteer USAID',
-      date: 'Volunteer USAID',
-    },
-    {
-      id: 7,
-      avatar: '/media/users/100_7.jpg',
-      name: 'Bijou Maze',
-      subname: 'Volunteer USAID',
-      date: 'Volunteer USAID',
-    },
-    {
-      id: 8,
-      avatar: '/media/users/100_8.jpg',
-      name: 'Bijou Maze',
-      subname: 'Volunteer USAID',
-      date: 'Volunteer USAID',
-    },
-    ]
-  },
-  {
-    id: 1,
-    name: 'Project clean water for villages',
-    users: [{
-      id: 1,
-      avatar: '/media/users/100_1.jpg',
-      name: 'Dona Jossart',
-      subname: 'Volunteer USAID',
-      date: '11:00',
-    },
-    {
-      id: 2,
-      avatar: '/media/users/100_2.jpg',
-      name: 'Nadine Mila',
-      subname: 'Volunteer USAID',
-      date: '10:15',
-    },
-    {
-      id: 3,
-      avatar: '/media/users/100_3.jpg',
-      name: 'Franck Jossart',
-      subname: 'Volunteer USAID',
-      date: '15 juillet 2021',
-    },
-    {
-      id: 4,
-      avatar: '/media/users/100_4.jpg',
-      name: 'Bijou Maze',
-      subname: 'Volunteer USAID',
-      date: 'Volunteer USAID',
-    },
-    {
-      id: 5,
-      avatar: '/media/users/100_5.jpg',
-      name: 'Bijou Maze',
-      subname: 'Volunteer USAID',
-      date: 'Volunteer USAID',
-    },
-    {
-      id: 6,
-      avatar: '/media/users/100_6.jpg',
-      name: 'Bijou Maze',
-      subname: 'Volunteer USAID',
-      date: 'Volunteer USAID',
-    },
-    {
-      id: 7,
-      avatar: '/media/users/100_7.jpg',
-      name: 'Bijou Maze',
-      subname: 'Volunteer USAID',
-      date: 'Volunteer USAID',
-    },
-    ]
-  },
-]
 
 function Chat(props) {
   const classes = useStyles();
   const theme = useTheme();
+  const { intl, socket } = props;
+  const { user } = useSelector((state) => state.auth, shallowEqual);
   const [value, setValue] = React.useState(0);
-  const { intl } = props;
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [modalShow, setModalValue] = useState(false);
   const [message, setMessage] = useState("");
-  const [messageData, setMessageData] = useState(
-    [
-      {
-        position: 'right',
-        type: 'text',
-        focus: false,
-        text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        date: new Date(),
-        avatar: toAbsoluteUrl('/media/users/100_1.jpg'),
-      },
-      {
-        position: 'left',
-        type: 'text',
-        focus: false,
-        text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        date: new Date(),
-        avatar: toAbsoluteUrl('/media/users/100_1.jpg'),
-      },
-    ]
-  );
+  const [users, setUsers] = useState([]);
+  const [channels, setChannels] = useState([]);
+  const [currentGroup, setCurrentGroup] = useState({});
+  const [messageData, setMessageData] = useState([]);
+
   function handleChangetab(event, newValue) {
     setValue(newValue);
   }
@@ -333,20 +120,7 @@ function Chat(props) {
   }
 
   const handleSearchChange = (event) => {
-    // setData(null);
     setSearchValue(event.target.value);
-
-    // if (event.target.value.length > 2) {
-    //   clearTimeout();
-
-    //   setLoading(true);
-
-    //   // simulate getting search result
-    //   timeoutId = setTimeout(() => {
-    //     setData(fakeData);
-    //     setLoading(false);
-    //   }, 500);
-    // }
   };
 
   const clear = () => {
@@ -376,29 +150,155 @@ function Chat(props) {
   }
 
   const handleSend = () => {
-    const data = [...messageData];
     if (message.trim() != "") {
-      data.push(
-        {
-          position: 'right',
-          type: 'text',
-          focus: true,
-          text: message.replace(/\n/g, "<br />"),
-          date: new Date(),
-          copiableDate: true,
-          avatar: toAbsoluteUrl('/media/users/100_1.jpg'),
-        },
-      )
-      setMessageData(data);
+      if (socket) {
+        socket.emit("newMessage", {
+          username: user.username,
+          channelId: currentGroup._id,
+          message: message,
+        });
+      }
+      // setMessageData(data);
       setMessage("");
     }
-
   }
+
+  const adduser = () => {
+    setModalValue(true);
+  }
+
+  const groupitem = async (group) => {
+    setCurrentGroup(group);
+    await getMessage(group._id);
+    if (socket) {
+      if (currentGroup._id && currentGroup._id !== group._id) {
+        socket.emit("leaveChannel", {
+          channelId: currentGroup._id,
+          username: user.username,
+        });
+      }
+      socket.emit("joinChannel", {
+        channelId: group._id,
+        username: user.username,
+      });
+    }
+  }
+
+  useEffect(() => {
+    let cur = channels.filter(channel => channel._id === currentGroup._id)[0];
+    if (cur && cur.users) {
+      setUsers(cur.users);
+      setCurrentGroup(cur);
+    }
+  }, [currentGroup._id, channels])
+
+  const modalClose = () => {
+    setModalValue(false);
+  }
+  const addChannel = async (name) => {
+    try {
+      await CreateChannel(name);
+      if (socket) {
+        socket.emit("newChannel", { channelName: name });
+      }
+      modalClose();
+    } catch (error) {
+      console.error(error);
+      // modalClose();
+    }
+
+  };
+
+  const getChannel = async () => {
+    try {
+      const { data } = await GetChannel();
+      setChannels(data);
+      // return data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const getMessage = async (channelId) => {
+    try {
+      const { data } = await GetMessage(channelId);
+
+      setMessageData(data.map(message => {
+        return ({
+          position: user._id === message.userId ? 'right' : 'left',
+          type: 'text',
+          focus: true,
+          text: message.message.replace(/\n/g, "<br />"),
+          date: new Date(message.newMessage.createdAt),
+          copiableDate: true,
+          avatar: toImageUrl(message.user.avatar),
+        });
+      }));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   const isTabletDevice = useMediaQuery({
     query: "(min-width:645px)",
   });
-  return (
 
+  useEffect(() => {
+    getChannel();
+  }, []);
+
+  useEffect(() => {
+    if (socket) {
+      socket.removeAllListeners("newChannel");
+      socket.removeAllListeners("onlineUsers");
+
+      socket.on("newChannel", ({ channel }) => {
+        setChannels((prevChannels) => [...prevChannels, channel]);
+      });
+      socket.on("onlineUsers", ({ users, channelId }) => {
+        const tempChans = [...channels];
+        const index = tempChans.findIndex(chan => chan._id === channelId);
+        if (index >= 0) {
+          tempChans[index].users = users;
+          setChannels(tempChans);
+        }
+        // setUsers(users);
+      });
+    }
+  }, [socket, channels.length]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.removeAllListeners("newMessage");
+      socket.on("newMessage", (message) => {
+        const data = [...messageData];
+        if (message.type !== "System")
+          data.push(
+            {
+              position: user._id === message.userId ? 'right' : 'left',
+              type: 'text',
+              focus: true,
+              text: message.message.replace(/\n/g, "<br />"),
+              date: new Date(message.newMessage.createdAt),
+              copiableDate: true,
+              avatar: toImageUrl(message.user.avatar),
+              status: 'new'
+            },
+          )
+        else {
+          // data.push(
+          //   {
+          //     type: 'system',
+          //     text: message.message.replace(/\n/g, "<br />")
+          //   }
+          // )
+        }
+        setMessageData(data);
+      });
+    }
+  }, [socket, messageData.length])
+
+  return (
     <div className="container-contact w-100">
       <div className="d-flex">
         {!isTabletDevice &&
@@ -446,10 +346,10 @@ function Chat(props) {
                     {users.map((user, i) => (
                       <ListItem key={i}>
                         <ListItemAvatar>
-                          <Avatar alt="Remy Sharp" src={toAbsoluteUrl(user.avatar)} />
+                          <Avatar alt={user.username} src={toImageUrl(user.user.avatar)} />
                         </ListItemAvatar>
                         <ListItemText
-                          primary={user.name}
+                          primary={user.username}
                           secondary={
                             <>
                               <Typography
@@ -470,19 +370,27 @@ function Chat(props) {
                   </List>
                 </TabContainer>
                 <TabContainer dir={theme.direction}>
-                  <List className={classes.listRoot} style={{ overflowY: "auto", marginTop: "-14px" }}>
-                    {groups.map((group, i) => {
-                      return (<ListItem className="groups" key={i}>
+                  <Typography className={"px-10 mt-5 " + classes.color} variant="subtitle1" gutterBottom>
+                    GROUPES DE TRAVAIL <AddIcon onClick={adduser} className="cursor-pointer" />
+                    <AddChannelModal
+                      show={modalShow}
+                      onHide={modalClose}
+                      onAddChannel={addChannel}
+                    />
+                  </Typography>
+                  <List className={classes.listRoot} style={{ overflowY: "auto", marginTop: "10px" }}>
+                    {channels.map((group, i) => {
+                      return (<ListItem className="groups cursor-pointer" key={i} onClick={() => groupitem(group)}>
                         <Typography variant="subtitle1" gutterBottom>
                           {group.name}
                         </Typography>
                         <div className="group-users">
-                          {group.users.map((user, j, gUsers) => {
+                          {!!(group.users && group.users.length) && group.users.map((user, j, gUsers) => {
                             if (gUsers.length >= 5) {
                               if (j < 4) {
                                 return (
                                   <ListItemAvatar key={j}>
-                                    <Avatar alt="Remy Sharp" src={toAbsoluteUrl(user.avatar)} />
+                                    <Avatar alt={user.username} src={toImageUrl(user.user.avatar)} />
                                   </ListItemAvatar>
                                 );
                               } else if (j == 4) {
@@ -495,11 +403,14 @@ function Chat(props) {
                             } else {
                               return (
                                 <ListItemAvatar key={j}>
-                                  <Avatar alt="Remy Sharp" src={toAbsoluteUrl(user.avatar)} />
+                                  <Avatar alt={user.username} src={toImageUrl(user.user.avatar)} />
                                 </ListItemAvatar>
                               );
                             }
                           })}
+                          {!(group.users && group.users.length) && (<ListItemAvatar>
+                            <div className={classes.plusUsersNumber}> + {0}</div>
+                          </ListItemAvatar>)}
                         </div>
                       </ListItem>)
                     })}
@@ -507,8 +418,6 @@ function Chat(props) {
                 </TabContainer>
               </SwipeableViews>
             </div>
-
-
           </div>}
         {isTabletDevice && <div style={{ width: 310 }}>
           <TextField
@@ -535,10 +444,10 @@ function Chat(props) {
             {users.map((user, i) => (
               <ListItem key={i}>
                 <ListItemAvatar>
-                  <Avatar alt="Remy Sharp" src={toAbsoluteUrl(user.avatar)} />
+                  <Avatar alt={user.username} src={toImageUrl(user.user.avatar)} />
                 </ListItemAvatar>
                 <ListItemText
-                  primary={user.name}
+                  primary={user.username}
                   secondary={
                     <>
                       <Typography
@@ -552,28 +461,33 @@ function Chat(props) {
                   }
                 />
                 <ListItemSecondaryAction>
-                  {user.date}
+                  {/* {user?.user?.createdAt} */}
                 </ListItemSecondaryAction>
               </ListItem>
             ))}
           </List>}
           {isTabletDevice && <Divider light className="bg-white-o-60 mt-10" />}
           {isTabletDevice && <Typography className={"px-10 mt-5 " + classes.color} variant="subtitle1" gutterBottom>
-            GROUPES DE TRAVAIL <AddIcon />
+            GROUPES DE TRAVAIL <AddIcon onClick={adduser} className="cursor-pointer" />
+            <AddChannelModal
+              show={modalShow}
+              onHide={modalClose}
+              onAddChannel={addChannel}
+            />
           </Typography>}
           {isTabletDevice && <List className={classes.listRoot} style={{ height: "calc((100vh - 381px)/2)", overflowY: "auto" }}>
-            {groups.map((group, i) => {
-              return (<ListItem className="groups" key={i}>
+            {channels.map((group, i) => {
+              return (<ListItem className="groups cursor-pointer" key={i} onClick={() => groupitem(group)}>
                 <Typography variant="subtitle1" gutterBottom>
                   {group.name}
                 </Typography>
-                <div className="group-users">
-                  {group.users.map((user, j, gUsers) => {
+                <div className="group-users" >
+                  {!!(group.users && group.users.length) && group.users.map((user, j, gUsers) => {
                     if (gUsers.length >= 5) {
                       if (j < 4) {
                         return (
-                          <ListItemAvatar key={j}>
-                            <Avatar alt="Remy Sharp" src={toAbsoluteUrl(user.avatar)} />
+                          <ListItemAvatar key={j} >
+                            <Avatar alt={user.username} src={toImageUrl(user.user.avatar)} />
                           </ListItemAvatar>
                         );
                       } else if (j == 4) {
@@ -586,11 +500,14 @@ function Chat(props) {
                     } else {
                       return (
                         <ListItemAvatar key={j}>
-                          <Avatar alt="Remy Sharp" src={toAbsoluteUrl(user.avatar)} />
+                          <Avatar alt={user.username} src={toImageUrl(user.user.avatar)} />
                         </ListItemAvatar>
                       );
                     }
                   })}
+                  {!(group.users && group.users.length) && <ListItemAvatar>
+                    <div className={classes.plusUsersNumber}> + {0}</div>
+                  </ListItemAvatar>}
                 </div>
               </ListItem>)
             })}
@@ -598,14 +515,14 @@ function Chat(props) {
         </div>}
         {isTabletDevice && <div style={{ flex: 1 }}>
           <div className="chat-view">
-            <div className="message-list" style={{ width: "100%" }}>
-              <MessageList
-                className='message-list'
-                lockable={true}
-                downButton={true}
-                toBottomHeight={'100%'}
-                dataSource={messageData} />
-            </div>
+            {/* <div className="message-list-view" style={{ width: "100%" }}> */}
+            <MessageList
+              className='message-list'
+              lockable={true}
+              downButton={true}
+              toBottomHeight={'100%'}
+              dataSource={messageData} />
+            {/* </div> */}
             <div className="message-input d-flex align-items-center">
               <AttachFile className="w-50px text-white-50" />
               <textarea
@@ -626,4 +543,4 @@ function Chat(props) {
   );
 }
 
-export default injectIntl(connect(null, null)(Chat));
+export default Chat;

@@ -2,54 +2,122 @@ const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const bcrypt = require("bcrypt");
 const jwt = require("jwt-then");
+const formidable = require("formidable");
+const path = require("path");
+const fs = require("fs");
 
 exports.register = async (req, res) => {
-  const { username, email, password } = req.body;
 
-  const emailRegex = /@gmail.com|@yahoo.com|@hotmail.com|@live.com|@mail.ru/;
+  const form = formidable.IncomingForm();
 
-  if (!emailRegex.test(email)) return res.status(400).json({
-    success: false,
-    errors: {
-      email: "Les e-mails ne sont pas pris en charge depuis votre domaine."
+  const uploadFolder = path.join(__dirname, "../", "public", "files");
+
+  // form.multiples = true;
+  // form.maxFileSize = 50 * 1024 * 1024; // 5MB
+  form.uploadDir = uploadFolder;
+
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      console.log("Error parsing the files");
+      return res.status(400).json({
+        success: false,
+        message: "There was an error parsing the files",
+        error: err,
+      });
     }
-  });
-  if (password.length < 6) throw "Le mot de passe doit contenir au moins 6 caractères.";
+    const {
+      username,
+      email,
+      password,
+      job,
+      field,
+      industry,
+      country,
+      state,
+      city,
+      note,
+      telephone,
+      phone,
+      fax,
+      website
+    } = fields;
 
-  const usernameExists = await User.findOne({
-    username,
-  });
+    const emailRegex = /@gmail.com|@yahoo.com|@hotmail.com|@live.com|@mail.ru/;
 
-  if (usernameExists) return res.status(400).json({
-    success: false,
-    errors: {
-      username: "Un utilisateur avec le même nom d'utilisateur existe déjà."
+    if (!emailRegex.test(email)) return res.status(400).json({
+      success: false,
+      errors: {
+        email: "Les e-mails ne sont pas pris en charge depuis votre domaine."
+      }
+    });
+
+    if (password.length < 6) throw "Le mot de passe doit contenir au moins 6 caractères.";
+
+    const usernameExists = await User.findOne({
+      username,
+    });
+
+    if (usernameExists) return res.status(400).json({
+      success: false,
+      errors: {
+        username: "Un utilisateur avec le même nom d'utilisateur existe déjà."
+      }
+    });
+
+    const emailExists = await User.findOne({
+      email,
+    });
+
+    if (emailExists) return res.status(400).json({
+      success: false,
+      errors: {
+        email: "L'utilisateur avec le même e-mail existe déjà."
+      }
+    });
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    let avatar = "";
+    let photo = "";
+    try {
+      let avatarFile = files.avatar;
+      let photoFile = files.photo;
+      // renames the file in the directory
+      if (avatarFile) {
+        fs.renameSync(avatarFile.path, path.join(uploadFolder, `${username}-${avatarFile.name}`));
+        avatar = `${username}-${avatarFile.name}`;
+      }
+      if (photoFile) {
+        fs.renameSync(photoFile.path, path.join(uploadFolder, `${username}-${photoFile.name}`));
+        photo = `${username}-${photoFile.name}`;
+      }
+    } catch (error) {
+      console.log(error);
     }
-  });
 
-  const emailExists = await User.findOne({
-    email,
-  });
+    const user = new User({
+      username,
+      email,
+      password: hashedPassword,
+      job,
+      field,
+      industry,
+      country,
+      state,
+      city,
+      note,
+      telephone,
+      phone,
+      fax,
+      avatar,
+      photo,
+      website,
+    });
 
-  if (emailExists) return res.status(400).json({
-    success: false,
-    errors: {
-      email: "L'utilisateur avec le même e-mail existe déjà."
-    }
-  });
+    await user.save();
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const user = new User({
-    username,
-    email,
-    password: hashedPassword,
-  });
-
-  await user.save();
-
-  res.json({
-    message: "Utilisatrice [" + username + "] enregistré avec succès!",
+    res.json({
+      message: "Utilisatrice [" + username + "] enregistré avec succès!",
+    });
   });
 };
 

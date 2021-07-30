@@ -1,8 +1,12 @@
+const mongoose = require("mongoose");
+
+const User = mongoose.model("User");
+
 // Maintain a list of online users
 const users = [];
 
 // User joins a channel
-function userJoins(id, username, channelId) {
+async function userJoins(id, username, channelId) {
   const index = users.findIndex((user) => user.id == id);
   // If user is already present in the list and again joins the same channel, then do nothing
   // Else, first remove the user from the list and add him again with the new channel id
@@ -13,7 +17,7 @@ function userJoins(id, username, channelId) {
       users.splice(index, 1);
     }
   }
-  const user = { id, username, channelId };
+  const user = { id, username, channelId, user: await User.findById(id, { password: 0 }) };
   users.push(user);
 }
 
@@ -33,7 +37,7 @@ function getCurrentUser(id) {
 
 // Get all the online users in given channel
 function getOnlineUsersInChannel(channelId) {
-  return users.filter((user) => user.channelId === channelId);
+  return users.filter((user) => user.channelId == channelId);
 }
 
 module.exports = {

@@ -5,8 +5,7 @@
 
 .rce-mlist {
     display: block;
-    /* overflow-y: auto;
-    overflow-x: unset; */
+    overflow: auto;
     position: relative;
     flex: 1;
 }

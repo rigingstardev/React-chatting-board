@@ -18,10 +18,9 @@ import { Aside } from './../../../../_metronic/layout/components/aside/Aside';
 import { Header } from './../../../../_metronic/layout/components/header/Header';
 
 const initialValues = {
-  name: "",
   job: "",
   field: "",
-  inductry: "",
+  industry: "",
   country: "",
   state: "",
   city: "",
@@ -43,20 +42,11 @@ function Registration(props) {
   const { intl } = props;
   const [loading, setLoading] = useState(false);
   const RegistrationSchema = Yup.object().shape({
-    // name: Yup.string()
-    //   .min(3, "Minimum 3 symbols")
-    //   .max(50, "Maximum 50 symbols")
-    //   .required(
-    //     intl.formatMessage({
-    //       id: "AUTH.VALIDATION.REQUIRED_FIELD",
-    //     })
-    //   ),
     email: Yup.string()
       .email("Format d'e-mail incorrect")
       .min(3, "Au moins 3 symboles")
       .max(50, "50 symboles maximum")
-      .required("Ce champ est requis"
-      ),
+      .required("Ce champ est requis"),
     username: Yup.string()
       .min(3, "Au moins 3 symboles")
       .max(50, "50 symboles maximum")
@@ -65,6 +55,9 @@ function Registration(props) {
       .min(6, "Au moins 6 symboles")
       .max(50, "50 symboles maximum")
       .required("Ce champ est requis."),
+    avatar: Yup.mixed()
+      .required("Ce champ est requis."),
+    photo: Yup.mixed(),
     changepassword: Yup.string()
       .required("Ce champ est requis.")
       .when("password", {
@@ -105,7 +98,15 @@ function Registration(props) {
     onSubmit: (values, { setStatus, setErrors, setSubmitting }) => {
       setSubmitting(true);
       enableLoading();
-      register(values.email, values.name, values.username, values.password)
+      console.log(values);
+      let formData = new FormData();
+      for (const key in values) {
+        if (Object.hasOwnProperty.call(values, key)) {
+          const value = values[key];
+          formData.append(key, value)
+        }
+      }
+      register(formData)
         .then(({ data: { accessToken } }) => {
           // props.register(accessToken);
           props.history.push('/auth/login');
@@ -126,178 +127,6 @@ function Registration(props) {
   });
 
   return (
-    // <div className="login-form login-signin" style={{ display: "block" }}>
-    //   <div className="text-center mb-10 mb-lg-20">
-    //     <h3 className="font-size-h1 text-white-50">
-    //       {/* <FormattedMessage id="AUTH.REGISTER.TITLE" /> */}
-    //       Inscrivez-vous
-    //     </h3>
-    //     <p className="text-muted font-weight-bold">
-    //       Enter your details to create your account
-    //     </p>
-    //   </div>
-
-    //   <form
-    //     id="kt_login_signin_form"
-    //     className="form fv-plugins-bootstrap fv-plugins-framework animated animate__animated animate__backInUp"
-    //     onSubmit={formik.handleSubmit}
-    //   >
-    //     {/* begin: Alert */}
-    //     {formik.status && (
-    //       <div className="mb-10 alert alert-custom alert-light-danger alert-dismissible">
-    //         <div className="alert-text font-weight-bold">{formik.status}</div>
-    //       </div>
-    //     )}
-    //     {/* end: Alert */}
-
-    //     {/* begin: name */}
-    //     <div className="form-group fv-plugins-icon-container">
-    //       <input
-    //         placeholder="Full name"
-    //         type="text"
-    //         className={`form-control form-control-solid h-auto py-5 px-6 ${getInputClasses(
-    //           "name"
-    //         )}`}
-    //         name="name"
-    //         {...formik.getFieldProps("name")}
-    //       />
-    //       {formik.touched.name && formik.errors.name ? (
-    //         <div className="fv-plugins-message-container">
-    //           <div className="fv-help-block">{formik.errors.name}</div>
-    //         </div>
-    //       ) : null}
-    //     </div>
-    //     {/* end: name */}
-
-    //     {/* begin: Email */}
-    //     <div className="form-group fv-plugins-icon-container">
-    //       <input
-    //         placeholder="Email"
-    //         type="email"
-    //         className={`form-control form-control-solid h-auto py-5 px-6 ${getInputClasses(
-    //           "email"
-    //         )}`}
-    //         name="email"
-    //         {...formik.getFieldProps("email")}
-    //       />
-    //       {formik.touched.email && formik.errors.email ? (
-    //         <div className="fv-plugins-message-container">
-    //           <div className="fv-help-block">{formik.errors.email}</div>
-    //         </div>
-    //       ) : null}
-    //     </div>
-    //     {/* end: Email */}
-
-    //     {/* begin: Username */}
-    //     <div className="form-group fv-plugins-icon-container">
-    //       <input
-    //         placeholder="User name"
-    //         type="text"
-    //         className={`form-control form-control-solid h-auto py-5 px-6 ${getInputClasses(
-    //           "username"
-    //         )}`}
-    //         name="username"
-    //         {...formik.getFieldProps("username")}
-    //       />
-    //       {formik.touched.username && formik.errors.username ? (
-    //         <div className="fv-plugins-message-container">
-    //           <div className="fv-help-block">{formik.errors.username}</div>
-    //         </div>
-    //       ) : null}
-    //     </div>
-    //     {/* end: Username */}
-
-    //     {/* begin: Password */}
-    //     <div className="form-group fv-plugins-icon-container">
-    //       <input
-    //         placeholder="Password"
-    //         type="password"
-    //         className={`form-control form-control-solid h-auto py-5 px-6 ${getInputClasses(
-    //           "password"
-    //         )}`}
-    //         name="password"
-    //         {...formik.getFieldProps("password")}
-    //       />
-    //       {formik.touched.password && formik.errors.password ? (
-    //         <div className="fv-plugins-message-container">
-    //           <div className="fv-help-block">{formik.errors.password}</div>
-    //         </div>
-    //       ) : null}
-    //     </div>
-    //     {/* end: Password */}
-
-    //     {/* begin: Confirm Password */}
-    //     <div className="form-group fv-plugins-icon-container">
-    //       <input
-    //         placeholder="Confirm Password"
-    //         type="password"
-    //         className={`form-control form-control-solid h-auto py-5 px-6 ${getInputClasses(
-    //           "changepassword"
-    //         )}`}
-    //         name="changepassword"
-    //         {...formik.getFieldProps("changepassword")}
-    //       />
-    //       {formik.touched.changepassword && formik.errors.changepassword ? (
-    //         <div className="fv-plugins-message-container">
-    //           <div className="fv-help-block">
-    //             {formik.errors.changepassword}
-    //           </div>
-    //         </div>
-    //       ) : null}
-    //     </div>
-    //     {/* end: Confirm Password */}
-
-    //     {/* begin: Terms and Conditions */}
-    //     <div className="form-group">
-    //       <label className="checkbox">
-    //         <input
-    //           type="checkbox"
-    //           name="acceptTerms"
-    //           className="m-1"
-    //           {...formik.getFieldProps("acceptTerms")}
-    //         />
-    //         <Link
-    //           to="/terms"
-    //           target="_blank"
-    //           className="mr-1"
-    //           rel="noopener noreferrer"
-    //         >
-    //           I agree the Terms & Conditions
-    //         </Link>
-    //         <span />
-    //       </label>
-    //       {formik.touched.acceptTerms && formik.errors.acceptTerms ? (
-    //         <div className="fv-plugins-message-container">
-    //           <div className="fv-help-block">{formik.errors.acceptTerms}</div>
-    //         </div>
-    //       ) : null}
-    //     </div>
-    //     {/* end: Terms and Conditions */}
-    //     <div className="form-group d-flex flex-wrap flex-center">
-    //       <button
-    //         type="submit"
-    //         disabled={
-    //           formik.isSubmitting ||
-    //           !formik.isValid ||
-    //           !formik.values.acceptTerms
-    //         }
-    //         className="btn btn-primary font-weight-bold px-9 py-4 my-3 mx-4"
-    //       >
-    //         <span>Submit</span>
-    //         {loading && <span className="ml-3 spinner spinner-white"></span>}
-    //       </button>
-
-    //       <Link to="/auth/login">
-    //         <button
-    //           type="button"
-    //           className="btn btn-light-primary font-weight-bold px-9 py-4 my-3 mx-4"
-    //         >
-    //           Cancel
-    //         </button>
-    //       </Link>
-    //     </div>
-    //   </form>
-    // </div>
     <>
       <HeaderMobile />
       <div className="d-flex flex-column flex-root">
@@ -351,7 +180,7 @@ function Registration(props) {
                         </div>
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Profession :</div>
                         <div className="col-12 col-md-8 col-sm-8">
-                          {/* begin: name */}
+                          {/* begin: job */}
                           <div className="form-group fv-plugins-icon-container">
                             <input
                               type="text"
@@ -367,7 +196,7 @@ function Registration(props) {
                               </div>
                             ) : null}
                           </div>
-                          {/* end: name */}
+                          {/* end: job */}
                         </div>
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Domaine d'expertise :</div>
                         <div className="col-12 col-md-8 col-sm-8">
@@ -599,12 +428,10 @@ function Registration(props) {
                           {/* begin: avatar */}
                           <div className="form-group fv-plugins-icon-container">
                             <input
-                              type="text"
-                              className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                "avatar"
-                              )}`}
+                              type="file"
+                              className={`form-control form-control-solid h-auto px-6`}
                               name="avatar"
-                              {...formik.getFieldProps("avatar")}
+                              onChange={evt => formik.setFieldValue("avatar", evt.target.files[0])}
                             />
                             {formik.touched.avatar && formik.errors.avatar ? (
                               <div className="fv-plugins-message-container">
@@ -619,12 +446,12 @@ function Registration(props) {
                           {/* begin: photo */}
                           <div className="form-group fv-plugins-icon-container">
                             <input
-                              type="text"
+                              type="file"
                               className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
                                 "photo"
                               )}`}
                               name="photo"
-                              {...formik.getFieldProps("photo")}
+                              onChange={evt => formik.setFieldValue("photo", evt.target.files[0])}
                             />
                             {formik.touched.photo && formik.errors.photo ? (
                               <div className="fv-plugins-message-container">

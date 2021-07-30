@@ -1,8 +1,8 @@
 import React from "react";
-import {Route} from "react-router-dom";
-import {Content} from "./Content";
+import { Route } from "react-router-dom";
+import { Content } from "./Content";
 
-export function ContentRoute({ children, component, render, ...props }) {
+export function ContentRoute({ children, component: Component, render, setupSocket, socket, ...props }) {
   return (
     <Route {...props}>
       {routeProps => {
@@ -18,9 +18,9 @@ export function ContentRoute({ children, component, render, ...props }) {
           return <Content>{children}</Content>;
         }
 
-        if (component) {
+        if (Component) {
           return (
-            <Content>{React.createElement(component, routeProps)}</Content>
+            <Content><Component {...routeProps} setupSocket={setupSocket} socket={socket} /></Content>
           );
         }
 

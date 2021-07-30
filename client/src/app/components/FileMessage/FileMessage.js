@@ -56,7 +56,7 @@ export class FileMessage extends Component {
                             error &&
                             <span className="rce-error-button">
                                 {/* <FaError
-                                    color='#ff3d3d' /> */}
+                                    color='#ff3d3d'/> */}
                             </span>
                         }
                         {

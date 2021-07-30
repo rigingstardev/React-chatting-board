@@ -2,11 +2,12 @@
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
+import { Avatar } from '@material-ui/core';
 import Dropdown from "react-bootstrap/Dropdown";
 import { useSelector } from "react-redux";
 import objectPath from "object-path";
 import { useHtmlClassService } from "../../../_core/MetronicLayout";
-import { toAbsoluteUrl } from "../../../../_helpers";
+import { toImageUrl } from "../../../../_helpers";
 import { DropdownTopbarItemToggler } from "../../../../_partials/dropdowns";
 
 export function UserProfileDropdown() {
@@ -19,8 +20,6 @@ export function UserProfileDropdown() {
         "light",
     };
   }, [uiService]);
-
-  console.log(user)
 
   return (
     <Dropdown drop="down" alignRight>
@@ -40,15 +39,10 @@ export function UserProfileDropdown() {
             {user?.username}
           </span>
           <span className="symbol symbol-35 symbol-light-success">
-            <span className="symbol-label font-size-h5 font-weight-bold">
-              {user?.username[0]}
-              {/* <Link
-                to="/logout"
-                className="btn btn-light-primary font-weight-bold"
-              >
-                Sign Out
-              </Link> */}
-            </span>
+            {/* <span className="symbol-label font-size-h5 font-weight-bold"> */}
+            {/* {user.username[0]} */}
+            <Avatar alt={user.username} src={toImageUrl(user.avatar)} />
+            {/* </span> */}
           </span>
         </div>
       </Dropdown.Toggle>

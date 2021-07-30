@@ -1,18 +1,14 @@
 .rce-container-mbox {
-    display: block;
-    min-width: 200px;
-    margin-bottom: 20px;
+    flex-direction: row;
     display: flex;
+    overflow: hidden;
+    align-items: start;
+    min-width: 200px;
+    padding: 0 120px 20px 100px;
 }
-
 .rce-container-mbox.right {
-    text-align: right;
     flex-direction: row-reverse;
-    margin-right: -40px;
-}
-
-.rce-container-mbox.left {
-    margin-left: -30px;
+    padding: 0 100px 20px 120px;
 }
 
 .rce-mbox-forward {
@@ -61,57 +57,56 @@
 .rce-mbox {
     position: relative;
     background: #DEE3E8CC;
-    color: #112233CC;
-    display: inline-block;
-    max-width: 450px;
     border-radius: 5px;
+    color: #112233CC;
     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .2);
-    margin-left: 10px;
+    /* border-top-left-radius: 0px; */
+    margin-left: 20px;
     margin-right: 5px;
     margin-top: 3px;
     flex-direction: column;
     margin-bottom: 3px;
-    padding: 15px;
-    /* float: left; */
+    padding: 6px 9px 8px 9px;
+    float: left;
     min-width: 140px;
 }
 
 .rce-mbox-body {
     margin: 0;
-    padding: 0;
+    padding: 8px 5px;
     position: relative;
 }
 
 .rce-mbox.rce-mbox-right {
-    /* float: right; */
-    text-align: left !important;
+    float: right;
     margin-left: 5px;
-    margin-right: 15px;
-    background-color: #112233;
+    margin-right: 20px;
     color: #B6CEFFCC;
+    background-color: #112233CC;
+    /* border-top-right-radius: 0px; */
+    border-top-left-radius: 5px;
 }
 
 .rce-mbox-text {
     font-size: 13.6px;
-    word-break: break-all;
+    word-break: break-word;
 }
 
 /* .rce-mbox-text:after {
-    content: ""
+    content: "\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0"
 } */
 
 .rce-mbox-time {
-    text-align: right;
-    color: #112233CC;
+    color: rgba(0, 0, 0, 0.45);
     font-size: 12px;
     position: absolute;
     right: 0;
     bottom: -20px;
 }
 
-.rce-mbox-time.right {
-    right: unset;
-    left: 0;
+.right .rce-mbox-time {
+    right: initial;
+    text-align: left;
 }
 
 .rce-mbox-time.non-copiable:before {
@@ -148,7 +143,7 @@
     top: 20%;
     width: 15px;
     height: 15px;
-    fill: #112233;
+    fill: #112233CC;
     filter: drop-shadow( 2px 0px 1px rgba(0, 0, 0, .2));
 }
 

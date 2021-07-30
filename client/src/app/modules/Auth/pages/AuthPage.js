@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, Switch, Redirect } from "react-router-dom";
 import { toAbsoluteUrl } from "../../../../_metronic/_helpers";
 import { ContentRoute } from "../../../../_metronic/layout";
@@ -8,7 +8,8 @@ import Login from "./Login";
 import ForgotPassword from "./ForgotPassword";
 import "../../../../_metronic/_assets/sass/pages/login/classic/login-1.scss";
 
-export function AuthPage(props) {
+export function AuthPage({ setupSocket, socket }) {
+
   return (
     <>
       <div className="d-flex flex-column flex-root">
@@ -73,7 +74,7 @@ export function AuthPage(props) {
             {/* begin::Content body */}
             <div className="d-flex flex-column-fluid flex-center mt-5 mt-lg-0">
               <Switch>
-                <ContentRoute path="/auth/login" component={Login} />
+                <ContentRoute path="/auth/login" setupSocket={setupSocket} socket={socket} component={Login} />
                 {/* <ContentRoute
                   path="/auth/registration"
                   component={Registration}
