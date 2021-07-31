@@ -68,8 +68,8 @@ export function Routes() {
                 /> <
                 AuthPage setupSocket = { setupSocket }
                 socket = { socket }
-                /> <
-                /Switch> <
+                /> < /
+                Switch > <
                 /Route>
             ) : (
                 /*Otherwise redirect to root page (`/`)*/
@@ -96,8 +96,8 @@ export function Routes() {
                 Layout >
                 <
                 BasePage socket = { socket }
-                /> <
-                /Layout>
+                /> < /
+                Layout >
             )
         } <
         /Switch>
