@@ -20,7 +20,7 @@ const UserProfilepage = lazy(() =>
   import("./modules/UserProfile/UserProfilePage")
 );
 
-export default function BasePage() {
+export default function BasePage({ socket }) {
   // useEffect(() => {
   //   console.log('Base page');
   // }, []) // [] - is required if you need only one call
@@ -40,7 +40,7 @@ export default function BasePage() {
         <Route path="/react-bootstrap" component={ReactBootstrapPage} />
         <Route path="/e-commerce" component={ECommercePage} />
         <Route path="/user-profile" component={UserProfilepage} />
-        <Route path="/chat" component={Chat} />
+        <Route path="/chat" render={() => <Chat socket={socket} />} />
         <Route path="/contact-us" component={ContactUs} />
         <Redirect to="error/error-v1" />
       </Switch>

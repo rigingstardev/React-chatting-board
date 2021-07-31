@@ -73,14 +73,15 @@ body {
 
 	& > .message-list {
 		background-color: #93999F;
-		padding: 10px 120px;
+		padding: 10px 0;
 		flex: 1;
-		overflow-y: auto;
+		max-height: calc(100% - 154px);
+		// overflow-y: auto;
 	}
 
 	.message-input {
 		background-color: #3F5060;
-		height: 186px;
+		height: 154px;
 	}
 }
 

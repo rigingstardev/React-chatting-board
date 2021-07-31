@@ -12,10 +12,6 @@ const MessageSchema = new mongoose.Schema(
       required: "User is required!",
       ref: "User",
     },
-    sentimentScore: {
-      type: Number,
-      default: 0,
-    },
     message: {
       type: String,
       required: "Message is required!",

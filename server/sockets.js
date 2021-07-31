@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const jwt = require("jwt-then");
-var Sentiment = require("sentiment");
+// var Sentiment = require("sentiment");
 
 const Message = mongoose.model("Message");
 const User = mongoose.model("User");
@@ -14,7 +14,7 @@ const {
 } = require("./utils/onlineUsers");
 
 let sockets = {};
-let sentiment = new Sentiment();
+// let sentiment = new Sentiment();
 
 sockets.init = (server) => {
   const ADMIN_ID = "admin";
@@ -27,19 +27,35 @@ sockets.init = (server) => {
       const token = socket.handshake.query.token;
       const payload = await jwt.verify(token, process.env.SECRET);
       socket.userId = payload.id;
+      socket.user = await User.findById(payload.id, { password: 0 });
       next();
-    } catch (err) {}
+    } catch (err) { }
   });
 
   // When user connects
-  io.on("connection", (socket) => {
+  io.on("connection", async (socket) => {
+    console.log('---Socket connected---');
+
+    const chans = await Channel.find().select(['_id']);
+    chans.map(async chan => {
+      const users = await getOnlineUsersInChannel(chan._id);
+      if (users.length) {
+        console.log('---+++----')
+        io.emit("onlineUsers", {
+          users: users,
+          channelId: chan._id
+        });
+      }
+    })
     // When user disconnects
     socket.on("disconnect", async ({ channelId }) => {
+      console.log('---Socket disconnect---');
       const user = getCurrentUser(socket.userId);
       if (user) {
         socket.leave(user.channelId);
         userLeaves(socket.userId);
         const newMessage = {
+          type: 'System',
           message: user.username + " left the channel!",
           username: ADMIN_USERNAME,
           userId: ADMIN_ID,
@@ -47,6 +63,7 @@ sockets.init = (server) => {
         socket.broadcast.to(user.channelId).emit("newMessage", newMessage);
         io.to(user.channelId).emit("onlineUsers", {
           users: getOnlineUsersInChannel(user.channelId),
+          channelId: user.channelId
         });
       }
     });
@@ -54,15 +71,17 @@ sockets.init = (server) => {
     // When user joins a channel
     socket.on("joinChannel", async ({ username, channelId }) => {
       socket.join(channelId);
-      userJoins(socket.userId, username, channelId);
+      await userJoins(socket.userId, username, channelId);
       const newMessage = {
+        type: "System",
         message: username + " joined the channel!",
         username: ADMIN_USERNAME,
         userId: ADMIN_ID,
       };
       socket.broadcast.to(channelId).emit("newMessage", newMessage);
-      io.to(channelId).emit("onlineUsers", {
+      io.emit("onlineUsers", {
         users: getOnlineUsersInChannel(channelId),
+        channelId: channelId
       });
     });
 
@@ -71,13 +90,15 @@ sockets.init = (server) => {
       socket.leave(channelId);
       userLeaves(socket.userId);
       const newMessage = {
+        type: "System",
         message: username + " left the channel!",
         username: ADMIN_USERNAME,
         userId: ADMIN_ID,
       };
       socket.broadcast.to(channelId).emit("newMessage", newMessage);
-      io.to(channelId).emit("onlineUsers", {
+      io.emit("onlineUsers", {
         users: getOnlineUsersInChannel(channelId),
+        channelId: channelId
       });
     });
 
@@ -90,63 +111,61 @@ sockets.init = (server) => {
     // When user sends a new message
     socket.on("newMessage", async ({ username, channelId, message }) => {
       // Blank messages are ignored
-      if (message.trim().length > 0) {
-        const sentimentResult = sentiment.analyze(message);
+      try {
 
-        io.to(channelId).emit("newMessage", {
-          message,
-          username: username,
-          userId: socket.userId,
-          sentimentScore: sentimentResult.score,
-        });
+        if (message.trim().length > 0) {
 
-        const channel = await Channel.findOne({ _id: channelId });
+          const newMessage = new Message({
+            channel: channelId,
+            user: socket.userId,
+            message,
+          });
 
-        io.to(channelId).emit(
-          "updateSentiment",
-          getCurrentSentiment(channel, sentimentResult)
-        );
-        Channel.updateOne(
-          { _id: channelId },
-          {
-            $set: getCurrentSentiment(channel, sentimentResult),
-          },
-          function (err, affected, resp) {}
-        );
+          await newMessage.save();
 
-        const user = await User.findOne({ _id: socket.userId });
-        User.updateOne(
-          { _id: socket.userId },
-          {
-            $set: getCurrentSentiment(user, sentimentResult),
-          },
-          function (err, affected, resp) {}
-        );
+          io.to(channelId).emit("newMessage", {
+            type: "Message",
+            message,
+            username: username,
+            userId: socket.userId,
+            user: socket.user,
+            newMessage
+          });
 
-        const newMessage = new Message({
-          channel: channelId,
-          user: socket.userId,
-          sentimentScore: sentimentResult.score,
-          message,
-        });
+          const channel = await Channel.findOne({ _id: channelId });
 
-        await newMessage.save();
+          io.to(channelId).emit(
+            "updateSentiment",
+            getCurrentSentiment(channel)
+          );
+
+          Channel.updateOne(
+            { _id: channelId },
+            {
+              $set: getCurrentSentiment(channel),
+            },
+            function (err, affected, resp) { }
+          );
+
+          const user = await User.findOne({ _id: socket.userId });
+          User.updateOne(
+            { _id: socket.userId },
+            {
+              $set: getCurrentSentiment(user),
+            },
+            function (err, affected, resp) { }
+          );
+        }
+      } catch (error) {
+        console.log(error);
       }
     });
   });
 };
 
-const getCurrentSentiment = (entity, currSentimentResult) => {
+const getCurrentSentiment = (entity) => {
   return {
-    totalSentimentScore: entity.totalSentimentScore + currSentimentResult.score,
-    totalMessages: entity.totalMessages + 1,
-    positive: entity.positive + (currSentimentResult.score > 1 ? 1 : 0),
-    neutral:
-      entity.neutral +
-      (currSentimentResult.score <= 1 && currSentimentResult.score >= -1
-        ? 1
-        : 0),
-    negative: entity.negative + (currSentimentResult.score < -1 ? 1 : 0),
+    totalMessages: entity.totalMessages + 1
   };
 };
 
