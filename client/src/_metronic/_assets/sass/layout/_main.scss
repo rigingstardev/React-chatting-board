@@ -85,6 +85,10 @@ body {
 	}
 }
 
+div[data-swipeable] > .MuiTypography-root.MuiTypography-body1 {
+	padding: 24px 0 !important;
+}
+
 ::-webkit-scrollbar {
   width: .5em;
 }

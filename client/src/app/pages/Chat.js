@@ -22,6 +22,8 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import AddChannelModal from './AddChannelModal';
 import { CreateChannel, GetChannel, GetMessage } from './_redux/chatCrud';
+import { WindowsNotify } from "../../helpers/WinNotify";
+
 /*
   INTL (i18n) docs:
   https://github.com/formatjs/react-intl/blob/master/docs/Components.md#formattedmessage
@@ -104,6 +106,7 @@ function Chat(props) {
   const [value, setValue] = React.useState(0);
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [notifyFlag, setNotifyFlag] = useState(false);
   const [modalShow, setModalValue] = useState(false);
   const [message, setMessage] = useState("");
   const [users, setUsers] = useState([]);
@@ -150,6 +153,9 @@ function Chat(props) {
   }
 
   const handleSend = () => {
+    if (!currentGroup._id) {
+      return alert('please select group');
+    }
     if (message.trim() != "") {
       if (socket) {
         socket.emit("newMessage", {
@@ -168,6 +174,7 @@ function Chat(props) {
   }
 
   const groupitem = async (group) => {
+    if (group._id === currentGroup._id) return;
     setCurrentGroup(group);
     await getMessage(group._id);
     if (socket) {
@@ -244,6 +251,12 @@ function Chat(props) {
   });
 
   useEffect(() => {
+    $(window).blur(function () {
+      setNotifyFlag(true);
+    });
+    $(window).focus(function () {
+      setNotifyFlag(false);
+    });
     getChannel();
   }, []);
 
@@ -272,7 +285,7 @@ function Chat(props) {
       socket.removeAllListeners("newMessage");
       socket.on("newMessage", (message) => {
         const data = [...messageData];
-        if (message.type !== "System")
+        if (message.type !== "System") {
           data.push(
             {
               position: user._id === message.userId ? 'right' : 'left',
@@ -285,26 +298,28 @@ function Chat(props) {
               status: 'new'
             },
           )
+          if (notifyFlag) WindowsNotify(`New message arrived from ${message.user.username}`, message.message, 'chat', toImageUrl(message.user.avatar));
+        }
         else {
-          // data.push(
-          //   {
-          //     type: 'system',
-          //     text: message.message.replace(/\n/g, "<br />")
-          //   }
-          // )
+          data.push(
+            {
+              type: 'system',
+              text: message.message
+            }
+          )
         }
         setMessageData(data);
       });
     }
-  }, [socket, messageData.length])
+  }, [socket, messageData.length, notifyFlag])
 
   return (
     <div className="container-contact w-100">
       <div className="d-flex">
         {!isTabletDevice &&
-          <div style={{ width: "100%", margin: "10px" }}>
+          <div className="w-100">
             <TextField
-              className={"px-10 py-5 w-100 " + classes.search}
+              className={"px-5 py-5 w-100 " + classes.search}
               id="input-with-icon-textfield"
               InputProps={{
                 startAdornment: (
@@ -334,6 +349,7 @@ function Chat(props) {
                 >
                   <Tab label="CONVERSATIONS" style={{ color: "#8ba2ca" }} />
                   <Tab label="GROUPES DE TRAVAIL" style={{ color: "#8ba2ca" }} />
+                  <Tab label="MESSAGES" style={{ color: "#8ba2ca" }} />
                 </Tabs>
               </AppBar>
               <SwipeableViews
@@ -416,10 +432,35 @@ function Chat(props) {
                     })}
                   </List>
                 </TabContainer>
+                <TabContainer dir={theme.direction}>
+                  <div className="chat-view">
+                    {/* <div className="message-list-view" style={{ width: "100%" }}> */}
+                    <MessageList
+                      className='message-list'
+                      lockable={true}
+                      downButton={true}
+                      toBottomHeight={'100%'}
+                      dataSource={messageData} />
+                    {/* </div> */}
+                    <div className="message-input d-flex align-items-center">
+                      <AttachFile className="w-50px text-white-50" />
+                      <textarea
+                        className={`form-control form-control-solid h-auto px-6 bg-transparent border-0 text-white-50`}
+                        name="name"
+                        onChange={handleChange}
+                        onKeyDown={keyPress}
+                        placeholder="Here where the users can enter their conversations et varius mi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed sit amet imperdiet quam.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. "
+                        rows="4"
+                        value={message}
+                      />
+                      <Send className="w-50px text-white-50 cursor-pointer" onClick={handleSend} />
+                    </div>
+                  </div>
+                </TabContainer>
               </SwipeableViews>
             </div>
           </div>}
-        {isTabletDevice && <div style={{ width: 310 }}>
+        {isTabletDevice && <div style={{ width: 310, minWidth: 310 }}>
           <TextField
             className={"px-10 py-5 w-100 " + classes.search}
             id="input-with-icon-textfield"

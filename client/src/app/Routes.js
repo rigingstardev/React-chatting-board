@@ -16,90 +16,74 @@ import ErrorsPage from "./modules/ErrorsExamples/ErrorsPage";
 import Registration from './modules/Auth/pages/Registration'
 
 export function Routes() {
-    const { isAuthorized, token } = useSelector(
-        ({ auth }) => ({
-            isAuthorized: auth.authToken != null,
-            token: auth.authToken
-        }),
-        shallowEqual
-    );
+  const { isAuthorized, token } = useSelector(
+    ({ auth }) => ({
+      isAuthorized: auth.authToken != null,
+      token: auth.authToken
+    }),
+    shallowEqual
+  );
 
-    const [socket, setSocket] = useState(null);
+  const [socket, setSocket] = useState(null);
 
-    const setupSocket = (authTo = null) => {
-        if ((authTo || token) && !socket) {
-            const newSocket = io("http://18.222.122.161:5000", {
-                query: {
-                    token: authTo || token
-                }
-            });
-
-            newSocket.on("connect", () => {
-                console.log('---Connected---');
-                //makeToast("success", "Socket Connected!");
-            });
-
-            newSocket.on("disconnect", () => {
-                setSocket(null);
-                console.log('---Disconnect---');
-                // setTimeout(setupSocket, 3000);
-                //makeToast("error", "Socket Disconnected!");
-            });
-
-            setSocket(newSocket);
+  const setupSocket = (authTo = null) => {
+    if ((authTo || token) && !socket) {
+      const newSocket = io(process.env.REACT_APP_SOCKET_URL, {
+        query: {
+          token: authTo || token
         }
-    };
+      });
 
-    useEffect(() => {
-        setupSocket();
-        //eslint-disable-next-line
-    }, []);
+      newSocket.on("connect", () => {
+        console.log('---Connected---');
+        //makeToast("success", "Socket Connected!");
+      });
 
-    return ( <
-        Switch > {!isAuthorized ? (
-                /*Render auth page when user at `/auth` and not authorized.*/
-                <
-                Route >
-                <
-                Switch >
-                <
-                ContentRoute path = "/auth/registration"
-                component = { Registration }
-                /> <
-                AuthPage setupSocket = { setupSocket }
-                socket = { socket }
-                /> < /
-                Switch > <
-                /Route>
-            ) : (
-                /*Otherwise redirect to root page (`/`)*/
-                <
-                Redirect from = "/auth"
-                to = "/" / >
-            )
-        }
+      newSocket.on("disconnect", () => {
+        setSocket(null);
+        console.log('---Disconnect---');
+        // setTimeout(setupSocket, 3000);
+        //makeToast("error", "Socket Disconnected!");
+      });
 
-        <
-        Route path = "/error"
-        component = { ErrorsPage }
-        /> <
-        Route path = "/logout"
-        component = { Logout }
-        />
+      setSocket(newSocket);
+    }
+  };
 
-        {
-            !isAuthorized ? (
-                /*Redirect to `/auth` when user is not authorized*/
-                <
-                Redirect to = "/auth/login" / >
-            ) : ( <
-                Layout >
-                <
-                BasePage socket = { socket }
-                /> < /
-                Layout >
-            )
-        } <
-        /Switch>
-    );
+  useEffect(() => {
+    setupSocket();
+    //eslint-disable-next-line
+  }, []);
+
+  return (
+    <Switch>
+      {!isAuthorized ? (
+        /*Render auth page when user at `/auth` and not authorized.*/
+        <Route>
+          <Switch>
+            <ContentRoute
+              path="/auth/registration"
+              component={Registration}
+            />
+            <AuthPage setupSocket={setupSocket} socket={socket} />
+          </Switch>
+        </Route>
+      ) : (
+        /*Otherwise redirect to root page (`/`)*/
+        <Redirect from="/auth" to="/" />
+      )}
+
+      <Route path="/error" component={ErrorsPage} />
+      <Route path="/logout" component={Logout} />
+
+      {!isAuthorized ? (
+        /*Redirect to `/auth` when user is not authorized*/
+        <Redirect to="/auth/login" />
+      ) : (
+        <Layout>
+          <BasePage socket={socket} />
+        </Layout>
+      )}
+    </Switch>
+  );
 }
