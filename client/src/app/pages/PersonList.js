@@ -65,42 +65,78 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-let pictures = [
+let users = [
     {
-        avatar: '/media/person/man1.png',
+        avatar: '/media/users/100_3.jpg',
+        text1: 'Sona Larry',
+        text2: 'Creatrice',
+        text3: 'Kinshasa / RDC',
     },
     {
-        avatar: '/media/person/woman1.png',
+        avatar: '/media/users/100_3.jpg',
+        text1: 'Sona Larry',
+        text2: 'Creatrice',
+        text3: 'Kinshasa / RDC',
     },
     {
-        avatar: '/media/person/woman1.png',
+        avatar: '/media/users/100_3.jpg',
+        text1: 'Sona Larry',
+        text2: 'Creatrice',
+        text3: 'Kinshasa / RDC',
     },
     {
-        avatar: '/media/person/man2.png',
+        avatar: '/media/users/100_3.jpg',
+        text1: 'Sona Larry',
+        text2: 'Creatrice',
+        text3: 'Kinshasa / RDC',
     },
     {
-        avatar: '/media/person/man1.png',
+        avatar: '/media/users/100_3.jpg',
+        text1: 'Sona Larry',
+        text2: 'Creatrice',
+        text3: 'Kinshasa / RDC',
     },
     {
-        avatar: '/media/person/man2.png',
+        avatar: '/media/users/100_3.jpg',
+        text1: 'Sona Larry',
+        text2: 'Creatrice',
+        text3: 'Kinshasa / RDC',
     },
     {
-        avatar: '/media/person/man1.png',
+        avatar: '/media/users/100_3.jpg',
+        text1: 'Sona Larry',
+        text2: 'Creatrice',
+        text3: 'Kinshasa / RDC',
     },
     {
-        avatar: '/media/person/woman2.png',
+        avatar: '/media/users/100_3.jpg',
+        text1: 'Sona Larry',
+        text2: 'Creatrice',
+        text3: 'Kinshasa / RDC',
     },
     {
-        avatar: '/media/person/man2.png',
+        avatar: '/media/users/100_3.jpg',
+        text1: 'Sona Larry',
+        text2: 'Creatrice',
+        text3: 'Kinshasa / RDC',
     },
     {
-        avatar: '/media/person/man1.png',
+        avatar: '/media/users/100_3.jpg',
+        text1: 'Sona Larry',
+        text2: 'Creatrice',
+        text3: 'Kinshasa / RDC',
     },
     {
-        avatar: '/media/person/woman2.png',
+        avatar: '/media/users/100_3.jpg',
+        text1: 'Sona Larry',
+        text2: 'Creatrice',
+        text3: 'Kinshasa / RDC',
     },
     {
-        avatar: '/media/person/man1.png',
+        avatar: '/media/users/100_3.jpg',
+        text1: 'Sona Larry',
+        text2: 'Creatrice',
+        text3: 'Kinshasa / RDC',
     },
 
 ];
@@ -120,102 +156,16 @@ function PersonList(props) {
         query: "(min-width:500px)",
     });
     return (
-        <div className={"container w-100 mx-auto"}>
-            {!isTabletDevice1 && !isTabletDevice && <div className="row" style={{ marginTop: "0px" }}>
+        <div className={"container-fluid person-list"}>
+            <div className="row mt-5">
                 <div className="col-12">
-                    <div className={classes.search + " row"} >
-                        <div className={classes.header + " col-12"}>Filtrez votre recherche</div>
-                        <div className="col-6">
-                            <InputGroup className={"mb-3 "}>
-                                <FormControl
-                                    className={classes.inputclass}
-                                    placeholder="Pays"
-                                    aria-label="Pays"
-                                    aria-describedby="basic-addon1"
-                                />
-                            </InputGroup>
-                        </div>
-                        <div className="col-6">
-                            <InputGroup className={"mb-3 "}>
-                                <FormControl
-                                    className={classes.inputclass}
-                                    placeholder="Etat"
-                                    aria-label="Etat"
-                                    aria-describedby="basic-addon1"
-                                />
-                            </InputGroup>
-                        </div>
-                        <div className="col-6">
-                            <InputGroup className={"mb-3 "}>
-                                <FormControl
-                                    className={classes.inputclass}
-                                    placeholder="Ville"
-                                    aria-label="Ville"
-                                    aria-describedby="basic-addon1"
-                                />
-                            </InputGroup>
-                        </div>
-                        <div className="col-6">
-                            <InputGroup className={"mb-3 "}>
-                                <FormControl
-                                    className={classes.inputclass}
-                                    placeholder="Profession"
-                                    aria-label="Profession"
-                                    aria-describedby="basic-addon1"
-                                />
-                            </InputGroup>
-                        </div>
-                        <div className="col-6">
-                            <InputGroup className={"mb-3 "}>
-                                <FormControl
-                                    className={classes.inputclass}
-                                    placeholder="Noms"
-                                    aria-label="Noms"
-                                    aria-describedby="basic-addon1"
-                                />
-                            </InputGroup>
-                        </div>
-                        <div className="col-6">
-                            <InputGroup className={"mb-3 "}>
-                                <FormControl
-                                    className={classes.inputclass}
-                                    placeholder="Expertise"
-                                    aria-label="Expertise"
-                                    aria-describedby="basic-addon1"
-                                />
-                            </InputGroup>
-                        </div>
-                        <div className="col-12" style={{ textAlign: "center" }}>
-                            <Button variant="secondary">Refaire</Button>
-                            <img
-                                alt="Logo"
-                                style={{ marginLeft: '5px' }}
-                                className="cursor-pointer"
-                                src={toAbsoluteUrl('/media/person/search.png')}
-                            />
-                        </div>
-                    </div>
+                    <h1 className="text-uppercase text-white-50 text-center my-10">entrepreneurs et professionnels congolais et d’ailleurs</h1>                
                 </div>
-                <div className="col-12">
-                    <div className="row">
-                        {pictures.map((group, i) => {
-                            return (<div className="col-6" >
-                                <img
-                                    alt="Logo"
-                                    style={{ width: "80%", margin: "5px" }}
-                                    src={toAbsoluteUrl(group.avatar)}
-                                />
-                            </div>)
-                        })}
-                    </div>
-                </div>
-            </div>}
-            {isTabletDevice1 && !isTabletDevice && <div className="row" style={{ marginTop: "2px" }}>
-                <div className="col-4">
+                <div className="col-12 col-sm-4 col-xxl-3">
                     <div className={classes.search} >
                         <div className={classes.header}>Filtrez votre recherche</div>
                         <div className="col-12">
-                            <InputGroup className={"mb-3 "}>
+                            <InputGroup className={"mb-3"}>
                                 <FormControl
                                     className={classes.inputclass}
                                     placeholder="Pays"
@@ -225,7 +175,7 @@ function PersonList(props) {
                             </InputGroup>
                         </div>
                         <div className="col-12">
-                            <InputGroup className={"mb-3 "}>
+                            <InputGroup className={"mb-3"}>
                                 <FormControl
                                     className={classes.inputclass}
                                     placeholder="Etat"
@@ -277,117 +227,32 @@ function PersonList(props) {
                         <div style={{ textAlign: "center" }}>
                             <Button variant="secondary">Refaire</Button>
                             <img
-                                alt="Logo"
-                                style={{ marginLeft: '5px' }}
-                                className="cursor-pointer"
+                                alt="search"
+                                className="cursor-pointer w-40px ml-2"
                                 src={toAbsoluteUrl('/media/person/search.png')}
                             />
                         </div>
                     </div>
                 </div>
-                <div className="col-8">
+                <div className="col-12 col-sm-8 col-xxl-9">
                     <div className="row">
-                        {pictures.map((group, i) => {
-                            return (<div className="col-4" >
+                        {users.map((user, i) => (<div className="col-6 col-sm-4 col-lg-3 mt-3 mt-sm-0 px-5" key={i}>
                                 <img
+                                    className="w-100"
                                     alt="Logo"
-                                    style={{ width: "80%", margin: "5px" }}
-                                    src={toAbsoluteUrl(group.avatar)}
+                                    src={toAbsoluteUrl(user.avatar)}
+                                    style={{ border: '2px solid #34829E' }}
                                 />
+                                <div className="py-3">
+                                    <p className="mb-0 mt-1 text-success font-size-lg">{ user.text1 }</p>
+                                    <p className="mb-0 text-white-50 font-size-lg">{ user.text2 }</p>
+                                    <p className="mb-0 text-white-50 font-size-lg">{ user.text3 }</p>
+                                </div>
                             </div>)
-                        })}
+                        )}
                     </div>
                 </div>
-            </div>}
-            {isTabletDevice && <div className="row" style={{ marginTop: "100px" }}>
-                <div className="col-4">
-                    <div className={classes.search} >
-                        <div className={classes.header}>Filtrez votre recherche</div>
-                        <div className="col-12">
-                            <InputGroup className={"mb-3 "}>
-                                <FormControl
-                                    className={classes.inputclass}
-                                    placeholder="Pays"
-                                    aria-label="Pays"
-                                    aria-describedby="basic-addon1"
-                                />
-                            </InputGroup>
-                        </div>
-                        <div className="col-12">
-                            <InputGroup className={"mb-3 "}>
-                                <FormControl
-                                    className={classes.inputclass}
-                                    placeholder="Etat"
-                                    aria-label="Etat"
-                                    aria-describedby="basic-addon1"
-                                />
-                            </InputGroup>
-                        </div>
-                        <div className="col-12">
-                            <InputGroup className={"mb-3 "}>
-                                <FormControl
-                                    className={classes.inputclass}
-                                    placeholder="Ville"
-                                    aria-label="Ville"
-                                    aria-describedby="basic-addon1"
-                                />
-                            </InputGroup>
-                        </div>
-                        <div className="col-12">
-                            <InputGroup className={"mb-3 "}>
-                                <FormControl
-                                    className={classes.inputclass}
-                                    placeholder="Profession"
-                                    aria-label="Profession"
-                                    aria-describedby="basic-addon1"
-                                />
-                            </InputGroup>
-                        </div>
-                        <div className="col-12">
-                            <InputGroup className={"mb-3 "}>
-                                <FormControl
-                                    className={classes.inputclass}
-                                    placeholder="Noms"
-                                    aria-label="Noms"
-                                    aria-describedby="basic-addon1"
-                                />
-                            </InputGroup>
-                        </div>
-                        <div className="col-12">
-                            <InputGroup className={"mb-3 "}>
-                                <FormControl
-                                    className={classes.inputclass}
-                                    placeholder="Expertise"
-                                    aria-label="Expertise"
-                                    aria-describedby="basic-addon1"
-                                />
-                            </InputGroup>
-                        </div>
-                        <div style={{ textAlign: "center" }}>
-                            <Button variant="secondary">Refaire</Button>
-                            <img
-                                alt="Logo"
-                                style={{ marginLeft: '5px' }}
-                                className="cursor-pointer"
-                                src={toAbsoluteUrl('/media/person/search.png')}
-                            />
-                        </div>
-                    </div>
-                </div>
-                <div className="col-8">
-                    <div className="row">
-                        {pictures.map((group, i) => {
-                            return (<div className="col-3" >
-                                <img
-                                    alt="Logo"
-                                    style={{ width: "80%", margin: "5px" }}
-                                    src={toAbsoluteUrl(group.avatar)}
-                                />
-                            </div>)
-                        })}
-                    </div>
-                </div>
-            </div>}
+            </div>
         </div>
     );
 }

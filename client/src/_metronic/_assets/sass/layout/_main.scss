@@ -59,6 +59,18 @@ body {
 	.container-fluid {
 		max-width: none;
 		padding: 70px get($page-padding, tablet-and-mobile) 0;
+		
+		&.person-list {
+			padding: 20px get($page-padding, tablet-and-mobile) 0;
+		}
+	}
+}
+
+@include media-breakpoint-down(sm) {
+	// Container
+	.container,
+	.container-fluid {
+		padding: 10px get($page-padding, tablet-and-mobile) 0;
 	}
 }
 

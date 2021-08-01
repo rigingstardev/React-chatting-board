@@ -49,7 +49,6 @@ export default function BasePage({ socket }) {
         <Route path="/charts" component={Charts} />
         <Route path="/contact" component={Contact} />
         <Route path="/chat" render={() => <Chat socket={socket} />} />
-        <Route path="/contact-us" component={ContactUs} />
         <Redirect to="error/error-v1" />
       </Switch>
     </Suspense>

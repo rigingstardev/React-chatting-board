@@ -50,35 +50,35 @@ const useStyles = makeStyles(theme => ({
 let pictures = [
     {
         id: 1,
-        avatar: '/media/bg/CompositeLayer@1X (1).png',
+        avatar: '/media/news/news1.png',
     },
     {
         id: 2,
-        avatar: '/media/bg/CompositeLayer@1X (2).png',
+        avatar: '/media/news/news2.png',
     },
     {
         id: 3,
-        avatar: '/media/bg/CompositeLayer@1X (3).png',
+        avatar: '/media/news/news3.png',
     },
     {
         id: 4,
-        avatar: '/media/bg/CompositeLayer@1X (4).png',
+        avatar: '/media/news/news1.png',
     },
     {
         id: 5,
-        avatar: '/media/bg/CompositeLayer@1X (5).png',
+        avatar: '/media/news/news4.png',
     },
     {
         id: 6,
-        avatar: '/media/bg/CompositeLayer@1X (6).png',
+        avatar: '/media/news/news5.png',
     },
     {
         id: 7,
-        avatar: '/media/bg/profie.png',
+        avatar: '/media/news/news1.png',
     },
     {
         id: 8,
-        avatar: '/media/bg/Profil.png',
+        avatar: '/media/news/news6.png',
     },
 
 ];
@@ -92,16 +92,24 @@ function UserList(props) {
     const [loading, setLoading] = useState(false);
     const classes = useStyles();
     return (
-        <div className={"container w-100 mx-auto " + classes.plusUsersNumber}>
+        <div className={"container-fluid p-5 p-sm-10 px-5 px-sm-10 px-md-30 " + classes.plusUsersNumber}>
 
-            <div className="row" style={{ marginTop: "100px" }}>
+            <div className="row mt-5">
                 {pictures.map((group, i) => {
-                    return (<div className="col-3" >
-                        <img
-                            alt="Logo"
-                            style={{ width: "80%", margin: "5px" }}
-                            src={toAbsoluteUrl(group.avatar)}
-                        />
+                    return (<div className="col-6 col-sm-4 col-md-4 col-lg-3 px-5 mb-10">
+                        <div style={{ backgroundColor: "#FAF2C7" }}>
+                            <img
+                                alt="Logo"
+                                className="w-100"
+                                src={toAbsoluteUrl(group.avatar)}
+                            />
+                            <div className="p-5">
+                                <p className="mb-0 font-weight-bolder">ROGER MUNTU</p>
+                                <p className="mb-0 font-size-sm">Journaliste / Animateur</p>
+                                <p className="mb-0 font-size-sm">La Voix de l’Amerique</p>
+                                <p className="mb-0 mt-1 font-size-sm text-right">Washington DC</p>
+                            </div>
+                        </div>
                     </div>)
                 })}
 
