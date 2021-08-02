@@ -79,7 +79,7 @@ export class MessageBox extends Component {
 
         return (
             <div
-                className={classNames('rce-container-mbox', this.props.className, this.props.position, { 'animate__animated animate__zoomIn': this.props.status === 'new' })}
+                className={classNames('rce-container-mbox', this.props.className, { [this.props.position]: this.props.type !== "system" }, { 'animate__animated animate__zoomIn': this.props.status === 'new' })}
                 onClick={this.props.onClick}>
                 {
                     this.props.renderAddCmp instanceof Function &&

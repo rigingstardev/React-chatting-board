@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BACKEND_URL = "http://110.10.10.164:5000/api/";
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 export const CHANNELADDGET_URL = BACKEND_URL + "channel";
 export const MESSAGEGET_URL = BACKEND_URL + "messages";
 

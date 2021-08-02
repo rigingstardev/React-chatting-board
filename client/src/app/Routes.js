@@ -28,7 +28,7 @@ export function Routes() {
 
     const setupSocket = (authTo = null) => {
         if ((authTo || token) && !socket) {
-            const newSocket = io("http://10.10.10.164:5000", {
+            const newSocket = io(process.env.REACT_APP_SOCKET_URL, {
                 query: {
                     token: authTo || token
                 }

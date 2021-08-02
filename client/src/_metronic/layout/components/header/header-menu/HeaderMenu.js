@@ -47,7 +47,7 @@ export function HeaderMenu({ layoutProps }) {
             {/*end::1 Level*/}
             {/*begin::1 Level*/}
             <li className={`menu-item menu-item-rel ${getMenuItemActive('/chat')}`}>
-                <NavLink className="menu-link" to="/chat">
+                <NavLink className="menu-link" to="/contact">
                     <span className="menu-text">CONTACT</span>
                     {layoutProps.rootArrowEnabled && (<i className="menu-arrow" />)}
                 </NavLink>

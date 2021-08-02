@@ -1,10 +1,10 @@
 import axios from "axios";
-const backendurl = "http://10.10.10.164:5000"
-export const LOGIN_URL = `${backendurl}/api/user/login`;
-export const REGISTER_URL = `${backendurl}/api/user/signup`;
-export const REQUEST_PASSWORD_URL = "/api/user/forgot-password";
+const backendurl = process.env.REACT_APP_BACKEND_URL;
+export const LOGIN_URL = `${backendurl}user/login`;
+export const REGISTER_URL = `${backendurl}user/signup`;
+export const REQUEST_PASSWORD_URL = "user/forgot-password";
 
-export const ME_URL = `${backendurl}/api/user/me`;
+export const ME_URL = `${backendurl}user/me`;
 
 export function login(email, password) {
     // console.log(LOGIN_URL);

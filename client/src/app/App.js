@@ -8,10 +8,17 @@ import { BrowserRouter } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
 
 import { Routes } from "../app/Routes";
+import { WindowsNotify } from "../helpers/WinNotify";
 import { I18nProvider } from "../_metronic/i18n";
 import { LayoutSplashScreen, MaterialThemeProvider } from "../_metronic/layout";
 
 export default function App({ store, persistor, basename }) {
+
+  let notifyFlag = localStorage.getItem('notifySetting');
+  if (!notifyFlag) {
+    WindowsNotify('Successful', 'Now you can get windows notification!')
+    localStorage.setItem('notifySetting', true);
+  }
 
   return (
     /* Provide Redux store */

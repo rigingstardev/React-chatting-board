@@ -3,7 +3,6 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require('path');
-var cors = require('cors')
 
 const errorHandler = require("./handlers/errorHandler");
 
@@ -14,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Setup Cross Origin
-app.use(cors())
+app.use(require("cors")());
 
 // Setup mongoose
 mongoose.set("useNewUrlParser", true);
@@ -22,11 +21,11 @@ mongoose.set("useCreateIndex", true);
 mongoose.set("useUnifiedTopology", true);
 
 mongoose.connect(process.env.MONGODB_URL, (error) => {
-    if (error) {
-        console.log("Mongoose connection ERROR:", error.message);
-    } else {
-        console.log("Connected to database.");
-    }
+  if (error) {
+    console.log("Mongoose connection ERROR:", error.message);
+  } else {
+    console.log("Connected to database.");
+  }
 });
 
 // Bring in the models
@@ -44,14 +43,14 @@ app.use(errorHandler.notFound);
 app.use(errorHandler.mongooseErrors);
 
 if (process.env.ENV === "DEVELOPMENT") {
-    app.use(errorHandler.developmentErrors);
+  app.use(errorHandler.developmentErrors);
 } else {
-    app.use(errorHandler.productionErrors);
+  app.use(errorHandler.productionErrors);
 }
 
 // Start server
 const server = app.listen(process.env.PORT, () => {
-    console.log(`Server listening on port ${process.env.PORT}...`);
+  console.log(`Server listening on port ${process.env.PORT}...`);
 });
 
 // Initialize socket.io

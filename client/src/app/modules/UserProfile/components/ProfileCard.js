@@ -14,7 +14,7 @@ export function ProfileCard() {
   const user = useSelector(({ auth }) => auth.user, shallowEqual);
 
   useEffect(() => {
-    return () => {};
+    return () => { };
   }, [user]);
 
   return (
@@ -90,11 +90,11 @@ export function ProfileCard() {
                 </div>
                 <div className="d-flex align-items-center justify-content-between mb-2">
                   <span className="font-weight-bold mr-2">Phone:</span>
-                  <span className="text-muted">{user.phone}</span>
+                  <span className="text-muted">{user?.phone}</span>
                 </div>
                 <div className="d-flex align-items-center justify-content-between">
                   <span className="font-weight-bold mr-2">Location:</span>
-                  <span className="text-muted">{user.address.city}</span>
+                  <span className="text-muted">{user?.address}</span>
                 </div>
               </div>
               {/* end::Contact */}

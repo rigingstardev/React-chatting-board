@@ -8,4 +8,4 @@ export function addCSSClass(ele, cls) {
 }
 
 export const toAbsoluteUrl = pathname => process.env.PUBLIC_URL + pathname;
-export const toImageUrl = pathname => "http://10.10.10.164:5000/files/" + pathname;
+export const toImageUrl = pathname => process.env.REACT_APP_IMAGE_URL + pathname;

@@ -2,6 +2,7 @@
  * Create React App entry point. This and `public/index.html` files can not be
  * changed or moved.
  */
+
 import "react-app-polyfill/ie11";
 import "react-app-polyfill/stable";
 import React from "react";
@@ -24,7 +25,7 @@ import {
   MetronicSplashScreenProvider,
   MetronicSubheaderProvider
 } from "./_metronic/layout";
-import {MetronicI18nProvider} from "./_metronic/i18n";
+import { MetronicI18nProvider } from "./_metronic/i18n";
 
 /**
  * Base URL of the website.
