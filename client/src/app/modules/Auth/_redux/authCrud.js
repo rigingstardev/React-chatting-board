@@ -8,16 +8,16 @@ export const RESET_PASSWRD_URL =  `${backendurl}user/password-reset/`;
 export const ME_URL = `${backendurl}user/me`;
 
 export function login(email, password) {
-  // console.log(LOGIN_URL);
-  return axios.post(LOGIN_URL, { email, password });
+    // console.log(LOGIN_URL);
+    return axios.post(LOGIN_URL, { email, password });
 }
 
 export function register(formData) {
-  return axios.post(REGISTER_URL, formData);
+    return axios.post(REGISTER_URL, formData);
 }
 
 export function requestPassword(email) {
-  return axios.post(REQUEST_PASSWORD_URL, { email });
+    return axios.post(REQUEST_PASSWORD_URL, { email });
 }
 
 export function resetPassword(user_id, token, password) {
@@ -25,6 +25,6 @@ export function resetPassword(user_id, token, password) {
 }
 
 export function getUserByToken() {
-  // Authorization head should be fulfilled in interceptor.
-  return axios.get(ME_URL);
+    // Authorization head should be fulfilled in interceptor.
+    return axios.get(ME_URL);
 }

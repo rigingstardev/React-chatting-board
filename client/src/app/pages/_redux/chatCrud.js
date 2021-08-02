@@ -6,13 +6,13 @@ export const MESSAGEGET_URL = BACKEND_URL + "messages";
 
 // CREATE =>  POST: add a new customer to the server
 export function CreateChannel(name) {
-  return axios.post(CHANNELADDGET_URL, { name });
+    return axios.post(CHANNELADDGET_URL, { name });
 }
 
 export function GetChannel() {
-  return axios.get(CHANNELADDGET_URL);
+    return axios.get(CHANNELADDGET_URL);
 }
 
 export function GetMessage(channelId) {
-  return axios.get(MESSAGEGET_URL + "/" + channelId);
+    return axios.get(MESSAGEGET_URL + "/" + channelId);
 }
