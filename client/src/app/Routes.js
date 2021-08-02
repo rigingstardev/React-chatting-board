@@ -28,7 +28,7 @@ export function Routes() {
 
     const setupSocket = (authTo = null) => {
         if ((authTo || token) && !socket) {
-            const newSocket = io("http://18.222.122.161:5000", {
+            const newSocket = io("http://10.10.10.164:5000", {
                 query: {
                     token: authTo || token
                 }

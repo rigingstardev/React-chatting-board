@@ -1,5 +1,5 @@
 import axios from "axios";
-const backendurl = "http://18.222.122.161:5000"
+const backendurl = "http://10.10.10.164:5000"
 export const LOGIN_URL = `${backendurl}/api/user/login`;
 export const REGISTER_URL = `${backendurl}/api/user/signup`;
 export const REQUEST_PASSWORD_URL = "/api/user/forgot-password";
