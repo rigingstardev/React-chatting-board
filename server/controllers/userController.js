@@ -1,10 +1,15 @@
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
+const Token = mongoose.model("Token");
+const crypto = require("crypto");
+const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const jwt = require("jwt-then");
 const formidable = require("formidable");
 const path = require("path");
 const fs = require("fs");
+
+const sendEmail = require("../utils/sendMail");
 
 exports.register = async (req, res) => {
 
@@ -151,9 +156,11 @@ exports.login = async (req, res) => {
     user
   });
 };
+
 exports.me = async (req, res) => {
   res.json(req.user);
-}
+};
+
 exports.getUser = async (req, res) => {
   const user = await User.findOne({
     _id: req.params.id,
@@ -162,4 +169,71 @@ exports.getUser = async (req, res) => {
   if (!user) throw "Cet utilisateur n'existe pas!";
 
   res.json(user);
+};
+
+exports.forgotPassword = async (req, res) => {
+    try {
+        const schema = Joi.object({ email: Joi.string().email().required() });
+        const { error } = schema.validate(req.body);
+        if (error) return res.status(400).json({
+          success: false,
+          errors: { 
+            email: error.details[0].message
+          }
+        });
+
+        const user = await User.findOne({ email: req.body.email });
+        if (!user)
+            return res.status(400).json({
+              success: false,
+              errors: {
+                email: "L'utilisateur avec e-mail donnée n'existe pas"
+              }
+            });
+
+        let token = await Token.findOne({ userId: user._id });
+        if (!token) {
+            token = await new Token({
+                userId: user._id,
+                token: crypto.randomBytes(32).toString("hex"),
+            }).save();
+        }
+
+        const link = `${process.env.FRONTEND_URL}auth/password-reset/${user._id}/${token.token}`;
+        await sendEmail(user.email, "Password reset", link);
+
+        res.json({
+          success: true
+        });
+    } catch (error) {
+        res.status(400).json({ errors: { email: "An error occured"}});
+        console.log(error);
+    }
+}
+
+exports.resetPassword = async (req, res) => {
+    try {
+        const schema = Joi.object({ password: Joi.string().required() });
+        const { error } = schema.validate(req.body);
+        if (error) return res.status(400).send(error.details[0].message);
+
+        const user = await User.findById(req.params.userId);
+        if (!user) return res.status(400).send("Lien invalide ou expiré.");
+
+        const token = await Token.findOne({
+            userId: user._id,
+            token: req.params.token,
+        });
+        if (!token) return res.status(400).send("Lien invalide ou expiré.");
+
+        user.password = await bcrypt.hash(req.body.password, 10);
+        await user.save();
+        await token.delete();
+
+        res.send("password reset sucessfully.");
+
+    } catch (error) {
+        res.status(400).send("Lien invalide ou expiré.");
+        console.log(error);
+    }
 };

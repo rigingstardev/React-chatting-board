@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Modal, InputGroup, FormControl } from 'react-bootstrap';
+import { Modal, InputGroup, FormControl } from 'react-bootstrap';
 
 export default function AddChannelModal({
     show,
@@ -42,8 +42,8 @@ export default function AddChannelModal({
                 </InputGroup>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="success" onClick={() => { onAddChannel(groupName); setGroupName("") }}>Add</Button>
-                <Button variant="danger" onClick={onHide}>Close</Button>
+                <button className="btn btn-primary font-weight-bold" onClick={() => { onAddChannel(groupName); setGroupName("") }}>Add</button>
+                <button className="btn btn-primary font-weight-bold" onClick={onHide}>Close</button>
             </Modal.Footer>
         </Modal>
     );

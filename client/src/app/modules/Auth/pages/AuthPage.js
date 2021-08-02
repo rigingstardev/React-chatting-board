@@ -6,6 +6,7 @@ import { ContentRoute } from "../../../../_metronic/layout";
 import Login from "./Login";
 // import Registration from "./Registration";
 import ForgotPassword from "./ForgotPassword";
+import ResetPassword from "./ResetPassword";
 import "../../../../_metronic/_assets/sass/pages/login/classic/login-1.scss";
 
 export function AuthPage({ setupSocket, socket }) {
@@ -35,7 +36,7 @@ export function AuthPage({ setupSocket, socket }) {
                 <img
                   alt="Logo"
                   className="max-h-70px max-w-475px w-100"
-                  src={toAbsoluteUrl("/media/logos/logo-letter-1.png")}
+                  src={toAbsoluteUrl("/media/logos/logo_Affaires.svg")}
                 />
               </div>
               {/* end:: Aside content */}
@@ -43,7 +44,7 @@ export function AuthPage({ setupSocket, socket }) {
               {/* start:: Aside footer for desktop */}
               <div className="d-none flex-column-auto d-lg-flex justify-content-between mt-10">
                 <div className="d-flex">
-                  <p className="font-weight-lighter text-white opacity-80">
+                  <p className="font-weight-lighter" style={{color: "#586577"}}>
                     Pulitzer Ce nter on Crisis Reporting – Fellow/Correspondent. Traveled across Congo for several weeks to report on election developments, and to raise awareness of the Congo conflict in US media. Embedded with Moroccan, Pakistani and Uruguayan United Nations peacekeepers in Ituri, Lake Albert and South Kivu. Accredited with Ministry of Information and United Nations Mission in Congo (Summer 2006). ntary report on the relation between the Congo conflict and the scramble for mineral resources (Fall 2006). Aired on PBS’ Foreign Exchange with Fareed Zakaria. Guest appearances on BBC’s World News
                   </p>
                 </div>
@@ -55,9 +56,9 @@ export function AuthPage({ setupSocket, socket }) {
           {/*begin::Aside*/}
 
           {/*begin::Content*/}
-          <div className="d-flex flex-column min-w-450px position-relative p-7 overflow-hidden background-auth">
+          <div className="d-flex flex-column min-w-100 align-items-center align-items-lg-stretch min-w-sm-450px position-relative p-7 overflow-hidden background-auth px-5 px-sm-20">
             {/*begin::Content header*/}
-            <div className="position-absolute top-0 right-0 text-right mt-5 mb-15 mb-lg-0 flex-column-auto justify-content-center py-5 px-10">
+            {/* <div className="position-absolute top-0 right-0 text-right mt-5 mb-15 mb-lg-0 flex-column-auto justify-content-center py-5 px-10">
               <span className="font-weight-bold text-white-50">
                 Vous n'avez pas encore de compte?
               </span>
@@ -68,11 +69,11 @@ export function AuthPage({ setupSocket, socket }) {
               >
                 S'inscrire!
               </Link>
-            </div>
+            </div> */}
             {/*end::Content header*/}
 
             {/* begin::Content body */}
-            <div className="d-flex flex-column-fluid flex-center mt-5 mt-lg-0">
+            <div className="d-flex flex-column-fluid mt-5 mt-lg-0 position-relative">
               <Switch>
                 <ContentRoute path="/auth/login" setupSocket={setupSocket} socket={socket} component={Login} />
                 {/* <ContentRoute
@@ -82,6 +83,10 @@ export function AuthPage({ setupSocket, socket }) {
                 <ContentRoute
                   path="/auth/forgot-password"
                   component={ForgotPassword}
+                />
+                <ContentRoute
+                  path="/auth/password-reset/:user_id/:token"
+                  component={ResetPassword}
                 />
                 <Redirect from="/auth" exact={true} to="/auth/login" />
                 <Redirect to="/auth/login" />

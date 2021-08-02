@@ -121,12 +121,23 @@
   color: #112233;
 }
 
-input {
+input, button, a, textarea {
   border-radius: 1px !important;
   -webkit-border-radius: 1px !important;
   -moz-border-radius: 1px !important;
   -ms-border-radius: 1px !important;
   -o-border-radius: 1px !important;
+}
+
+#register_btn {
+  background: url('/media/ui/register_1.png');
+  background-size: 100% 100%;
+  border: none;
+}
+
+#register_btn:hover {
+  background: url('/media/ui/register_2.png');
+  background-size: 100% 100%;
 }
 
 @media screen and (max-width: 991px) {
@@ -135,13 +146,39 @@ input {
   }
 
   #kt_login_signin_form {
-    input, button:not(.send) {
+    input {
       background-color: #D9E1EA !important;
       color: #000000 !important;
+    }
+
+    #kt_login_signin_submit {
+      background-color: #ffffffe6 !important;
+      color: #000000 !important;
+    }
+
+    #kt_login_forgot span{
+      color: #D9E1EA99 !important;
     }
   }
 
   #kt_login_signup {
   color: white;
+  }
+
+  #goto-signup {
+    background-color: #D9E1EA !important;
+    color: #000000 !important;
+  }
 }
+
+button {
+    background-color: #384553 !important;
+    color: #ACBEE2 !important;
+    border-color: #384553 !important;
+
+}
+
+button:hover {
+    background-color: #384553 !important;
+    border-color: transparent !important;
 }

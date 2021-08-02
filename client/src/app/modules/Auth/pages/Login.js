@@ -94,7 +94,7 @@ function Login(props) {
   });
 
   return (
-    <div className="login-form login-signin" id="kt_login_signin_form">
+    <div className="login-form login-signin d-flex flex-column justify-content-between" id="kt_login_signin_form">
       {/* begin::Head */}
       <div className="text-center mb-10 mb-lg-20">
 
@@ -142,39 +142,52 @@ function Login(props) {
             </div>
           ) : null}
         </div>
+
+        <div className="form-group fv-plugins-icon-container">
+          <button
+            id="kt_login_signin_submit"
+            type="submit"
+            disabled={formik.isSubmitting}
+            className={`btn btn-primary font-weight-bold px-9 py-5 w-100`}
+            style={{ backgroundColor: "#384553", borderColor: "#384553", color: "#ACBEE2" }}
+          >
+            <span>Entrez</span>
+            {loading && <span className="ml-3 spinner spinner-white"></span>}
+          </button>
+        </div>
+
         <div className="form-group d-flex flex-wrap justify-content-between align-items-center">
           <Link
-            to="/auth/login"
+            to="/auth/forgot-password"
             className="text-dark-50 text-hover-primary my-3 mr-2"
             id="kt_login_forgot"
           >
-            <span>Mot de passe oublié?</span>
+            <span style={{color: "#384553"}}>Mot de passe oublié?</span>
           </Link>
         </div>
 
         {/* begin::Mobile footer */}
         <div className="d-flex d-lg-none flex-column-auto flex-column flex-sm-row justify-content-between align-items-center mt-5 p-5">
           <div className="d-flex">
-            <p className="font-weight-lighter opacity-80" style={{ borderColor: "#384553", color: "#ACBEE2", wordBreak: "break-all" }}>
+            <p className="font-weight-lighter" style={{ borderColor: "#384553", color: "#586577", wordBreak: "break-all" }}>
               Pulitzer Ce nter on Crisis Reporting – Fellow/Correspondent. Traveled across Congo for several weeks to report on election developments, and to raise awareness of the Congo conflict in US media. Embedded with Moroccan, Pakistani and Uruguayan United Nations peacekeepers in Ituri, Lake Albert and South Kivu. Accredited with Ministry of Information and United Nations Mission in Congo (Summer 2006). ntary report on the relation between the Congo conflict and the scramble for mineral resources (Fall 2006).<br /> Aired on PBS’ Foreign Exchange with Fareed Zakaria. Guest appearances on BBC’s World News
             </p>
           </div>
         </div>
         {/* end::Mobile footer */}
-
-        <div style={{ textAlign: "center" }}>
-          <button
-            id="kt_login_signin_submit"
-            type="submit"
-            disabled={formik.isSubmitting}
-            className={`btn btn-primary font-weight-bold px-9 py-4 my-3`}
-            style={{ backgroundColor: "#384553", borderColor: "#384553", color: "#ACBEE2" }}
-          >
-            <span>Joindre le réseau</span>
-            {loading && <span className="ml-3 spinner spinner-white"></span>}
-          </button>
-        </div>
       </form>
+      <div className="text-center">
+        <Link
+          id="goto-signup"
+          to="/auth/registration"
+          disabled={formik.isSubmitting}
+          className={`btn btn-primary font-weight-bold px-9 py-4 my-3`}
+          style={{ backgroundColor: "#384553", borderColor: "#384553", color: "#ACBEE2" }}
+        >
+          <span>Joindre le réseau</span>
+          {/* {loading && <span className="ml-3 spinner spinner-white"></span>} */}
+        </Link>
+      </div>
       {/*end::Form*/}
     </div>
   );

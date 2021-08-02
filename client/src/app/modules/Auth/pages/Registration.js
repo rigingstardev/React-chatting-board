@@ -38,6 +38,11 @@ const initialValues = {
   acceptTerms: false,
 };
 
+const SUPPORTED_FORMATS = [
+  'image/png',
+  'image/jpeg'
+] 
+
 function Registration(props) {
   const { intl } = props;
   const [loading, setLoading] = useState(false);
@@ -55,9 +60,48 @@ function Registration(props) {
       .min(6, "Au moins 6 symboles")
       .max(50, "50 symboles maximum")
       .required("Ce champ est requis."),
-    avatar: Yup.mixed()
+    job: Yup.string()
       .required("Ce champ est requis."),
-    photo: Yup.mixed(),
+    industry: Yup.string()
+      .required("Ce champ est requis."),
+    country: Yup.string()
+      .required("Ce champ est requis."),
+    city: Yup.string()
+      .required("Ce champ est requis."),
+    note: Yup.string()
+      .required("Ce champ est requis."),
+    phone: Yup.string()
+      .required("Ce champ est requis."),
+    avatar: Yup.mixed()
+      .required("Ce champ est requis.")
+      .test('fileFormat', 'Type de fichier non pris en charge.', (value) => (value && SUPPORTED_FORMATS.includes(value.type)))
+      // .test('fileSize', 'Veuillez vérifier la dimension du fichier.', async (value) => { 
+      //   if(!value) return false;
+      //   const img = new Image();
+      //   img.src = URL.createObjectURL(value);
+      //   return await new Promise(resolve => {
+      //     img.decode().then(() => {
+      //       URL.revokeObjectURL(img.src);
+      //       return resolve(img.width >= 400 && img.height >= 400);
+      //     });
+      //   });
+      // }),
+      ,
+    photo: Yup.mixed()
+      .required("Ce champ est requis.")
+      .test('fileFormat', 'Type de fichier non pris en charge.', (value) => (value && SUPPORTED_FORMATS.includes(value.type)))
+      // .test('fileSize', 'Veuillez vérifier la dimension du fichier.', async (value) => { 
+      //   if(!value) return false;
+      //   const img = new Image();
+      //   img.src = URL.createObjectURL(value);
+      //   return await new Promise(resolve => {
+      //     img.decode().then(() => {
+      //       URL.revokeObjectURL(img.src);
+      //       return resolve(img.width >= 1140 && img.height >= 470);
+      //     });
+      //   });
+      // }),
+      ,
     changepassword: Yup.string()
       .required("Ce champ est requis.")
       .when("password", {
@@ -423,14 +467,23 @@ function Registration(props) {
                           </div>
                           {/* end: website */}
                         </div>
-                        <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Photo  identifiant :</div>
+                        <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-0">
+                          Photo identifiant :
+                          <p className="m-0">
+                            14.11cm * 14.11cm <br />
+                            (400px * 400px)
+                          </p>
+                        </div>
                         <div className="col-12 col-md-8 col-sm-8">
                           {/* begin: avatar */}
                           <div className="form-group fv-plugins-icon-container">
                             <input
                               type="file"
-                              className={`form-control form-control-solid h-auto px-6`}
+                              className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
+                                "avatar"
+                              )}`}
                               name="avatar"
+                              accept=".png, .jpg, .jpeg"
                               onChange={evt => formik.setFieldValue("avatar", evt.target.files[0])}
                             />
                             {formik.touched.avatar && formik.errors.avatar ? (
@@ -441,7 +494,13 @@ function Registration(props) {
                           </div>
                           {/* end: avatar */}
                         </div>
-                        <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Photo pour votre page :</div>
+                        <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-0">
+                          Photo pour votre page :
+                          <p className="m-0">
+                             40.22cm * 16.58cm <br />
+                            (1140px * 470px)
+                          </p>
+                        </div>
                         <div className="col-12 col-md-8 col-sm-8">
                           {/* begin: photo */}
                           <div className="form-group fv-plugins-icon-container">
@@ -450,6 +509,7 @@ function Registration(props) {
                               className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
                                 "photo"
                               )}`}
+                              accept=".png, .jpg, .jpeg"
                               name="photo"
                               onChange={evt => formik.setFieldValue("photo", evt.target.files[0])}
                             />
@@ -461,7 +521,7 @@ function Registration(props) {
                           </div>
                           {/* end: photo */}
                         </div>
-                        <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">le mot de passe :</div>
+                        <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Mot de passe :</div>
                         <div className="col-12 col-md-8 col-sm-8">
                           {/* begin: password */}
                           <div className="form-group fv-plugins-icon-container">
@@ -481,7 +541,7 @@ function Registration(props) {
                           </div>
                           {/* end: password */}
                         </div>
-                        <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">mot de passe de confirmation :</div>
+                        <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Confirmez le mot de passe :</div>
                         <div className="col-12 col-md-8 col-sm-8">
                           {/* begin: changepassword */}
                           <div className="form-group fv-plugins-icon-container">
@@ -504,18 +564,21 @@ function Registration(props) {
                       </div>
                       <button
                         type="submit"
+                        id="register_btn"
                         disabled={
                           formik.isSubmitting ||
                           !formik.isValid
                           // !formik.values.acceptTerms
                         }
-                        className="btn btn-primary send font-weight-bold px-9 py-4 my-3 mx-4 position-absolute"
+                        className="send font-weight-bold px-9 py-4 my-3 mx-4 position-absolute"
                         style={{
-                          left: "calc(50% - 50px)",
-                          backgroundColor: "#CCB742"
+                          left: "calc(50% - 90px)",
+                          backgroundColor: "#CCB742",
+                          width: 173,
+                          height: 43,
+                          backgroundImage: (formik.isSubmitting || !formik.isValid) ? "url('/media/ui/register_1.png')" : "",
                         }}
                       >
-                        <span>Envoyer</span>
                         {loading && <span className="ml-3 spinner spinner-white"></span>}
                       </button>
                     </form>

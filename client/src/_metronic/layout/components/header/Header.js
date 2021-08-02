@@ -39,7 +39,7 @@ export function Header() {
               <img
                 alt="Logo"
                 className="max-h-70px max-w-350px w-100"
-                src={toAbsoluteUrl("/media/logos/logo-letter-1.png")}
+                src={toAbsoluteUrl("/media/logos/logo_Affaires.svg")}
               />
             </Link>
           </div>
