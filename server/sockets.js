@@ -113,7 +113,14 @@ sockets.init = (server) => {
     // When user creates a new channel
     socket.on("newChannel", async ({ channelName }) => {
       const channel = await Channel.findOne({ name: channelName }).populate('users');
-      if (channel) io.emit("newChannel", { channel });
+      if (channel) {
+        channel.users.map(user => {
+          if (user.socketId) {
+            io.sockets.connected[user.socketId].join(channel._id);
+          }
+        })
+        io.emit("newChannel", { channel });
+      }
     });
 
     // When user sends a new message in channel
@@ -139,10 +146,10 @@ sockets.init = (server) => {
 
           const channel = await Channel.findById(channelId);
 
-          io.to(channelId).emit(
-            "updateSentiment",
-            getCurrentSentiment(channel)
-          );
+          // io.to(channelId).emit(
+          //   "updateSentiment",
+          //   getCurrentSentiment(channel)
+          // );
           channel.totalMessages += 1;
           channel.save();
 
