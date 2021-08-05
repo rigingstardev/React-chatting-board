@@ -169,18 +169,22 @@ sockets.init = (server) => {
           });
 
           await newMessage.save();
+          const data = await newMessage.populate('from', { password: 0 }).populate('to', { password: 0 }).execPopulate();
 
-          let toU = await User.findById(toUser);
-          const messageNew = await DirectMessage.findById(newMessage._id).populate('from', { password: 0 }).populate('to', { password: 0 });
+          // const messageNew = await DirectMessage.findById(newMessage._id).populate('from', { password: 0 }).populate('to', { password: 0 });
+
+          // console.log(data, '---')
 
           socket.emit("newDirectMessage", {
             type: "DirectMessage",
-            message: messageNew
+            message: data
           });
+
+          let toU = await User.findById(toUser);
           if (toU && toU.socketId) {
             io.to(toU.socketId).emit("newDirectMessage", {
               type: "DirectMessage",
-              message: messageNew
+              message: data
             });
           }
         }
