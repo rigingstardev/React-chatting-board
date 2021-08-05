@@ -7,7 +7,25 @@ const auth = require("../middlewares/auth");
 router.get(
   "/:channelId",
   auth,
-  catchErrors(messagesController.getAllMessagesInRoom)
+  catchErrors(messagesController.getAllMessagesInChannel)
+);
+
+router.get(
+  "/private/:fromUser",
+  auth,
+  catchErrors(messagesController.getAllDirectMessage)
+);
+
+router.get(
+  "/read/:id",
+  auth,
+  catchErrors(messagesController.readChannelMessage)
+);
+
+router.patch(
+  "/read/private/:id",
+  auth,
+  catchErrors(messagesController.readDirectMessage)
 );
 
 module.exports = router;

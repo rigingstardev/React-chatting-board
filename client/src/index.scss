@@ -170,15 +170,24 @@ input, button, a, textarea {
     color: #000000 !important;
   }
 }
+.modal-dialog {
+  button.btn {
+      background-color: #384553 !important;
+      color: #ACBEE2 !important;
+      border-color: #384553 !important;
+  
+  }
+  
+  button.btn:hover {
+      background-color: #384553 !important;
+      border-color: transparent !important;
+  }
 
-button {
-    background-color: #384553 !important;
-    color: #ACBEE2 !important;
-    border-color: #384553 !important;
-
+  .dropdown-container {
+    border-radius: 1px;
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    -ms-border-radius: 1px;
+    -o-border-radius: 1px;
 }
-
-button:hover {
-    background-color: #384553 !important;
-    border-color: transparent !important;
 }

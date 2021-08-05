@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Channel = mongoose.model("Channel");
 
 exports.createChannel = async (req, res) => {
-  const { name } = req.body;
+  const { name, users } = req.body;
 
   const nameRegex = /^[A-Za-z\s]+$/;
 
@@ -13,6 +13,7 @@ exports.createChannel = async (req, res) => {
 
   const channel = new Channel({
     name,
+    users: [...users, req.user._id]
   });
 
   await channel.save();
@@ -21,6 +22,11 @@ exports.createChannel = async (req, res) => {
     message: "Channel created!",
   });
 };
+
+exports.addUser = async (req, res) => {
+  const { users } = req.body;
+  const channel = await Channel.findById(req.params.id).populate('User');
+}
 
 exports.getChannelSentiment = async (req, res) => {
   const channel = await Channel.findOne({
@@ -35,7 +41,6 @@ exports.getChannelSentiment = async (req, res) => {
 };
 
 exports.getAllChannels = async (req, res) => {
-  const channels = await Channel.find({});
-
+  const channels = await Channel.find({ users: req.user._id }).populate('users', { password: 0 }, { _id: { $ne: req.user._id } });
   res.json(channels);
 };

@@ -9,6 +9,10 @@ const ChannelSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  users: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  }]
 });
 
 const Channel = mongoose.model("Channel", ChannelSchema);

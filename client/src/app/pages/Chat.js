@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import clsx from "clsx";
 import { shallowEqual, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Avatar, colors, Divider, InputAdornment, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, makeStyles, TextField, Typography } from "@material-ui/core";
@@ -21,8 +22,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import AddChannelModal from './AddChannelModal';
-import { CreateChannel, GetChannel, GetMessage } from './_redux/chatCrud';
+import { CreateChannel, GetChannel, GetMessage, GetAllUsers, ReadDirectMessage } from './_redux/chatCrud';
 import { WindowsNotify } from "../../helpers/WinNotify";
+import { Badge } from 'react-bootstrap';
 
 /*
   INTL (i18n) docs:
@@ -52,6 +54,7 @@ const useStyles = makeStyles(theme => ({
     width: 500,
   },
   search: {
+    height: 65,
     "& > .MuiInput-underline": {
       borderBottom: '1px solid #e7eff780',
       padding: "2px 0"
@@ -61,6 +64,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   listRoot: {
+    cursor: 'pointer',
     "& .MuiListItem-container, & .MuiListItem-root.MuiListItem-gutters": {
       marginTop: 1,
       backgroundColor: "#3F5060",
@@ -95,6 +99,9 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     color: '#b6ceffbd'
+  },
+  active: {
+    border: "2px solid #2d6e44"
   }
 }));
 
@@ -111,7 +118,8 @@ function Chat(props) {
   const [message, setMessage] = useState("");
   const [users, setUsers] = useState([]);
   const [channels, setChannels] = useState([]);
-  const [currentGroup, setCurrentGroup] = useState({});
+  const [currentId, setCurrentId] = useState("");
+  const [messageType, setMessageType] = useState('private');
   const [messageData, setMessageData] = useState([]);
 
   function handleChangetab(event, newValue) {
@@ -131,8 +139,15 @@ function Chat(props) {
     setSearchValue("");
   };
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const value = e.target.value;
+    if (currentId && messageType === "private") {
+      let currentUser = users.filter(user => user._id === currentId);
+      if (currentUser.length) {
+        if (currentUser[0].count > 0)
+          await ReadDirectMessage(currentId);
+      }
+    }
     setMessage(value);
   }
 
@@ -153,16 +168,22 @@ function Chat(props) {
   }
 
   const handleSend = () => {
-    if (!currentGroup._id) {
-      return alert('please select group');
+    if (!currentId) {
+      return alert('please select channel or user.');
     }
     if (message.trim() != "") {
       if (socket) {
-        socket.emit("newMessage", {
-          username: user.username,
-          channelId: currentGroup._id,
-          message: message,
-        });
+        if (messageType === "private") {
+          socket.emit("newDirectMessage", {
+            toUser: currentId,
+            message: message,
+          });
+        } else {
+          socket.emit("newChannelMessage", {
+            channelId: currentId,
+            message: message,
+          });
+        }
       }
       // setMessageData(data);
       setMessage("");
@@ -173,38 +194,30 @@ function Chat(props) {
     setModalValue(true);
   }
 
-  const groupitem = async (group) => {
-    if (group._id === currentGroup._id) return;
-    setCurrentGroup(group);
-    await getMessage(group._id);
-    if (socket) {
-      if (currentGroup._id && currentGroup._id !== group._id) {
-        socket.emit("leaveChannel", {
-          channelId: currentGroup._id,
-          username: user.username,
-        });
-      }
-      socket.emit("joinChannel", {
-        channelId: group._id,
-        username: user.username,
-      });
+  const groupitem = async (id, type = "private") => {
+    if (currentId === id) return;
+    if (type === "private") {
+      await ReadDirectMessage(id);
     }
+    setCurrentId(id);
+    setMessageType(type);
+    await getMessage(id, type);
   }
 
-  useEffect(() => {
-    let cur = channels.filter(channel => channel._id === currentGroup._id)[0];
-    if (cur && cur.users) {
-      setUsers(cur.users);
-      setCurrentGroup(cur);
-    }
-  }, [currentGroup._id, channels])
+  // useEffect(() => {
+  //   let cur = channels.filter(channel => channel._id === currentGroup._id)[0];
+  //   if (cur && cur.users) {
+  //     setUsers(cur.users);
+  //     setCurrentGroup(cur);
+  //   }
+  // }, [currentGroup._id, channels])
 
   const modalClose = () => {
     setModalValue(false);
   }
-  const addChannel = async (name) => {
+  const addChannel = async (name, selUsers) => {
     try {
-      await CreateChannel(name);
+      await CreateChannel(name, selUsers);
       if (socket) {
         socket.emit("newChannel", { channelName: name });
       }
@@ -226,29 +239,48 @@ function Chat(props) {
     }
   }
 
-  const getMessage = async (channelId) => {
+  const getAllUsers = async () => {
     try {
-      const { data } = await GetMessage(channelId);
-
-      setMessageData(data.map(message => {
-        return ({
-          position: user._id === message.userId ? 'right' : 'left',
-          type: 'text',
-          focus: true,
-          text: message.message.replace(/\n/g, "<br />"),
-          date: new Date(message.newMessage.createdAt),
-          copiableDate: true,
-          avatar: toImageUrl(message.user.avatar),
-        });
-      }));
+      const { data } = await GetAllUsers();
+      setUsers(data);
+      // return data;
     } catch (error) {
       console.error(error);
     }
   }
 
-  const isTabletDevice = useMediaQuery({
-    query: "(min-width:645px)",
-  });
+  const getMessage = async (id, type = "private") => {
+    try {
+      const { data } = await GetMessage(id, type);
+
+      setMessageData(data.map((message) => {
+        if (type === "private") {
+          return ({
+            position: user._id === message.message.from._id ? 'right' : 'left',
+            type: 'text',
+            focus: true,
+            text: message.message.message.replace(/\n/g, "<br />"),
+            date: new Date(message.message.createdAt),
+            copiableDate: true,
+            avatar: toImageUrl(message.message.from.avatar),
+          });
+        }
+        return ({
+          position: user._id === message.user._id ? 'right' : 'left',
+          type: 'text',
+          focus: true,
+          text: message.message.message.replace(/\n/g, "<br />"),
+          date: new Date(message.message.createdAt),
+          copiableDate: true,
+          avatar: toImageUrl(message.user.avatar),
+        });
+      }));
+
+      getAllUsers();
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   useEffect(() => {
     $(window).blur(function () {
@@ -258,47 +290,69 @@ function Chat(props) {
       setNotifyFlag(false);
     });
     getChannel();
+    getAllUsers();
   }, []);
 
   useEffect(() => {
     if (socket) {
       socket.removeAllListeners("newChannel");
-      socket.removeAllListeners("onlineUsers");
 
       socket.on("newChannel", ({ channel }) => {
         setChannels((prevChannels) => [...prevChannels, channel]);
-      });
-      socket.on("onlineUsers", ({ users, channelId }) => {
-        const tempChans = [...channels];
-        const index = tempChans.findIndex(chan => chan._id === channelId);
-        if (index >= 0) {
-          tempChans[index].users = users;
-          setChannels(tempChans);
-        }
-        // setUsers(users);
       });
     }
   }, [socket, channels.length]);
 
   useEffect(() => {
     if (socket) {
-      socket.removeAllListeners("newMessage");
-      socket.on("newMessage", (message) => {
+      socket.removeAllListeners("newChannelMessage");
+      socket.removeAllListeners("newDirectMessage");
+      socket.on("newChannelMessage", (message) => {
         const data = [...messageData];
         if (message.type !== "System") {
           data.push(
             {
-              position: user._id === message.userId ? 'right' : 'left',
+              position: user._id === message.user._id ? 'right' : 'left',
               type: 'text',
               focus: true,
-              text: message.message.replace(/\n/g, "<br />"),
-              date: new Date(message.newMessage.createdAt),
+              text: message.message.message.replace(/\n/g, "<br />"),
+              date: new Date(message.message.createdAt),
               copiableDate: true,
               avatar: toImageUrl(message.user.avatar),
               status: 'new'
             },
           )
-          if (notifyFlag) WindowsNotify(`New message arrived from ${message.user.username}`, message.message, 'chat', toImageUrl(message.user.avatar));
+          if (notifyFlag) WindowsNotify(`New message arrived from ${message.user.username}`, message.message.message, 'chat', toImageUrl(message.user.avatar));
+        }
+        else {
+          data.push(
+            {
+              type: 'system',
+              text: message.message
+            }
+          )
+        }
+        setMessageData(data);
+      });
+
+      socket.on("newDirectMessage", (message) => {
+        const data = [...messageData];
+        getAllUsers()
+        if (message.type !== "System") {
+          if (message.message.from._id === currentId || message.message.to._id === currentId)
+            data.push(
+              {
+                position: user._id === message.message.from._id ? 'right' : 'left',
+                type: 'text',
+                focus: true,
+                text: message.message.message.replace(/\n/g, "<br />"),
+                date: new Date(message.message.createdAt),
+                copiableDate: true,
+                avatar: toImageUrl(message.message.from.avatar),
+                status: 'new'
+              },
+            )
+          if (notifyFlag) WindowsNotify(`New message arrived from ${message.message.from.username}`, message.message.message, 'chat', toImageUrl(message.message.from.avatar));
         }
         else {
           data.push(
@@ -311,7 +365,20 @@ function Chat(props) {
         setMessageData(data);
       });
     }
-  }, [socket, messageData.length, notifyFlag])
+  }, [socket, messageData.length, notifyFlag]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("checkOnlineUsers", () => {
+        getAllUsers();
+        getChannel();
+      });
+    }
+  }, [socket])
+
+  const isTabletDevice = useMediaQuery({
+    query: "(min-width:645px)",
+  });
 
   return (
     <div className="container-contact w-100">
@@ -358,11 +425,14 @@ function Chat(props) {
                 onChangeIndex={handleChangeIndex}
               >
                 <TabContainer dir={theme.direction}>
-                  <List className={classes.listRoot} style={{ overflowY: "auto" }}>
+                  <List className={classes.listRoot} style={{ overflowY: "auto" }} onClick={() => groupitem(user._id)}>
                     {users.map((user, i) => (
-                      <ListItem key={i}>
-                        <ListItemAvatar>
-                          <Avatar alt={user.username} src={toImageUrl(user.user.avatar)} />
+                      <ListItem className={clsx(user._id === currentId && classes.active)} key={i}>
+                        <ListItemAvatar className="symbol symbol-circle">
+                          <>
+                            <Avatar className="symbol-label" alt={user.username} src={toImageUrl(user.avatar)} />
+                            <i className={clsx("symbol-badge symbol-badge-bottom", { "bg-success": user.socketId, "bg-gray-700": !user.socketId })}></i>
+                          </>
                         </ListItemAvatar>
                         <ListItemText
                           primary={user.username}
@@ -379,7 +449,8 @@ function Chat(props) {
                           }
                         />
                         <ListItemSecondaryAction>
-                          {user.date}
+                          <Badge variant="success">{Boolean(user.count) && "+" + user.count}</Badge>
+                          <span className="sr-only">unread messages</span>
                         </ListItemSecondaryAction>
                       </ListItem>
                     ))}
@@ -392,11 +463,12 @@ function Chat(props) {
                       show={modalShow}
                       onHide={modalClose}
                       onAddChannel={addChannel}
+                      users={users}
                     />
                   </Typography>
                   <List className={classes.listRoot} style={{ overflowY: "auto", marginTop: "10px" }}>
                     {channels.map((group, i) => {
-                      return (<ListItem className="groups cursor-pointer" key={i} onClick={() => groupitem(group)}>
+                      return (<ListItem className={clsx("groups cursor-pointer", group._id === currentId && classes.active)} key={i} onClick={() => groupitem(group._id, "channel")}>
                         <Typography variant="subtitle1" gutterBottom>
                           {group.name}
                         </Typography>
@@ -405,8 +477,11 @@ function Chat(props) {
                             if (gUsers.length >= 5) {
                               if (j < 4) {
                                 return (
-                                  <ListItemAvatar key={j}>
-                                    <Avatar alt={user.username} src={toImageUrl(user.user.avatar)} />
+                                  <ListItemAvatar className="symbol symbol-circle" key={j}>
+                                    <>
+                                      <Avatar className="symbol-label" alt={user.username} src={toImageUrl(user.avatar)} />
+                                      <i className={clsx("symbol-badge symbol-badge-bottom", { "bg-success": user.socketId, "bg-gray-700": !user.socketId })}></i>
+                                    </>
                                   </ListItemAvatar>
                                 );
                               } else if (j == 4) {
@@ -418,8 +493,11 @@ function Chat(props) {
                               return "";
                             } else {
                               return (
-                                <ListItemAvatar key={j}>
-                                  <Avatar alt={user.username} src={toImageUrl(user.user.avatar)} />
+                                <ListItemAvatar className="symbol symbol-circle" key={j}>
+                                  <>
+                                    <Avatar className="symbol-label" alt={user.username} src={toImageUrl(user.avatar)} />
+                                    <i className={clsx("symbol-badge symbol-badge-bottom", { "bg-success": user.socketId, "bg-gray-700": !user.socketId })}></i>
+                                  </>
                                 </ListItemAvatar>
                               );
                             }
@@ -460,7 +538,7 @@ function Chat(props) {
               </SwipeableViews>
             </div>
           </div>}
-        {isTabletDevice && <div style={{ width: 310, minWidth: 310 }}>
+        {isTabletDevice && <div style={{ width: 310, minWidth: 310, height: "calc(100vh - 171px)", borderBottom: "1px solid #4a5764" }}>
           <TextField
             className={"px-10 py-5 w-100 " + classes.search}
             id="input-with-icon-textfield"
@@ -478,14 +556,17 @@ function Chat(props) {
               ),
             }}
           />
-          <Typography className={"px-10 " + classes.color} variant="subtitle1" gutterBottom>
+          <Typography className={"px-10 m-0 " + classes.color} style={{ height: 25 }} variant="subtitle1" gutterBottom>
             CONVERSATIONS
           </Typography>
-          {isTabletDevice && <List className={classes.listRoot} style={{ height: "calc((100vh - 381px)/2)", overflowY: "auto" }}>
+          {isTabletDevice && <List className={classes.listRoot} style={{ height: "calc((100% - 162px) / 2)", overflowY: "auto" }}>
             {users.map((user, i) => (
-              <ListItem key={i}>
-                <ListItemAvatar>
-                  <Avatar alt={user.username} src={toImageUrl(user.user.avatar)} />
+              <ListItem key={i} className={clsx(user._id === currentId && classes.active)} onClick={() => groupitem(user._id)}>
+                <ListItemAvatar className="symbol symbol-circle">
+                  <>
+                    <Avatar className="symbol-label" alt={user.username} src={toImageUrl(user.avatar)} />
+                    <i className={clsx("symbol-badge symbol-badge-bottom", { "bg-success": user.socketId, "bg-gray-700": !user.socketId })}></i>
+                  </>
                 </ListItemAvatar>
                 <ListItemText
                   primary={user.username}
@@ -503,22 +584,25 @@ function Chat(props) {
                 />
                 <ListItemSecondaryAction>
                   {/* {user?.user?.createdAt} */}
+                  <Badge variant="danger" pill >{Boolean(user.count) && "+" + user.count}</Badge>
+                  <span className="sr-only">unread messages</span>
                 </ListItemSecondaryAction>
               </ListItem>
             ))}
           </List>}
-          {isTabletDevice && <Divider light className="bg-white-o-60 mt-10" />}
-          {isTabletDevice && <Typography className={"px-10 mt-5 " + classes.color} variant="subtitle1" gutterBottom>
+          {isTabletDevice && <Divider light className="bg-white-o-60" style={{ marginTop: 35 }} />}
+          {isTabletDevice && <Typography className={"px-10 " + classes.color} variant="subtitle1" style={{ marginTop: 10, marginBottom: 5, height: 22 }} gutterBottom>
             GROUPES DE TRAVAIL <AddIcon onClick={adduser} className="cursor-pointer" />
             <AddChannelModal
               show={modalShow}
               onHide={modalClose}
               onAddChannel={addChannel}
+              users={users}
             />
           </Typography>}
-          {isTabletDevice && <List className={classes.listRoot} style={{ height: "calc((100vh - 381px)/2)", overflowY: "auto" }}>
+          {isTabletDevice && <List className={classes.listRoot} style={{ height: "calc((100% - 162px) / 2)", overflowY: "auto" }}>
             {channels.map((group, i) => {
-              return (<ListItem className="groups cursor-pointer" key={i} onClick={() => groupitem(group)}>
+              return (<ListItem className={clsx("groups cursor-pointer", group._id === currentId && classes.active)} key={i} onClick={() => groupitem(group._id, "channel")}>
                 <Typography variant="subtitle1" gutterBottom>
                   {group.name}
                 </Typography>
@@ -527,8 +611,11 @@ function Chat(props) {
                     if (gUsers.length >= 5) {
                       if (j < 4) {
                         return (
-                          <ListItemAvatar key={j} >
-                            <Avatar alt={user.username} src={toImageUrl(user.user.avatar)} />
+                          <ListItemAvatar className="symbol symbol-circle" key={j} >
+                            <>
+                              <Avatar className="symbol-label" alt={user.username} src={toImageUrl(user.avatar)} />
+                              <i className={clsx("symbol-badge symbol-badge-bottom", { "bg-success": user.socketId, "bg-gray-700": !user.socketId })}></i>
+                            </>
                           </ListItemAvatar>
                         );
                       } else if (j == 4) {
@@ -540,8 +627,11 @@ function Chat(props) {
                       return "";
                     } else {
                       return (
-                        <ListItemAvatar key={j}>
-                          <Avatar alt={user.username} src={toImageUrl(user.user.avatar)} />
+                        <ListItemAvatar className="symbol symbol-circle" key={j}>
+                          <>
+                            <Avatar className="symbol-label" alt={user.username} src={toImageUrl(user.avatar)} />
+                            <i className={clsx("symbol-badge symbol-badge-bottom", { "bg-success": user.socketId, "bg-gray-700": !user.socketId })}></i>
+                          </>
                         </ListItemAvatar>
                       );
                     }

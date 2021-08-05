@@ -15,7 +15,7 @@
         height: $size;
     }
 
-    $badge-size:  12px;
+    $badge-size:  10px;
 
     .symbol-badge {
         width: $badge-size;
@@ -30,11 +30,11 @@
     }
 
     &.symbol-circle {
-        $distance: ($size / 2) * (1.41 - 1) - $badge-size;
+        $distance: ($size / 2) * (1.5 - 1) - $badge-size;
 
         .symbol-badge {
             top: $distance;
-            right: $distance;
+            right: $distance * 2.5;
 
             &.symbol-badge-bottom {
                 top: auto;

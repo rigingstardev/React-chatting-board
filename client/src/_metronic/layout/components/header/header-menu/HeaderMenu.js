@@ -30,23 +30,23 @@ export function HeaderMenu({ layoutProps }) {
             </li>
             {/*end::1 Level*/}
             {/*begin::1 Level*/}
-            <li className={`menu-item menu-item-rel ${getMenuItemActive('/chat')}`}>
-                <NavLink className="menu-link" to="/chat">
+            <li className={`menu-item menu-item-rel ${getMenuItemActive('/personList')}`}>
+                <NavLink className="menu-link" to="/personList">
                     <span className="menu-text">RÉPERTOIRE</span>
                     {layoutProps.rootArrowEnabled && (<i className="menu-arrow" />)}
                 </NavLink>
             </li>
             {/*end::1 Level*/}
             {/*begin::1 Level*/}
-            <li className={`menu-item menu-item-rel ${getMenuItemActive('/chat')}`}>
-                <NavLink className="menu-link" to="/chat">
+            <li className={`menu-item menu-item-rel ${getMenuItemActive('/user-profile')}`}>
+                <NavLink className="menu-link" to="/user-profile">
                     <span className="menu-text">INFORMATIONS</span>
                     {layoutProps.rootArrowEnabled && (<i className="menu-arrow" />)}
                 </NavLink>
             </li>
             {/*end::1 Level*/}
             {/*begin::1 Level*/}
-            <li className={`menu-item menu-item-rel ${getMenuItemActive('/chat')}`}>
+            <li className={`menu-item menu-item-rel ${getMenuItemActive('/contact')}`}>
                 <NavLink className="menu-link" to="/contact">
                     <span className="menu-text">CONTACT</span>
                     {layoutProps.rootArrowEnabled && (<i className="menu-arrow" />)}

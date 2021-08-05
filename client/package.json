@@ -79,6 +79,7 @@
         "react-inlinesvg": "1.2.0",
         "react-intl": "3.6.2",
         "react-is": "16.13.1",
+        "react-multi-select-component": "^4.0.5",
         "react-perfect-scrollbar": "1.5.8",
         "react-portal": "4.2.0",
         "react-progress-bar.js": "^0.2.3",

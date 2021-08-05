@@ -14,7 +14,7 @@ export default function UserProfilePage() {
   return (
     <div className="container">
       <div className="d-flex flex-row">
-        <ProfileCard></ProfileCard>
+        {/* <ProfileCard></ProfileCard> */}
         <div className="flex-row-fluid ml-lg-8">
           <Switch>
             <Redirect

@@ -32,6 +32,7 @@ mongoose.connect(process.env.MONGODB_URL, (error) => {
 require("./models/User");
 require("./models/Channel");
 require("./models/Message");
+require("./models/DirectMessage");
 require("./models/Token");
 
 // Bring in the routes

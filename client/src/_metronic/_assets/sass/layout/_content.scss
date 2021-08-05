@@ -5,7 +5,7 @@
 // Desktop Mode
 @include media-breakpoint-up(lg) {
 	.content {
-		padding: 120px 0 20px;
+		padding: 100px 0 0;
 
 		// Fixed Footer Mode
 		.footer-fixed & {
@@ -28,7 +28,7 @@
 	}
 
 	#kt_content {
-		padding-top: 20px;
+		padding-top: 0;
 	}
 
 	.content {
