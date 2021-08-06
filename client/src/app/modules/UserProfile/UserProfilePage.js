@@ -6,7 +6,6 @@ import { ProfileOverview } from "./ProfileOverview";
 import ChangePassword from "./ChangePassword";
 import PersonaInformation from "./PersonaInformation";
 import EmailSettings from "./EmailSettings";
-import { ProfileCard } from "./components/ProfileCard";
 
 export default function UserProfilePage() {
   const suhbeader = useSubheader();

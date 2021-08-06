@@ -2,19 +2,14 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import { connect } from "react-redux";
 import * as Yup from "yup";
-import { Link } from "react-router-dom";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { injectIntl } from "react-intl";
 import * as auth from "../_redux/authRedux";
 import { register } from "../_redux/authCrud";
 import { HeaderMobile } from "../../../../_metronic/layout/components/header-mobile/HeaderMobile";
 import { QuickUser } from './../../../../_metronic/layout/components/extras/offcanvas/QuickUser';
-import { QuickPanel } from './../../../../_metronic/layout/components/extras/offcanvas/QuickPanel';
 import { ScrollTop } from './../../../../_metronic/layout/components/extras/ScrollTop';
-import { StickyToolbar } from './../../../../_metronic/layout/components/extras/StickyToolbar';
 import { LayoutInit } from './../../../../_metronic/layout/components/LayoutInit';
 import { Footer } from './../../../../_metronic/layout/components/footer/Footer';
-import { SubHeader } from './../../../../_metronic/layout/components/subheader/SubHeader';
-import { Aside } from './../../../../_metronic/layout/components/aside/Aside';
 import { Header } from './../../../../_metronic/layout/components/header/Header';
 
 const initialValues = {

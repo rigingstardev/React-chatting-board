@@ -2,8 +2,7 @@
 import React from "react";
 import { useLocation } from "react-router";
 import { NavLink } from "react-router-dom";
-import SVG from "react-inlinesvg";
-import { toAbsoluteUrl, checkIsActive } from "../../../../_helpers";
+import { checkIsActive } from "../../../../_helpers";
 import { QuickUserToggler } from "../../extras/QuiclUserToggler";
 import { shallowEqual, useSelector } from 'react-redux';
 
@@ -21,7 +20,7 @@ export function HeaderMenu({ layoutProps }) {
     >
         {/*begin::Header Nav*/}
         <ul className={`menu-nav ${layoutProps.ulClasses}`}>
-            {/*begin::1 Level*/}
+            {/* begin::1 Level */}
             <li className={`menu-item menu-item-rel ${getMenuItemActive('/chat')}`}>
                 <NavLink className="menu-link" to="/chat">
                     <span className="menu-text">SURFACE</span>
@@ -30,31 +29,31 @@ export function HeaderMenu({ layoutProps }) {
             </li>
             {/*end::1 Level*/}
             {/*begin::1 Level*/}
-            <li className={`menu-item menu-item-rel ${getMenuItemActive('/personList')}`}>
+            {/* <li className={`menu-item menu-item-rel ${getMenuItemActive('/personList')}`}>
                 <NavLink className="menu-link" to="/personList">
                     <span className="menu-text">RÉPERTOIRE</span>
                     {layoutProps.rootArrowEnabled && (<i className="menu-arrow" />)}
                 </NavLink>
-            </li>
+            </li> */}
             {/*end::1 Level*/}
             {/*begin::1 Level*/}
-            <li className={`menu-item menu-item-rel ${getMenuItemActive('/user-profile')}`}>
+            {/* <li className={`menu-item menu-item-rel ${getMenuItemActive('/user-profile')}`}>
                 <NavLink className="menu-link" to="/user-profile">
                     <span className="menu-text">INFORMATIONS</span>
                     {layoutProps.rootArrowEnabled && (<i className="menu-arrow" />)}
                 </NavLink>
-            </li>
+            </li> */}
             {/*end::1 Level*/}
             {/*begin::1 Level*/}
-            <li className={`menu-item menu-item-rel ${getMenuItemActive('/contact')}`}>
+            {/* <li className={`menu-item menu-item-rel ${getMenuItemActive('/contact')}`}>
                 <NavLink className="menu-link" to="/contact">
                     <span className="menu-text">CONTACT</span>
                     {layoutProps.rootArrowEnabled && (<i className="menu-arrow" />)}
                 </NavLink>
-            </li>
+            </li> */}
             {user && <li className={`menu-item menu-item-rel`}>
                 <NavLink className="menu-link" to="/logout">
-                    <span className="menu-text">LOGOUT</span>
+                    <span className="menu-text">SE DÉCONNECTER</span>
                 </NavLink>
             </li>}
             {user && <li className={`menu-item menu-item-rel`}>

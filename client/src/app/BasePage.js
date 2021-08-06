@@ -4,7 +4,6 @@ import { LayoutSplashScreen, ContentRoute } from "../_metronic/layout";
 import { BuilderPage } from "./pages/BuilderPage";
 import { MyPage } from "./pages/MyPage";
 import { DashboardPage } from "./pages/DashboardPage";
-import ContactUs from "./pages/ContactUs";
 import Contact from "./pages/Contact";
 import UserList from "./pages/UserList";
 import PersonList from "./pages/PersonList";

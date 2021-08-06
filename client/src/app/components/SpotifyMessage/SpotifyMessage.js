@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import './SpotifyMessage.css';
 
-const classNames = require('classnames');
-
 export class SpotifyMessage extends Component {
     toUrl() {
         var formBody = [];
