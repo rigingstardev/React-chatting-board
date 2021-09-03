@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import clsx from "clsx";
 import { shallowEqual, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
-import { Avatar, colors, Divider, InputAdornment, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, makeStyles, TextField, Typography } from "@material-ui/core";
+import { Avatar, colors, Divider, InputAdornment, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, makeStyles, TextField, Typography, Input } from "@material-ui/core";
 import SVG from 'react-inlinesvg';
 import AddIcon from '@material-ui/icons/Add';
 import AttachFile from "@material-ui/icons/AttachFile";
@@ -104,6 +104,22 @@ const useStyles = makeStyles(theme => ({
     border: "2px solid #2d6e44"
   }
 }));
+//////////////////////
+const aaa = {
+  results: [
+    { name: 'aaa' },
+    { name: 'abb' },
+    { name: 'abc' },
+    { name: 'ttt' },
+    { name: 'ggg' },
+    { name: 'fff' },
+    { name: 'eee' },
+    { name: 'ddd' },
+    { name: 'ccc' },
+    { name: 'ooo' },
+    { name: 'kkk' },
+  ],
+};
 
 function Chat(props) {
   const classes = useStyles();
@@ -121,9 +137,29 @@ function Chat(props) {
   const [currentId, setCurrentId] = useState("");
   const [messageType, setMessageType] = useState('private');
   const [messageData, setMessageData] = useState([]);
+  //////////////
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState(
+    aaa.results
+  );
+  const handleChange1 = e => {
+    setSearchTerm(e.target.value);
+  };
+  // useEffect(() => {
+  //   const results = aaa.results.filter(person =>
+  //     person.name.toLowerCase().includes(searchTerm)
+  //   );
+  //   setSearchResults(results);
+  // }, [searchTerm]);
 
   function handleChangetab(event, newValue) {
     setValue(newValue);
+  }
+
+  function search() {
+    return users ? users.filter(person =>
+      person.username.toLowerCase().includes(searchTerm)
+    ) : [];
   }
 
   function handleChangeIndex(index) {
@@ -457,8 +493,8 @@ function Chat(props) {
                   </List>
                 </TabContainer>
                 <TabContainer dir={theme.direction}>
-                  <Typography className={"px-10 mt-5 " + classes.color} variant="subtitle1" gutterBottom>
-                    GROUPES DE TRAVAIL <AddIcon onClick={adduser} className="cursor-pointer" />
+                  <Typography className={"cursor-pointer px-10 mt-5 " + classes.color} onClick={adduser} variant="subtitle1" gutterBottom >
+                    GROUPES DE TRAVAIL <AddIcon />
                     <AddChannelModal
                       show={modalShow}
                       onHide={modalClose}
@@ -538,13 +574,14 @@ function Chat(props) {
               </SwipeableViews>
             </div>
           </div>}
-        {isTabletDevice && <div style={{ width: 310, minWidth: 310, height: "calc(100vh - 171px)", borderBottom: "1px solid #4a5764" }}>
+        {isTabletDevice && <div style={{ width: 350, minWidth: 350, height: "calc(100vh - 171px)", borderBottom: "1px solid #4a5764" }}>
           <TextField
             className={"px-10 py-5 w-100 " + classes.search}
             id="input-with-icon-textfield"
             InputProps={{
               startAdornment: (
-                <InputAdornment position="start">
+
+                <InputAdornment position="start" >
                   <span className="svg-icon">
                     <SVG
                       src={toAbsoluteUrl(
@@ -555,12 +592,15 @@ function Chat(props) {
                 </InputAdornment>
               ),
             }}
+            placeholder="Search"
+            value={searchTerm}
+            onChange={handleChange1}
           />
           <Typography className={"px-10 m-0 " + classes.color} style={{ height: 25 }} variant="subtitle1" gutterBottom>
             CONVERSATIONS
           </Typography>
           {isTabletDevice && <List className={classes.listRoot} style={{ height: "calc((100% - 162px) / 2)", overflowY: "auto" }}>
-            {users.map((user, i) => (
+            {search().map((user, i) => (
               <ListItem key={i} className={clsx(user._id === currentId && classes.active)} onClick={() => groupitem(user._id)}>
                 <ListItemAvatar className="symbol symbol-circle">
                   <>
@@ -583,16 +623,20 @@ function Chat(props) {
                   }
                 />
                 <ListItemSecondaryAction>
-                  {/* {user?.user?.createdAt} */}
                   <Badge variant="danger" pill >{Boolean(user.count) && "+" + user.count}</Badge>
                   <span className="sr-only">unread messages</span>
                 </ListItemSecondaryAction>
               </ListItem>
             ))}
           </List>}
+          {/* <ul>
+                    {searchResults.map((item, i) => (
+                      <li key={i} >{`${item.name}`}</li>
+                    ))}
+                  </ul> */}
           {isTabletDevice && <Divider light className="bg-white-o-60" style={{ marginTop: 35 }} />}
-          {isTabletDevice && <Typography className={"px-10 " + classes.color} variant="subtitle1" style={{ marginTop: 10, marginBottom: 5, height: 22 }} gutterBottom>
-            GROUPES DE TRAVAIL <AddIcon onClick={adduser} className="cursor-pointer" />
+          {isTabletDevice && <Typography className={" cursor-pointer px-10 " + classes.color} variant="subtitle1" onClick={adduser} style={{ marginTop: 10, marginBottom: 5, height: 22 }} gutterBottom>
+            GROUPES DE TRAVAIL <AddIcon />
             <AddChannelModal
               show={modalShow}
               onHide={modalClose}
@@ -661,9 +705,10 @@ function Chat(props) {
                 name="name"
                 onChange={handleChange}
                 onKeyDown={keyPress}
-                placeholder="Here where the users can enter their conversations et varius mi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed sit amet imperdiet quam.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. "
-                rows="4"
+                placeholder="Tapez un nouveau message"
+                rows="3"
                 value={message}
+                style={{ fontSize: "1.1rem" }}
               />
               <Send className="w-50px text-white-50 cursor-pointer" onClick={handleSend} />
             </div>

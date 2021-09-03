@@ -1,6 +1,6 @@
 // 3rd-party Plugins
-@import "~highlight.js/styles/googlecode.css";
-@import "~perfect-scrollbar/css/perfect-scrollbar.css";
+// @import "~highlight.js/styles/googlecode.css";
+// @import "~perfect-scrollbar/css/perfect-scrollbar.css";
 
 // Theme Styles
 @import "./_metronic/_assets/sass/style.react.scss";
@@ -55,7 +55,9 @@
       }
   }
 }
-
+.btn:hover{
+  background-color: white;
+}
 .json > pre {
   background: none #fff !important;
 
@@ -113,9 +115,6 @@
   background-color: #93999F;
 }
 
-#kt_login_signin_form {
-  
-}
 
 #kt_login_signup {
   color: #112233;
@@ -175,7 +174,6 @@ input, button, a, textarea {
       background-color: #384553 !important;
       color: #ACBEE2 !important;
       border-color: #384553 !important;
-  
   }
   
   button.btn:hover {
