@@ -1,16 +1,9 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import React from "react";
 import { connect } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
-import { Avatar, colors, Divider, InputAdornment, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, makeStyles, TextField, Typography } from "@material-ui/core";
+import { injectIntl } from "react-intl";
+import {makeStyles} from "@material-ui/core";
 import { toAbsoluteUrl } from '../../_metronic/_helpers/AssetsHelpers';
-import { FaFileExcel } from "react-icons/fa";
-import { InputGroup } from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
-import { FormControl } from 'react-bootstrap';
-import { useMediaQuery } from 'react-responsive';
 
 /*
   INTL (i18n) docs:
@@ -38,21 +31,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const initialValues = {
-    email: "",
-    password: "",
-};
-
 function Charts(props) {
-    const { intl } = props;
-    const [loading, setLoading] = useState(false);
     const classes = useStyles();
-    const isTabletDevice = useMediaQuery({
-        query: "(min-width:1583px)",
-    });
-    const isTabletDevice1 = useMediaQuery({
-        query: "(min-width:826px)",
-    });
     return (
         <div className={"container w-100 mx-auto"}>
             <div className="row" style={{ marginTop: "10px" }}>

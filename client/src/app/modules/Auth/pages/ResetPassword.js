@@ -13,8 +13,6 @@ const initialValues = {
 };
 
 function ResetPassword(props) {
-
-  const { intl } = props;
   let { user_id, token } = useParams();
   const [isRequested, setIsRequested] = useState(false);
   const ForgotPasswordSchema = Yup.object().shape({

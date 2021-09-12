@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect } from "react";
-import { Link, Switch, Redirect } from "react-router-dom";
+import React from "react";
+import { Switch, Redirect } from "react-router-dom";
 import { toAbsoluteUrl } from "../../../../_metronic/_helpers";
 import { ContentRoute } from "../../../../_metronic/layout";
 import Login from "./Login";
@@ -35,7 +35,7 @@ export function AuthPage({ setupSocket, socket }) {
               <div className="flex-column-fluid d-flex flex-column justify-content-center  algin-center" style={{ alignItems: "center" }}>
                 <img
                   alt="Logo"
-                  className="max-h-70px max-w-475px w-100"
+                  className="max-h-50px max-w-475px w-100"
                   src={toAbsoluteUrl("/media/logos/logo_Affaires.svg")}
                 />
               </div>

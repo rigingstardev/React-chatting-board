@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { connect } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
-import { Avatar, colors, Divider, InputAdornment, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, makeStyles, TextField, Typography } from "@material-ui/core";
+import { injectIntl } from "react-intl";
+import { makeStyles} from "@material-ui/core";
 import { Button } from 'react-bootstrap';
 import { useMediaQuery } from 'react-responsive';
 import { toAbsoluteUrl } from '../../_metronic/_helpers/AssetsHelpers';
@@ -125,8 +124,7 @@ function Contact(props) {
     const isTabletDevice3 = useMediaQuery({
         query: "(min-width:71px)",
     });
-    const { intl } = props;
-    const [loading, setLoading] = useState(false);
+    const [setLoading] = useState(false);
     const LoginSchema = Yup.object().shape({
         nomsvalue: Yup.string()
             .min(3, "Minimum 3 symbols")
@@ -144,10 +142,6 @@ function Contact(props) {
 
     const enableLoading = () => {
         setLoading(true);
-    };
-
-    const disableLoading = () => {
-        setLoading(false);
     };
 
     const getInputClasses = (fieldname) => {
