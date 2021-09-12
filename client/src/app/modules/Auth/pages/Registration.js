@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useFormik } from "formik";
+import { useFormik, FieldProps, FormikConsumer, Formik } from "formik";
 import { connect } from "react-redux";
 import * as Yup from "yup";
 import { injectIntl } from "react-intl";
@@ -11,6 +11,11 @@ import { ScrollTop } from './../../../../_metronic/layout/components/extras/Scro
 import { LayoutInit } from './../../../../_metronic/layout/components/LayoutInit';
 import { Footer } from './../../../../_metronic/layout/components/footer/Footer';
 import { Header } from './../../../../_metronic/layout/components/header/Header';
+import { toAbsoluteUrl, toImageUrl } from "../../../../_metronic/_helpers";
+import { Component } from 'react'
+import Select, { Option, ReactSelectProps } from 'react-select'
+import { countryList, domainList, professionList } from "../../../constant";
+
 
 const initialValues = {
   job: "",
@@ -36,11 +41,12 @@ const initialValues = {
 const SUPPORTED_FORMATS = [
   'image/png',
   'image/jpeg'
-] 
+]
 
 function Registration(props) {
   const { intl } = props;
   const [loading, setLoading] = useState(false);
+  const [update, setUpdate] = useState(0);
   const RegistrationSchema = Yup.object().shape({
     email: Yup.string()
       .email("Format d'e-mail incorrect")
@@ -70,33 +76,33 @@ function Registration(props) {
     avatar: Yup.mixed()
       .required("Ce champ est requis.")
       .test('fileFormat', 'Type de fichier non pris en charge.', (value) => (value && SUPPORTED_FORMATS.includes(value.type)))
-      // .test('fileSize', 'Veuillez vérifier la dimension du fichier.', async (value) => { 
-      //   if(!value) return false;
-      //   const img = new Image();
-      //   img.src = URL.createObjectURL(value);
-      //   return await new Promise(resolve => {
-      //     img.decode().then(() => {
-      //       URL.revokeObjectURL(img.src);
-      //       return resolve(img.width >= 400 && img.height >= 400);
-      //     });
-      //   });
-      // }),
-      ,
+    // .test('fileSize', 'Veuillez vérifier la dimension du fichier.', async (value) => { 
+    //   if(!value) return false;
+    //   const img = new Image();
+    //   img.src = URL.createObjectURL(value);
+    //   return await new Promise(resolve => {
+    //     img.decode().then(() => {
+    //       URL.revokeObjectURL(img.src);
+    //       return resolve(img.width >= 400 && img.height >= 400);
+    //     });
+    //   });
+    // }),
+    ,
     photo: Yup.mixed()
       .required("Ce champ est requis.")
       .test('fileFormat', 'Type de fichier non pris en charge.', (value) => (value && SUPPORTED_FORMATS.includes(value.type)))
-      // .test('fileSize', 'Veuillez vérifier la dimension du fichier.', async (value) => { 
-      //   if(!value) return false;
-      //   const img = new Image();
-      //   img.src = URL.createObjectURL(value);
-      //   return await new Promise(resolve => {
-      //     img.decode().then(() => {
-      //       URL.revokeObjectURL(img.src);
-      //       return resolve(img.width >= 1140 && img.height >= 470);
-      //     });
-      //   });
-      // }),
-      ,
+    // .test('fileSize', 'Veuillez vérifier la dimension du fichier.', async (value) => { 
+    //   if(!value) return false;
+    //   const img = new Image();
+    //   img.src = URL.createObjectURL(value);
+    //   return await new Promise(resolve => {
+    //     img.decode().then(() => {
+    //       URL.revokeObjectURL(img.src);
+    //       return resolve(img.width >= 1140 && img.height >= 470);
+    //     });
+    //   });
+    // }),
+    ,
     changepassword: Yup.string()
       .required("Ce champ est requis.")
       .when("password", {
@@ -147,7 +153,6 @@ function Registration(props) {
       }
       register(formData)
         .then(({ data: { accessToken } }) => {
-          // props.register(accessToken);
           props.history.push('/auth/login');
           disableLoading();
           setSubmitting(false);
@@ -192,8 +197,8 @@ function Registration(props) {
                       onSubmit={formik.handleSubmit}
                     >
                       <p >Bienvenu (e) dans le répertoire Congolais des affaires. Vous êtes sur le point d'entrer dans
-                        le réseau de professionnels, d'opérateurs économiques et de créateurs les plus authentiques opérant sur le sol congolais et ailleurs.
-                        Veuillez, s'il vous plaît, entrer vos informations les plus précises. Décrivez au mieux votre expérience dans votre domaine d'expertise ainsi que vos qualités professionnelles. Nous vous recommandons d'inclure aussi vos qualités personnelles.
+                      le réseau de professionnels, d'opérateurs économiques et de créateurs les plus authentiques opérant sur le sol congolais et ailleurs.
+                      Veuillez, s'il vous plaît, entrer vos informations les plus précises. Décrivez au mieux votre expérience dans votre domaine d'expertise ainsi que vos qualités professionnelles. Nous vous recommandons d'inclure aussi vos qualités personnelles.
                         Apres validation, vos informations entrées dans ce site seront publiées, vues et partager par des tierces personnes visitant ou recherchant d’expertises comme le vôtre. </p>
 
                       <div className="row mt-15">
@@ -220,16 +225,23 @@ function Registration(props) {
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Profession :</div>
                         <div className="col-12 col-md-8 col-sm-8">
                           {/* begin: job */}
-                          <div className="form-group fv-plugins-icon-container">
-                            <input
-                              type="text"
-                              className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
+                          <div className="form-group fv-plugins-icon-container" style={{ color: 'black',borderRadius:0 }}>
+                            <Select
+                              placeholder="sélectionner Profession"
+                              className={`${getInputClasses(
                                 "job"
                               )}`}
-                              name="job"
                               {...formik.getFieldProps("job")}
+                              onChange={selectedOption => {
+                                formik.values.job = selectedOption;
+                                setUpdate(update + 1);
+                              }}
+                              isSearchable={true}
+                              options={professionList}
+                              name="job"
+                              style={{borderRadius:'0px !important'}}
                             />
-                            {formik.touched.job && formik.errors.job ? (
+                            {formik.touched.job && formik.errors.job? (
                               <div className="fv-plugins-message-container">
                                 <div className="fv-help-block">{formik.errors.job}</div>
                               </div>
@@ -260,14 +272,20 @@ function Registration(props) {
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Industrie :</div>
                         <div className="col-12 col-md-8 col-sm-8">
                           {/* begin: name */}
-                          <div className="form-group fv-plugins-icon-container">
-                            <input
-                              type="text"
-                              className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
+                          <div className="form-group fv-plugins-icon-container" style={{ color: 'black' }}>
+                          <Select
+                              placeholder="sélectionner Industrie"
+                              className={`${getInputClasses(
                                 "industry"
                               )}`}
-                              name="industry"
                               {...formik.getFieldProps("industry")}
+                              onChange={selectedOption => {
+                                formik.values.industry = selectedOption;
+                                setUpdate(update + 1);
+                              }}
+                              isSearchable={true}
+                              options={domainList}
+                              name="industry"
                             />
                             {formik.touched.industry && formik.errors.industry ? (
                               <div className="fv-plugins-message-container">
@@ -280,14 +298,20 @@ function Registration(props) {
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Pays :</div>
                         <div className="col-12 col-md-8 col-sm-8">
                           {/* begin: country */}
-                          <div className="form-group fv-plugins-icon-container">
-                            <input
-                              type="text"
-                              className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
+                          <div className="form-group fv-plugins-icon-container" style={{ color: 'black' }}>
+                          <Select
+                              className={`${getInputClasses(
                                 "country"
                               )}`}
-                              name="country"
+                              placeholder="sélectionner pays"
                               {...formik.getFieldProps("country")}
+                              onChange={selectedOption => {
+                                formik.values.country = selectedOption;
+                                setUpdate(update + 1);
+                              }}
+                              isSearchable={true}
+                              options={countryList}
+                              name="country"
                             />
                             {formik.touched.country && formik.errors.country ? (
                               <div className="fv-plugins-message-container">
@@ -340,7 +364,7 @@ function Registration(props) {
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">
                           A propos de vous :
                           <p className="mt-5">(Vous pouvez taper ou
-                            copier et coller votre
+                          copier et coller votre
                             texte dans ce champ)</p>
                         </div>
                         <div className="col-12 col-md-8 col-sm-8">
@@ -469,18 +493,22 @@ function Registration(props) {
                             (400px * 400px)
                           </p>
                         </div>
+                        
                         <div className="col-12 col-md-8 col-sm-8">
                           {/* begin: avatar */}
                           <div className="form-group fv-plugins-icon-container">
-                            <input
-                              type="file"
-                              className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                "avatar"
-                              )}`}
-                              name="avatar"
-                              accept=".png, .jpg, .jpeg"
-                              onChange={evt => formik.setFieldValue("avatar", evt.target.files[0])}
-                            />
+                            <div style={{display:"flex"}}>
+                              <input
+                                type="file"
+                                className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
+                                  "avatar"
+                                )}`}
+                                name="avatar"
+                                accept=".png, .jpg, .jpeg"
+                                onChange={evt => formik.setFieldValue("avatar", evt.target.files[0])}
+                              />
+                              <button type="reset" onClick={() => {formik.setFieldValue("avatar","");formik.setFieldValue("photo","");}} style={{width:"45px",marginLeft:"10px"}}><i className="fas fa-trash" style={{color:"black"}}></i></button>
+                            </div>
                             {formik.touched.avatar && formik.errors.avatar ? (
                               <div className="fv-plugins-message-container">
                                 <div className="fv-help-block">{formik.errors.avatar}</div>
@@ -492,7 +520,7 @@ function Registration(props) {
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-0">
                           Photo pour votre page :
                           <p className="m-0">
-                             40.22cm * 16.58cm <br />
+                            40.22cm * 16.58cm <br />
                             (1140px * 470px)
                           </p>
                         </div>
@@ -507,6 +535,7 @@ function Registration(props) {
                               accept=".png, .jpg, .jpeg"
                               name="photo"
                               onChange={evt => formik.setFieldValue("photo", evt.target.files[0])}
+                              style={{width:"342.52px"}}
                             />
                             {formik.touched.photo && formik.errors.photo ? (
                               <div className="fv-plugins-message-container">
@@ -560,18 +589,17 @@ function Registration(props) {
                       <button
                         type="submit"
                         id="register_btn"
-                        disabled={
-                          formik.isSubmitting ||
-                          !formik.isValid
-                          // !formik.values.acceptTerms
-                        }
+                        // disabled={
+                        //   formik.isSubmitting ||
+                        //   !formik.isValid
+                        //   // !formik.values.acceptTerms
+                        // }
                         className="send font-weight-bold px-9 py-4 my-3 mx-4 position-absolute"
                         style={{
                           left: "calc(50% - 90px)",
-                          backgroundColor: "#CCB742",
                           width: 173,
                           height: 43,
-                          backgroundImage: (formik.isSubmitting || !formik.isValid) ? "url('/media/ui/register_1.png')" : "",
+                          borderRadius: 10,
                         }}
                       >
                         {loading && <span className="ml-3 spinner spinner-white"></span>}

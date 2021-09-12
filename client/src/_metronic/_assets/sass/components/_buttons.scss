@@ -10,7 +10,7 @@
 
 	// Transition
 	@include button-custom-transition($transition-link);
-
+	
 	&:focus:not(.btn-shadow):not(.btn-shadow-hover) {
 		box-shadow: none !important;
 	}
@@ -47,10 +47,10 @@
 		line-height: 1;
 		display: inline-flex;
 
-		&:after,
-		&:before {
-			//line-height: 0;
-		}
+		// &:after,
+		// &:before {
+		// 	//line-height: 0;
+		// }
 	}
 
 	// Svg icons

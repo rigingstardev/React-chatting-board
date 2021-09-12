@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import * as auth from "../_redux/authRedux";
 import { login } from "../_redux/authCrud";
-
+import './authentication.css';
 /*
   INTL (i18n) docs:
   https://github.com/formatjs/react-intl/blob/master/docs/Components.md#formattedmessage
@@ -136,7 +136,7 @@ function Login(props) {
             style={{ backgroundColor: "#384553", borderColor: "#384553", color: "#ACBEE2" }}
           />
           {formik.touched.password && formik.errors.password ? (
-            <div className="fv-plugins-message-container">
+            <div className="fv-plugins-message-container"> 
               <div className="fv-help-block">{formik.errors.password}</div>
             </div>
           ) : null}
@@ -147,7 +147,7 @@ function Login(props) {
             id="kt_login_signin_submit"
             type="submit"
             disabled={formik.isSubmitting}
-            className={`btn btn-primary font-weight-bold px-9 py-5 w-100`}
+            className={`btn font-weight-bold px-9 py-5 w-100`}
             style={{ backgroundColor: "#384553", borderColor: "#384553", color: "#ACBEE2" }}
           >
             <span>Entrez</span>
