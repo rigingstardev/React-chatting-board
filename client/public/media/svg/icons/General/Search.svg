@@ -1,12 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
-    <title>Stockholm-icons / General / Search</title>
-    <desc>Created with Sketch.</desc>
-    <defs></defs>
-    <g id="Stockholm-icons-/-General-/-Search" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <rect id="bound" x="0" y="0" width="24" height="24"></rect>
-        <path d="M14.2928932,16.7071068 C13.9023689,16.3165825 13.9023689,15.6834175 14.2928932,15.2928932 C14.6834175,14.9023689 15.3165825,14.9023689 15.7071068,15.2928932 L19.7071068,19.2928932 C20.0976311,19.6834175 20.0976311,20.3165825 19.7071068,20.7071068 C19.3165825,21.0976311 18.6834175,21.0976311 18.2928932,20.7071068 L14.2928932,16.7071068 Z" id="Path-2" fill="#000000" fill-rule="nonzero" opacity="0.3"></path>
-        <path d="M11,16 C13.7614237,16 16,13.7614237 16,11 C16,8.23857625 13.7614237,6 11,6 C8.23857625,6 6,8.23857625 6,11 C6,13.7614237 8.23857625,16 11,16 Z M11,18 C7.13400675,18 4,14.8659932 4,11 C4,7.13400675 7.13400675,4 11,4 C14.8659932,4 18,7.13400675 18,11 C18,14.8659932 14.8659932,18 11,18 Z" id="Path" fill="#000000" fill-rule="nonzero"></path>
-    </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 795.85 755.87"><defs><style>.cls-1{fill:#fff;fill-rule:evenodd;}</style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><g id="Layer_2-2" data-name="Layer 2"><g id="Layer_1-2-2" data-name="Layer 1-2"><path class="cls-1" d="M531,437.14,795.85,681.65l-68.4,74.22L464,515.73a314,314,0,0,0,39.29-36.39A228.86,228.86,0,0,0,531,437.14ZM71.06,90.75C172.33-21.78,345.66-30.91,458.19,70.37S579.85,345,478.57,457.51a270.72,270.72,0,0,1-321.65,67A318.63,318.63,0,0,1,90,479.34,278,278,0,0,1,20.12,170.8,248.76,248.76,0,0,1,71.06,90.75Zm52.39,55.3c76.84-82.21,205.78-86.56,288-9.71s86.56,205.78,9.72,288c-75.62,80.91-202,86.59-284.61,12.81-83.92-75-91.17-203.79-16.19-287.71Q121.89,147.74,123.45,146.05Z"/></g></g></g></g></svg>

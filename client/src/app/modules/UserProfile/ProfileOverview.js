@@ -1,7 +1,6 @@
 import React from "react";
-import { AdvanceTablesWidget7, ListsWidget10, ListsWidget14 } from '../../../_metronic/_partials/widgets';
 import { Card } from '../../../_metronic/_partials/controls/Card'
-import { Button, CardActionArea, CardActions, CardContent, CardMedia, makeStyles, Typography } from "@material-ui/core";
+import { Button, CardActionArea,  CardContent, makeStyles, Typography } from "@material-ui/core";
 import { toAbsoluteUrl } from "../../../_metronic/_helpers";
 
 const useStyles = makeStyles({

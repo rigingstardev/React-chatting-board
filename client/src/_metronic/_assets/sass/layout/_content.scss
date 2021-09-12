@@ -5,7 +5,7 @@
 // Desktop Mode
 @include media-breakpoint-up(lg) {
 	.content {
-		padding: 100px 0 0;
+		padding: 80px 0 0;
 
 		// Fixed Footer Mode
 		.footer-fixed & {
@@ -24,7 +24,7 @@
 @include media-breakpoint-down(md) {
 	
 	#kt_header {
-		height: 100px;
+		height: 80px;
 	}
 
 	#kt_content {

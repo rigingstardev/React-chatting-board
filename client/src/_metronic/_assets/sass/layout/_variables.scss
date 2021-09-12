@@ -28,12 +28,12 @@ $header-config: (
 	desktop: (
 		// Default Mode
 		default: (
-			height: 100px
+			height: 80px
 		),
 		// Fixed Mode
 		fixed: (
 			zindex: 97,
-			height: 100px
+			height: 80px
 		)
 	),
 
@@ -41,12 +41,12 @@ $header-config: (
 	tablet-and-mobile: (
 		// Default Mode
 		default: (
-			height: 100px,
+			height: 80px,
 		),
 		// Fixed Mode
 		fixed: (
 			zindex: 97,
-			height: 100px
+			height: 80px
 		)
 	)
 ) !default;

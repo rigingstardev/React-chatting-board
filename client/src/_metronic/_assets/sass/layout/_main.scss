@@ -79,7 +79,7 @@ body {
 // }
 
 .chat-view {
-	height: calc(100vh - 171px);
+	height: calc(100vh - 80px);
 	display: flex;
 	flex-direction: column;
 
@@ -87,13 +87,14 @@ body {
 		background-color: #93999F;
 		padding: 10px 0;
 		flex: 1;
-		max-height: calc(100% - 154px);
+		max-height: calc(100% - 100px);
 		// overflow-y: auto;
 	}
 
 	.message-input {
 		background-color: #3F5060;
-		height: 154px;
+		height: 100px;
+		padding: 15px 20px;
 	}
 }
 

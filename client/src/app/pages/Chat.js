@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useFormik } from "formik";
-import * as Yup from "yup";
 import clsx from "clsx";
 import { shallowEqual, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
-import { Avatar, colors, Divider, InputAdornment, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, makeStyles, TextField, Typography, Input } from "@material-ui/core";
+import { Avatar,  Divider, InputAdornment, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, makeStyles, TextField, Typography, Input } from "@material-ui/core";
 import SVG from 'react-inlinesvg';
 import AddIcon from '@material-ui/icons/Add';
-import AttachFile from "@material-ui/icons/AttachFile";
-import Send from "@material-ui/icons/Send";
 import { toAbsoluteUrl, toImageUrl } from "../../_metronic/_helpers";
 import { MessageList } from '../components/MessageList/MessageList';
 
@@ -55,12 +49,12 @@ const useStyles = makeStyles(theme => ({
   },
   search: {
     height: 65,
-    "& > .MuiInput-underline": {
-      borderBottom: '1px solid #e7eff780',
+    "& > .MuiInput-underline, & > .MuiInput-underline:after": {
+      borderBottom: '1px solid #fff',
       padding: "2px 0"
     },
     "& input": {
-      color: '#e7eff780'
+      color: '#fff'
     }
   },
   listRoot: {
@@ -101,7 +95,7 @@ const useStyles = makeStyles(theme => ({
     color: '#b6ceffbd'
   },
   active: {
-    border: "2px solid #2d6e44"
+    borderLeft: "6px solid #eee",
   }
 }));
 //////////////////////
@@ -161,7 +155,11 @@ function Chat(props) {
       person.username.toLowerCase().includes(searchTerm)
     ) : [];
   }
-
+  function search_channel() {
+    return channels ? channels.filter(group =>
+      group.name.toLowerCase().includes(searchTerm)
+    ) : [];
+  }
   function handleChangeIndex(index) {
     setValue(index);
   }
@@ -420,7 +418,7 @@ function Chat(props) {
     <div className="container-contact w-100">
       <div className="d-flex">
         {!isTabletDevice &&
-          <div className="w-100">
+          <div className="w-100" >
             <TextField
               className={"px-5 py-5 w-100 " + classes.search}
               id="input-with-icon-textfield"
@@ -461,9 +459,9 @@ function Chat(props) {
                 onChangeIndex={handleChangeIndex}
               >
                 <TabContainer dir={theme.direction}>
-                  <List className={classes.listRoot} style={{ overflowY: "auto" }} onClick={() => groupitem(user._id)}>
+                  <List className={classes.listRoot} style={{ overflowY: "auto" }} >
                     {users.map((user, i) => (
-                      <ListItem className={clsx(user._id === currentId && classes.active)} key={i}>
+                      <ListItem key={i} className={clsx(user._id === currentId && classes.active)} onClick={() => groupitem(user._id)}>
                         <ListItemAvatar className="symbol symbol-circle">
                           <>
                             <Avatar className="symbol-label" alt={user.username} src={toImageUrl(user.avatar)} />
@@ -494,7 +492,7 @@ function Chat(props) {
                 </TabContainer>
                 <TabContainer dir={theme.direction}>
                   <Typography className={"cursor-pointer px-10 mt-5 " + classes.color} onClick={adduser} variant="subtitle1" gutterBottom >
-                    GROUPES DE TRAVAIL <AddIcon />
+                    GROUPES DE TRAVAIL <AddIcon fontSize="large"/>
                     <AddChannelModal
                       show={modalShow}
                       onHide={modalClose}
@@ -557,24 +555,37 @@ function Chat(props) {
                       dataSource={messageData} />
                     {/* </div> */}
                     <div className="message-input d-flex align-items-center">
-                      <AttachFile className="w-50px text-white-50" />
+                    <SVG
+                        className="w-30px text-white-50" 
+                        style={{paddingLeft:"5px"}}
+                        src={toAbsoluteUrl(
+                          "/media/svg/icons/General/Attachment.svg"
+                        )}
+                      />
                       <textarea
                         className={`form-control form-control-solid h-auto px-6 bg-transparent border-0 text-white-50`}
                         name="name"
                         onChange={handleChange}
                         onKeyDown={keyPress}
-                        placeholder="Here where the users can enter their conversations et varius mi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed sit amet imperdiet quam.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. "
-                        rows="4"
+                        placeholder="Tapez un nouveau message"
+                        rows="3"
                         value={message}
                       />
-                      <Send className="w-50px text-white-50 cursor-pointer" onClick={handleSend} />
+                                    <SVG
+                className="w-50px text-white-50 cursor-pointer"
+                style={{paddingRight:"15px"}}
+                src={toAbsoluteUrl(
+                  "/media/svg/icons/General/Send Icon.svg"
+                )}
+                onClick={handleSend}
+              />  
                     </div>
                   </div>
                 </TabContainer>
               </SwipeableViews>
             </div>
           </div>}
-        {isTabletDevice && <div style={{ width: 350, minWidth: 350, height: "calc(100vh - 171px)", borderBottom: "1px solid #4a5764" }}>
+        {isTabletDevice && <div style={{ width: 350, minWidth: 350, height: "calc(100vh - 180px)", borderBottom: "1px solid #4a5764" }}>
           <TextField
             className={"px-10 py-5 w-100 " + classes.search}
             id="input-with-icon-textfield"
@@ -635,8 +646,8 @@ function Chat(props) {
                     ))}
                   </ul> */}
           {isTabletDevice && <Divider light className="bg-white-o-60" style={{ marginTop: 35 }} />}
-          {isTabletDevice && <Typography className={" cursor-pointer px-10 " + classes.color} variant="subtitle1" onClick={adduser} style={{ marginTop: 10, marginBottom: 5, height: 22 }} gutterBottom>
-            GROUPES DE TRAVAIL <AddIcon />
+          {isTabletDevice && <Typography className={" cursor-pointer px-10 " + classes.color} variant="subtitle1" onClick={adduser} style={{ marginTop: 8, marginBottom: 7, height: 22 }} gutterBottom>
+            GROUPES DE TRAVAIL <AddIcon fontSize="large" fontWeight={10}/>
             <AddChannelModal
               show={modalShow}
               onHide={modalClose}
@@ -644,49 +655,49 @@ function Chat(props) {
               users={users}
             />
           </Typography>}
-          {isTabletDevice && <List className={classes.listRoot} style={{ height: "calc((100% - 162px) / 2)", overflowY: "auto" }}>
-            {channels.map((group, i) => {
-              return (<ListItem className={clsx("groups cursor-pointer", group._id === currentId && classes.active)} key={i} onClick={() => groupitem(group._id, "channel")}>
-                <Typography variant="subtitle1" gutterBottom>
-                  {group.name}
-                </Typography>
-                <div className="group-users" >
-                  {!!(group.users && group.users.length) && group.users.map((user, j, gUsers) => {
-                    if (gUsers.length >= 5) {
-                      if (j < 4) {
+            {isTabletDevice && <List className={classes.listRoot} style={{ height: "calc((100% - 162px) / 2)", overflowY: "auto", padding: "0" }}>
+              {search_channel().map((group, i) => {
+                return (<ListItem className={clsx("groups cursor-pointer", group._id === currentId && classes.active)} key={i} onClick={() => groupitem(group._id, "channel")}>
+                  <Typography variant="subtitle1" gutterBottom>
+                    {group.name}
+                  </Typography>
+                  <div className="group-users" >
+                    {!!(group.users && group.users.length) && group.users.map((user, j, gUsers) => {
+                      if (gUsers.length >= 5) {
+                        if (j < 4) {
+                          return (
+                            <ListItemAvatar className="symbol symbol-circle" key={j} >
+                              <>
+                                <Avatar className="symbol-label" alt={user.username} src={toImageUrl(user.avatar)} />
+                                <i className={clsx("symbol-badge symbol-badge-bottom", { "bg-success": user.socketId, "bg-gray-700": !user.socketId })}></i>
+                              </>
+                            </ListItemAvatar>
+                          );
+                        } else if (j == 4) {
+                          let number = gUsers.length - 4;
+                          return (<ListItemAvatar key={j}>
+                            <div className={classes.plusUsersNumber}> + {number}</div>
+                          </ListItemAvatar>);
+                        }
+                        return "";
+                      } else {
                         return (
-                          <ListItemAvatar className="symbol symbol-circle" key={j} >
+                          <ListItemAvatar className="symbol symbol-circle" key={j}>
                             <>
                               <Avatar className="symbol-label" alt={user.username} src={toImageUrl(user.avatar)} />
                               <i className={clsx("symbol-badge symbol-badge-bottom", { "bg-success": user.socketId, "bg-gray-700": !user.socketId })}></i>
                             </>
                           </ListItemAvatar>
                         );
-                      } else if (j == 4) {
-                        let number = gUsers.length - 4;
-                        return (<ListItemAvatar key={j}>
-                          <div className={classes.plusUsersNumber}> + {number}</div>
-                        </ListItemAvatar>);
                       }
-                      return "";
-                    } else {
-                      return (
-                        <ListItemAvatar className="symbol symbol-circle" key={j}>
-                          <>
-                            <Avatar className="symbol-label" alt={user.username} src={toImageUrl(user.avatar)} />
-                            <i className={clsx("symbol-badge symbol-badge-bottom", { "bg-success": user.socketId, "bg-gray-700": !user.socketId })}></i>
-                          </>
-                        </ListItemAvatar>
-                      );
-                    }
-                  })}
-                  {!(group.users && group.users.length) && <ListItemAvatar>
-                    <div className={classes.plusUsersNumber}> + {0}</div>
-                  </ListItemAvatar>}
-                </div>
-              </ListItem>)
-            })}
-          </List>}
+                    })}
+                    {!(group.users && group.users.length) && <ListItemAvatar>
+                      <div className={classes.plusUsersNumber}> + {0}</div>
+                    </ListItemAvatar>}
+                  </div>
+                </ListItem>)
+              })}
+            </List>}
         </div>}
         {isTabletDevice && <div style={{ flex: 1 }}>
           <div className="chat-view">
@@ -699,7 +710,13 @@ function Chat(props) {
               dataSource={messageData} />
             {/* </div> */}
             <div className="message-input d-flex align-items-center">
-              <AttachFile className="w-50px text-white-50" />
+            <SVG
+                        className="w-30px text-white-50" 
+                        style={{paddingLeft:"5px"}}
+                        src={toAbsoluteUrl(
+                          "/media/svg/icons/General/Attachment.svg"
+                        )}
+                      />
               <textarea
                 className={`form-control form-control-solid h-auto px-6 bg-transparent border-0 text-white-50`}
                 name="name"
@@ -710,7 +727,14 @@ function Chat(props) {
                 value={message}
                 style={{ fontSize: "1.1rem" }}
               />
-              <Send className="w-50px text-white-50 cursor-pointer" onClick={handleSend} />
+              <SVG
+                className="w-50px text-white-50 cursor-pointer"
+                style={{paddingRight:"15px"}}
+                src={toAbsoluteUrl(
+                  "/media/svg/icons/General/Send Icon.svg"
+                )}
+                onClick={handleSend}
+              />    
             </div>
           </div>
         </div>}

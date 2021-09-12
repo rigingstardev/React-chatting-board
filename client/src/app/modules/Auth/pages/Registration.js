@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useFormik, FieldProps, FormikConsumer, Formik } from "formik";
+import { useFormik} from "formik";
 import { connect } from "react-redux";
 import * as Yup from "yup";
 import { injectIntl } from "react-intl";
@@ -11,10 +11,10 @@ import { ScrollTop } from './../../../../_metronic/layout/components/extras/Scro
 import { LayoutInit } from './../../../../_metronic/layout/components/LayoutInit';
 import { Footer } from './../../../../_metronic/layout/components/footer/Footer';
 import { Header } from './../../../../_metronic/layout/components/header/Header';
-import { toAbsoluteUrl, toImageUrl } from "../../../../_metronic/_helpers";
-import { Component } from 'react'
-import Select, { Option, ReactSelectProps } from 'react-select'
 import { countryList, domainList, professionList } from "../../../constant";
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import './authentication.css';
 
 
 const initialValues = {
@@ -124,7 +124,6 @@ function Registration(props) {
   const disableLoading = () => {
     setLoading(false);
   };
-
   const getInputClasses = (fieldname) => {
     if (formik.touched[fieldname] && formik.errors[fieldname]) {
       return "is-invalid";
@@ -225,8 +224,8 @@ function Registration(props) {
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Profession :</div>
                         <div className="col-12 col-md-8 col-sm-8">
                           {/* begin: job */}
-                          <div className="form-group fv-plugins-icon-container" style={{ color: 'black',borderRadius:0 }}>
-                            <Select
+                          <div className="form-group fv-plugins-icon-container" style={{ color: 'black', borderRadius: 0 }}>
+                            {/* <Select
                               placeholder="sélectionner Profession"
                               className={`${getInputClasses(
                                 "job"
@@ -240,8 +239,31 @@ function Registration(props) {
                               options={professionList}
                               name="job"
                               style={{borderRadius:'0px !important'}}
+                            /> */}
+                            <Autocomplete
+                              id="free-solo-demo"
+                              freeSolo
+                              options={professionList.map((option) => option.value)}
+                              className={` ${getInputClasses(
+                                "job"
+                              )}`}
+                              onChange={(event, values) => {
+                                formik.values.job = values;
+                                setUpdate(update + 1);
+                                console.log(formik.values.job);
+                              }}
+                              name="job"
+                              renderInput={(params) => (
+                                <TextField {...params}
+                                  variant="outlined"
+                                  onChange={(event) => {
+                                    console.log(event.target.value);
+                                    formik.values.job = event.target.value;
+                                  }}
+                                  style={{ borderRadius: '0px !important', backgroundColor: 'rgb(232, 240, 254)' }} />
+                              )}
                             />
-                            {formik.touched.job && formik.errors.job? (
+                            {formik.touched.job && formik.errors.job ? (
                               <div className="fv-plugins-message-container">
                                 <div className="fv-help-block">{formik.errors.job}</div>
                               </div>
@@ -273,7 +295,7 @@ function Registration(props) {
                         <div className="col-12 col-md-8 col-sm-8">
                           {/* begin: name */}
                           <div className="form-group fv-plugins-icon-container" style={{ color: 'black' }}>
-                          <Select
+                            {/* <Select
                               placeholder="sélectionner Industrie"
                               className={`${getInputClasses(
                                 "industry"
@@ -286,6 +308,27 @@ function Registration(props) {
                               isSearchable={true}
                               options={domainList}
                               name="industry"
+                            /> */}
+                            <Autocomplete
+                              id="free-solo-demo"
+                              freeSolo
+                              options={domainList.map((option) => option.value)}
+                              className={` ${getInputClasses(
+                                "industry"
+                              )}`}
+                              onChange={(event, values) => {
+                                formik.values.industry = values;
+                                setUpdate(update + 1);
+                              }}
+                              name="industry"
+                              renderInput={(params) => (
+                                <TextField {...params}
+                                  variant="outlined"
+                                  onChange={(event) => {
+                                    formik.values.industry = event.target.value;
+                                  }}
+                                  style={{ borderRadius: '0px !important', backgroundColor: 'rgb(232, 240, 254)' }} />
+                              )}
                             />
                             {formik.touched.industry && formik.errors.industry ? (
                               <div className="fv-plugins-message-container">
@@ -299,19 +342,26 @@ function Registration(props) {
                         <div className="col-12 col-md-8 col-sm-8">
                           {/* begin: country */}
                           <div className="form-group fv-plugins-icon-container" style={{ color: 'black' }}>
-                          <Select
-                              className={`${getInputClasses(
+                            <Autocomplete
+                              id="free-solo-demo"
+                              freeSolo
+                              options={countryList.map((option) => option.value)}
+                              className={` ${getInputClasses(
                                 "country"
                               )}`}
-                              placeholder="sélectionner pays"
-                              {...formik.getFieldProps("country")}
-                              onChange={selectedOption => {
-                                formik.values.country = selectedOption;
+                              onChange={(event, values) => {
+                                formik.values.country = values;
                                 setUpdate(update + 1);
                               }}
-                              isSearchable={true}
-                              options={countryList}
                               name="country"
+                              renderInput={(params) => (
+                                <TextField {...params}
+                                  variant="outlined"
+                                  onChange={(event) => {
+                                    formik.values.country = event.target.value;
+                                  }}
+                                  style={{ borderRadius: '0px !important', backgroundColor: 'rgb(232, 240, 254)' }} />
+                              )}
                             />
                             {formik.touched.country && formik.errors.country ? (
                               <div className="fv-plugins-message-container">
@@ -493,11 +543,11 @@ function Registration(props) {
                             (400px * 400px)
                           </p>
                         </div>
-                        
+
                         <div className="col-12 col-md-8 col-sm-8">
                           {/* begin: avatar */}
                           <div className="form-group fv-plugins-icon-container">
-                            <div style={{display:"flex"}}>
+                            <div style={{ display: "flex" }}>
                               <input
                                 type="file"
                                 className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
@@ -505,9 +555,9 @@ function Registration(props) {
                                 )}`}
                                 name="avatar"
                                 accept=".png, .jpg, .jpeg"
-                                onChange={evt => formik.setFieldValue("avatar", evt.target.files[0])}
+                                onChange={evt => { formik.setFieldValue("avatar", evt.target.files[0]); }}
                               />
-                              <button type="reset" onClick={() => {formik.setFieldValue("avatar","");formik.setFieldValue("photo","");}} style={{width:"45px",marginLeft:"10px"}}><i className="fas fa-trash" style={{color:"black"}}></i></button>
+                              <button type="reset" onClick={() => { formik.setFieldValue("avatar", ""); formik.setFieldValue("photo", ""); }} style={{ width: "45px", marginLeft: "10px" }}><i className="fas fa-trash" style={{ color: "black" }}></i></button>
                             </div>
                             {formik.touched.avatar && formik.errors.avatar ? (
                               <div className="fv-plugins-message-container">
@@ -535,7 +585,7 @@ function Registration(props) {
                               accept=".png, .jpg, .jpeg"
                               name="photo"
                               onChange={evt => formik.setFieldValue("photo", evt.target.files[0])}
-                              style={{width:"342.52px"}}
+                              style={{ width: "342.52px" }}
                             />
                             {formik.touched.photo && formik.errors.photo ? (
                               <div className="fv-plugins-message-container">
