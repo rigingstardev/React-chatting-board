@@ -31,6 +31,7 @@ exports.register = async (req, res) => {
         error: err,
       });
     }
+    
     const {
       username,
       email,
