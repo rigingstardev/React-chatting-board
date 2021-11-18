@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from "react";
 import {connect} from "react-redux";
 import {injectIntl} from "react-intl";
-import {makeStyles} from "@material-ui/core";
+import {makeStyles, withTheme} from "@material-ui/core";
 import { toAbsoluteUrl, toImageUrl } from "../../_metronic/_helpers";
-import {InputGroup} from 'react-bootstrap';
+import {InputGroup, Form} from 'react-bootstrap';
 import {Button} from 'react-bootstrap';
-import {FormControl} from 'react-bootstrap';
 import {GetAllUsers} from './_redux/chatCrud';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import {professionList, countryList} from '../constant';
 
 /*
   INTL (i18n) docs:
@@ -18,13 +20,15 @@ import {GetAllUsers} from './_redux/chatCrud';
   https://jaredpalmer.com/formik/docs/tutorial#getfieldprops
 */
 
+
 const useStyles = makeStyles(theme => ({
     plusUsersNumber: {
         backgroundColor: "#0E476F"
     },
     search: {
         backgroundColor: '#768690',
-        height: "450px"
+        height: 'auto',
+        padding: '1.5rem'
     },
     header: {
         textAlign: "center",
@@ -32,52 +36,51 @@ const useStyles = makeStyles(theme => ({
         paddingTop: "10px",
         color: "#E0E3E6"
     },
-    inputclass: {
-        backgroundColor: '#5E6E79 !important',
-        color:'white !important',
-        marginTop: "10px",
-        border:"none"
+    label: {
+        color: 'white'
     },
-    listRoot: {
-        "& .MuiListItem-container, & .MuiListItem-root.MuiListItem-gutters": {
-            marginTop: 1,
-            backgroundColor: "#3F5060",
-            display: "flex"
+    inputclass: {
+        color: "#5E6E79",
+        marginBottom: "1rem",
+        marginTop:"0.5rem", 
+        "& .MuiInputLabel-outlined:not(.MuiInputLabel-shrink)": {
+            // Default transform is "translate(14px, 20px) scale(1)""
+            // This lines up the label with the initial cursor position in the input
+            // after changing its padding-left.
+            color:"white",
+            transform: "translate(5px, 15px) scale(1);"
         },
-        "& .MuiListItem-root.MuiListItem-gutters.groups": {
-            display: 'block'
+        "& .MuiFormLabel-filled":{
+            color:"white",
         },
-        "& .MuiListItem-root.MuiListItem-gutters > div.group-users": {
-            display: 'flex',
-            alignItems: 'center'
+        "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#5E6E79",
         },
-        "& .MuiTypography-root": {
-            color: '#b6ceffbd'
+        "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "green"
         },
-        "& .MuiListItemSecondaryAction-root": {
-            color: '#112233cc'
-        },
-        "& .MuiAvatar-root": {
-            width: 70,
-            height: 60
-        }
     }
 }));
 
 const initialInputData={country:"",state:"",city:"",profession:"",username:"",expertise:""};
+const dataList = ["Red", "Green", "Black", "Blue", "Orange"];
+const userNameColors=["text-success", "text-primary", "text-danger"];
+
 function PersonList(props) {
     const classes = useStyles();
     const [usersData, setUsers] = useState([]);
     const [displayData,setDisplayData]=useState([]);
     const [inputData,setInputData]=useState({country:"",state:"",city:"",profession:"",username:"",expertise:""});
     const [update, setUpdate] = useState(0);
+    const [val, setVal] = useState("");
+    const [userColor, setUserColor] = useState(0);
 
     const getAllUsers = async () => {
         try {
             const {data} = await GetAllUsers();
+            console.log("allusers", data);
             setUsers(data); 
             setDisplayData(data);
-            // return data;
         } catch (error) {
             console.error(error);
         }
@@ -85,7 +88,7 @@ function PersonList(props) {
 
     const Filterdata = () => {        
         var tmp=[];
-        console.log(usersData);
+        console.log(inputData);
         usersData.map((user)=>{
             var flg=true;
             for(let item in inputData){
@@ -98,19 +101,16 @@ function PersonList(props) {
     }
     
     const refreshData =()=>{
+        setVal([]);
         setInputData(initialInputData);
         setDisplayData(usersData);
         setUpdate(update+1);
+        console.log("initial", initialInputData);
     }
     useEffect(() => {
         getAllUsers();
     }, []);
-    const updatePays = (e) =>{
-        var tmp = inputData;        
-        tmp[e.target.id]=e.target.value
-        setInputData(tmp);
-        setUpdate(update+1);
-    }
+    
     return (
         <div className={"container person-list"}>
             <div className="row mt-5">
@@ -118,98 +118,137 @@ function PersonList(props) {
                     <h1 className="text-uppercase text-white-50 text-center my-10">entrepreneurs et professionnels congolais et d’ailleurs</h1>
                 </div>
                 <div className="col-12 col-sm-4 col-xxl-3">
-                    <div className={
-                        classes.search
-                    }>
-                        <div className={
-                            classes.header
-                        }>Filtrez votre recherche</div>
-                        <div className="col-12">
-                            <InputGroup className={"mb-3"}>
-                                <FormControl className={
-                                        classes.inputclass
-                                    }
-                                    placeholder="Pays"
-                                    aria-label="Pays"
-                                    id="country"
-                                    value={inputData.pays}
-                                    onChange={updatePays}
-                                    aria-describedby="basic-addon1"/>
-                            </InputGroup>
-                        </div>
-                        <div className="col-12">
-                            <InputGroup className={"mb-3"}>
-                                <FormControl className={
-                                        classes.inputclass
-                                    }
-                                    value={inputData.etat}
-                                    placeholder="Etat"
-                                    aria-label="Etat"
-                                    id="state"
-                                    aria-describedby="basic-addon1"
-                                    onChange={updatePays}
+                    <div className={classes.search}>
+                        <div className={ classes.header }>Filtrez votre recherche</div>
+                            <Autocomplete
+                              id="country"
+                              name="country"
+                              freeSolo
+                              value={val}
+                              className={classes.inputclass}
+                              onChange={(event, value)=>{
+                                  inputData["country"] = value === null ? '' : value;
+                                  setUpdate(update + 1);
+                                  console.log(inputData);
+                                }}
+                                options={countryList.map((option) => option.value.toString())}
+                                renderInput={(params) => (
+                                    <TextField {...params}
+                                    variant="outlined"
+                                    label="Pays"
+                                    onChange={(event)=>{
+                                        inputData["country"] = event.target.value;
+                                        setUpdate(update + 1);
+                                        console.log(event.target.value);
+                                    }}
+                                    style={{ backgroundColor: '#5E6E79' }}
                                     />
-                            </InputGroup>
-                        </div>
-                        <div className="col-12">
-                            <InputGroup className={"mb-3 "}>
-                                <FormControl className={
-                                        classes.inputclass
-                                    }
-                                    value={inputData.ville}
-                                    placeholder="Ville"
-                                    aria-label="Ville"
-                                    id="city"
-                                    aria-describedby="basic-addon1"
-                                    onChange={updatePays}
+                                    )}
                                     />
-                            </InputGroup>
-                        </div>
-                        <div className="col-12">
-                            <InputGroup className={"mb-3 "}>
-                                <FormControl className={
-                                        classes.inputclass
-                                    }
-                                    value={inputData.profession}
-                                    placeholder="Profession"
-                                    aria-label="Profession"
-                                    id="profession"
-                                    aria-describedby="basic-addon1"
-                                    onChange={updatePays}
-                                    />
-                            </InputGroup>
-                        </div>
-                        <div className="col-12">
-                            <InputGroup className={"mb-3 "}>
-                                <FormControl className={
-                                        classes.inputclass
-                                    }
-                                    value={inputData.noms}
-                                    placeholder="Noms"
-                                    aria-label="Noms"
-                                    id="username"
-                                    aria-describedby="basic-addon1"
-                                    onChange={updatePays}
-                                    />
-                            </InputGroup>
-                        </div>
-                        <div className="col-12">
-                            <InputGroup className={"mb-3 "}>
-                                <FormControl className={
-                                        classes.inputclass
-                                    }
-                                    value={inputData.expertise}
-                                    placeholder="Expertise"
-                                    aria-label="Expertise" 
-                                    id="expertise"
-                                    aria-describedby="basic-addon1"
-                                    onChange={updatePays}
-                                    />
-                            </InputGroup>
-                        </div>
-                        <div style={
-                            {textAlign: "center"}
-                        }>
+                            <Autocomplete
+                              id="state"
+                              name="state"
+                              freeSolo
+                              value={val}
+                              className={classes.inputclass}
+                              options={[]}
+                              renderInput={(params) => (
+                                  <TextField {...params}
+                                  variant="outlined"
+                                  label="Etat"
+                                  onChange={(event)=>{
+                                      inputData["state"] = event.target.value;
+                                      setUpdate(update + 1);
+                                      console.log(inputData);
+                                    }}
+                                    style={{ borderRadius: '0px !important', backgroundColor: '#5E6E79' }} />
+                                    )}
+                            />
+                            <Autocomplete
+                              id="city"
+                              name="city"
+                              freeSolo
+                              value={val}
+                              className={classes.inputclass}
+                              options={[]}
+                              renderInput={(params) => (
+                                  <TextField {...params}
+                                  label="Ville"
+                                  variant="outlined"
+                                  onChange={(event)=>{
+                                    inputData["city"] = event.target.value;
+                                    setUpdate(update + 1);
+                                    console.log(inputData);
+                                  }}
+                                  style={{ borderRadius: '0px !important', backgroundColor: '#5E6E79' }} />
+                                  )}
+                                  />
+                            <Autocomplete
+                              id="profession"
+                              name="profession"
+                              freeSolo
+                              value={val}
+                              className={classes.inputclass}
+                              options={professionList.map((option) => option.value)}
+                              onChange={(event, value)=>{
+                                inputData["profession"] = value === null ? '' : value;
+                                setUpdate(update + 1);
+                                console.log(inputData);
+                              }}
+                              name="Profession"
+                              renderInput={(params) => (
+                                  <TextField {...params}
+                                  variant="outlined"
+                                  label="Profession"
+                                  onChange={(event)=>{
+                                    inputData["profession"] = event.target.value;
+                                    setUpdate(update + 1);
+                                    console.log(inputData);
+                                  }}
+                                  style={{ borderRadius: '0px !important', backgroundColor: '#5E6E79' }} />
+                              )}
+                            />
+                            <Autocomplete
+                              id="names"
+                              name="names"
+                              freeSolo
+                              value={val}
+                              className={classes.inputclass}
+                              options={[]}
+                              name="Noms"
+                              renderInput={(params) => (
+                                  <TextField {...params}
+                                  variant="outlined"
+                                  label="Noms"
+                                  onChange={(event)=>{
+                                    inputData["username"] = event.target.value;
+                                    setUpdate(update + 1);
+                                    console.log(inputData);
+                                  }}
+                                  style={{ borderRadius: '0px !important', backgroundColor: '#5E6E79' }} />
+                                )}
+                            />
+                            <Autocomplete
+                              id="expertise"
+                              name="expertise"
+                              freeSolo
+                              value={val}
+                              className={classes.inputclass}
+                              options={[]}
+                              name="Expertise"
+                              renderInput={(params) => (
+                                <TextField {...params}
+                                  variant="outlined"
+                                  label="Expertise"
+                                  onChange={(event)=>{
+                                    inputData["expertise"] = event.target.value;
+                                    setUpdate(update + 1);
+                                    console.log(inputData);
+                                  }}
+                                  style={{ borderRadius: '0px !important', backgroundColor: '#5E6E79' }} />
+                              )}
+                            />
+                        <div style={{textAlign: "center"}}>
                             <Button variant="secondary" onClick={refreshData}>Refaire</Button>
                             <img alt="search" className="cursor-pointer w-40px ml-2" onClick={Filterdata}
                                 src={
@@ -232,18 +271,16 @@ function PersonList(props) {
                                         {border: '2px solid #34829E'}
                                     }/>
                                 <div className="py-3">
-                                    <p className="mb-0 mt-1 text-success font-size-lg">
-                                        {
-                                        user.username
-                                    }</p>
+                                    
+                                    <p className={"mb-0 mt-1 font-size-lg", userNameColors[i%3]}>
+                                        {user.username}
+                                    </p>
                                     <p className="mb-0 text-white-50 font-size-lg">
-                                        {
-                                        user.industry
-                                    }</p>
+                                        {user.industry}
+                                    </p>
                                     <p className="mb-0 text-white-50 font-size-lg">
-                                        {
-                                        user.job
-                                    }</p>
+                                        {user.profession}
+                                    </p>
                                 </div>
                             </div>
                         ))

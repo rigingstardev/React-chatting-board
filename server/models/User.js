@@ -28,7 +28,7 @@ const UserSchema = new mongoose.Schema(
     photo: {
       type: String,
     },
-    job: {
+    profession: {
       type: String,
     },
     field: {

@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card } from '../../../_metronic/_partials/controls/Card'
 import { Button, CardActionArea,  CardContent, makeStyles, Typography } from "@material-ui/core";
-import { toAbsoluteUrl } from "../../../_metronic/_helpers";
+import { toImageUrl } from "../../../_metronic/_helpers";
+import {getUserByToken} from '../Auth/_redux/authCrud';
 
 const useStyles = makeStyles({
   card: {
@@ -16,7 +17,24 @@ const useStyles = makeStyles({
 });
 
 export function ProfileOverview() {
+  
+  const [userData, setUserData] = useState([]);
+
+  const getUser = async () => {
+    try{
+      const {data} = await getUserByToken();
+      setUserData(data);
+      console.log(data);
+    }catch(error){
+      console.log(error)
+    }
+  }
+  
   const classes = useStyles();
+
+  useEffect(()=>{
+    getUser();
+  }, []);
   return (
     <div className="row">
       {/* <div className="col-lg-6">
@@ -37,18 +55,20 @@ export function ProfileOverview() {
             )}`}
             title="Contemplative Reptile"
           /> */}
-          <img src={`${toAbsoluteUrl("/media/profile/profile.png")}`} className="w-100 px-5" />
+          <img src={toImageUrl(encodeURIComponent(userData.photo))} className="w-100 px-5" />
           <CardContent>
             <Typography className="text-white my-5" gutterBottom variant="h5" component="h2">
-              Yacky Fall
+              {/* Yacky Fall */}
+              {userData.username}
             </Typography>
             <Typography className="text-white-50 mb-5" gutterBottom variant="subtitle1">
-              Expert comptable
+              {/* Expert comptable */}
+              {userData.profession}
             </Typography>
             <div className="row">
               <div className="col-12 col-sm-12 col-md-8">
                 <Typography className="text-white-50" variant="body2" color="textSecondary" component="p">
-                  Pulitzer Ce nter on Crisis Reporting – Fellow/Correspondent. Traveled across Congo for several weeks to report on election developments, and to raise awareness of the Congo conflict in US media.  Embedded with Moroccan, Pakistani and Uruguayan United Nations peacekeepers in Ituri, Lake Albert and South Kivu. Accredited with Ministry of Information and United Nations Mission in Congo (Summer 2006).
+                  {/* Pulitzer Ce nter on Crisis Reporting – Fellow/Correspondent. Traveled across Congo for several weeks to report on election developments, and to raise awareness of the Congo conflict in US media.  Embedded with Moroccan, Pakistani and Uruguayan United Nations peacekeepers in Ituri, Lake Albert and South Kivu. Accredited with Ministry of Information and United Nations Mission in Congo (Summer 2006).
                   <br />
                   <br />
                   Stanford University - William C. and Barbara H. Edwards Media Fellow at the Hoover Institution (Fall 2005). United Press International - Columnist. Wrote a weekly column -- Eye on Africa -- an analysis of political developments on the continent with worldwide distribution (2004-2005).
@@ -56,7 +76,8 @@ export function ProfileOverview() {
                   <br />
                   Produced Congo’s Bloody Coltan, a documentary report on the relation between the Congo conflict and the scramble for mineral resources (Fall 2006). Aired on PBS’ Foreign Exchange with Fareed Zakaria. Guest appearances on BBC’s World News Update, PBS’ NewsHour with Jim Lehrer and Foreign Exchange with Fareed Zakaria, NPR’s Diane Rehm Show, Al Jazeera’s World News, VOA’s Washington Forum and Straight Talk Africa, and Radio Canada’s Dimanche Magazine
                   <br />
-                  <br />
+                  <br /> */}
+                  {userData.note}
                 </Typography>
                 <div className="mt-10 d-flex align-items-center flex-wrap">
                   <div className="mr-5 mr-sm-15">
@@ -92,16 +113,16 @@ export function ProfileOverview() {
                       Coordonnées
                     </Typography>
                     <Typography className="text-white-50" gutterBottom variant="body2" color="textSecondary" component="p">
-                      Tél. portable : <b className="text-white">+ 243 455 8954</b>
+                      Tél. portable : <b className="text-white">{userData.phone}</b>
                     </Typography>
                     <Typography className="text-white-50" gutterBottom variant="body2" color="textSecondary" component="p">
-                      Tél. bureau : <b className="text-white">+ 240 762 2875</b>
+                      Tél. bureau : <b className="text-white">{userData.telephone}</b>
                     </Typography>
                     <Typography className="text-white-50" gutterBottom variant="body2" color="textSecondary" component="p">
-                      E-mail : <b className="text-white">example@email.com</b>
+                      E-mail : <b className="text-white">{userData.email}</b>
                     </Typography>
                     <Typography className="text-white-50" gutterBottom variant="body2" color="textSecondary" component="p">
-                      État : <b className="text-white"> New York</b>
+                      État : <b className="text-white">{userData.state}</b>
                     </Typography>
                   </div>
                   <div className="col-12 col-sm-4 col-md-12 mt-15 text-sm-left text-center">

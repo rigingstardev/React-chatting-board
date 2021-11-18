@@ -18,7 +18,7 @@ import './authentication.css';
 
 
 const initialValues = {
-  job: "",
+  profession: "",
   field: "",
   industry: "",
   country: "",
@@ -61,7 +61,7 @@ function Registration(props) {
       .min(6, "Au moins 6 symboles")
       .max(50, "50 symboles maximum")
       .required("Ce champ est requis."),
-    job: Yup.string()
+    profession: Yup.string()
       .required("Ce champ est requis."),
     industry: Yup.string()
       .required("Ce champ est requis."),
@@ -223,53 +223,54 @@ function Registration(props) {
                         </div>
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Profession :</div>
                         <div className="col-12 col-md-8 col-sm-8">
-                          {/* begin: job */}
+                          {/* begin: profession */}
                           <div className="form-group fv-plugins-icon-container" style={{ color: 'black', borderRadius: 0 }}>
                             {/* <Select
                               placeholder="sélectionner Profession"
                               className={`${getInputClasses(
-                                "job"
+                                "profession"
                               )}`}
-                              {...formik.getFieldProps("job")}
+                              {...formik.getFieldProps("profession")}
                               onChange={selectedOption => {
-                                formik.values.job = selectedOption;
+                                formik.values.profession = selectedOption;
                                 setUpdate(update + 1);
                               }}
                               isSearchable={true}
                               options={professionList}
-                              name="job"
+                              name="profession"
                               style={{borderRadius:'0px !important'}}
                             /> */}
                             <Autocomplete
                               id="free-solo-demo"
                               freeSolo
+                              // multiple
                               options={professionList.map((option) => option.value)}
                               className={` ${getInputClasses(
-                                "job"
+                                "profession"
                               )}`}
                               onChange={(event, values) => {
-                                formik.values.job = values;
+                                formik.values.profession = values;
                                 setUpdate(update + 1);
-                                console.log(formik.values.job);
+                                console.log(formik.values.profession);
                               }}
-                              name="job"
+                              name="profession"
                               renderInput={(params) => (
                                 <TextField {...params}
                                   variant="outlined"
                                   onChange={(event) => {
                                     console.log(event.target.value);
-                                    formik.values.job = event.target.value;
+                                    formik.values.profession = event.target.value;
                                   }}
                                   style={{ borderRadius: '0px !important', backgroundColor: 'rgb(232, 240, 254)' }} />
                               )}
                             />
-                            {formik.touched.job && formik.errors.job ? (
+                            {formik.touched.profession && formik.errors.profession ? (
                               <div className="fv-plugins-message-container">
-                                <div className="fv-help-block">{formik.errors.job}</div>
+                                <div className="fv-help-block">{formik.errors.profession}</div>
                               </div>
                             ) : null}
                           </div>
-                          {/* end: job */}
+                          {/* end: profession */}
                         </div>
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-3">Domaine d'expertise :</div>
                         <div className="col-12 col-md-8 col-sm-8">

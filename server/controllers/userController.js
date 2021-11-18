@@ -36,7 +36,7 @@ exports.register = async (req, res) => {
       username,
       email,
       password,
-      job,
+      profession,
       field,
       industry,
       country,
@@ -105,7 +105,7 @@ exports.register = async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      job,
+      profession,
       field,
       industry,
       country,
@@ -146,12 +146,11 @@ exports.login = async (req, res) => {
   if (!isMatch) return res.status(401).json({
     success: false,
     errors: {
-      email: "Cette information d'identification n'est pas correcte."
+      email: "Ce mot de passe n'est pas correct."
     }
   });
 
   const token = await jwt.sign({ id: user.id }, process.env.SECRET);
-
   res.json({
     message: "Connecté avec succès!",
     token,
@@ -179,7 +178,7 @@ exports.getAllUsers = async (req, res) => {
       _id,
       username,
       email,
-      job,
+      profession,
       field,
       industry,
       country,
@@ -202,7 +201,7 @@ exports.getAllUsers = async (req, res) => {
         _id,
         username,
         email,
-        job,
+        profession,
         field,
         industry,
         country,
