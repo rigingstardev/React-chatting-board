@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { connect } from "react-redux";
+import {contact} from './_redux/contactCrud';
 import { injectIntl } from "react-intl";
 import { makeStyles} from "@material-ui/core";
 import { Button } from 'react-bootstrap';
@@ -105,9 +106,9 @@ const useStyles = makeStyles(theme => ({
 
 }));
 const initialValues = {
-    nomsvalue: "",
-    adressevalue: "",
-    numrovalue: "",
+    name: "",
+    email: "",
+    number: "",
 };
 
 function Contact(props) {
@@ -124,25 +125,24 @@ function Contact(props) {
     const isTabletDevice3 = useMediaQuery({
         query: "(min-width:71px)",
     });
-    const [setLoading] = useState(false);
-    const LoginSchema = Yup.object().shape({
-        nomsvalue: Yup.string()
+    const [loading, setLoading] = useState(false);
+    const EmailSchema = Yup.object().shape({
+        name: Yup.string()
             .min(3, "Minimum 3 symbols")
             .max(50, "Maximum 50 symbols")
             .required("Ce champ est requis."),
-        adressevalue: Yup.string()
+        email: Yup.string()
             .min(3, "Minimum 3 symbols")
             .max(50, "Maximum 50 symbols")
             .required("Ce champ est requis."),
-        numrovalue: Yup.string()
+        number: Yup.string()
             .min(3, "Minimum 3 symbols")
             .max(50, "Maximum 50 symbols")
             .required("Ce champ est requis."),
     });
 
-    const enableLoading = () => {
-        setLoading(true);
-    };
+    const enableLoading = () => { setLoading(true)};
+    const disableLoading = () => { setLoading(false)};
 
     const getInputClasses = (fieldname) => {
         if (formik.touched[fieldname] && formik.errors[fieldname]) {
@@ -158,24 +158,26 @@ function Contact(props) {
 
     const formik = useFormik({
         initialValues,
-        validationSchema: LoginSchema,
-        onSubmit: (values, { setStatus, setSubmitting }) => {
+        validationSchema: EmailSchema,
+        onSubmit: (values, { setStatus, setSubmitting, setErrors, resetForm}) => {
             enableLoading();
             setTimeout(() => {
-                // login(values.email, values.password)
-                //   .then(({ data: { token } }) => {
-                //     disableLoading();
-                //     console.log(token);
-                //   })
-                //   .catch(() => {
-                //     disableLoading();
-                //     setSubmitting(false);
-                //     setStatus(
-                //       intl.formatMessage({
-                //         id: "AUTH.VALIDATION.INVALID_LOGIN",
-                //       })
-                //     );
-                //   });
+                alert(JSON.stringify(values, null, 2));
+                contact(values)
+                    .then(({ data: { accessToken } }) => {
+                        // props.history.push('/auth/login');
+                        // disableLoading();
+                        // setSubmitting(false);
+                        resetForm();
+                        alert("sucesss email");
+
+                    })
+                    .catch((err) => {
+                        alert("failed email");
+                        // setSubmitting(false);
+                        // setErrors(err.response.data.errors);
+                        // disableLoading();
+                    });
             }, 1000);
         },
     });
@@ -193,16 +195,16 @@ function Contact(props) {
                                 <div className="form-group fv-plugins-icon-container">
                                     <textarea
                                         className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                            "name"
+                                            "message"
                                         )}`}
-                                        name="name"
+                                        name="message"
                                         placeholder="Entrez votre message"
                                         rows="15"
-                                        {...formik.getFieldProps("name")}
+                                        {...formik.getFieldProps("message")}
                                     />
-                                    {formik.touched.name && formik.errors.name ? (
+                                    {formik.touched.message && formik.errors.message ? (
                                         <div className="fv-plugins-message-container">
-                                            <div className="fv-help-block">{formik.errors.name}</div>
+                                            <div className="fv-help-block">{formik.errors.message}</div>
                                         </div>
                                     ) : null}
                                 </div>
@@ -219,14 +221,14 @@ function Contact(props) {
                                         <input
                                             type="text"
                                             className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                                "nomsvalue"
+                                                "name"
                                             )}`}
-                                            name="nomsvalue"
-                                            {...formik.getFieldProps("nomsvalue")}
+                                            name="name"
+                                            {...formik.getFieldProps("name")}
                                         />
-                                        {formik.touched.nomsvalue && formik.errors.nomsvalue ? (
+                                        {formik.touched.name && formik.errors.name ? (
                                             <div className="fv-plugins-message-container">
-                                                <div className="fv-help-block">{formik.errors.nomsvalue}</div>
+                                                <div className="fv-help-block">{formik.errors.name}</div>
                                             </div>
                                         ) : null}
                                     </div>
@@ -235,14 +237,14 @@ function Contact(props) {
                                         <input
                                             type="text"
                                             className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                                "adressevalue"
+                                                "email"
                                             )}`}
-                                            name="adressevalue"
-                                            {...formik.getFieldProps("adressevalue")}
+                                            name="email"
+                                            {...formik.getFieldProps("email")}
                                         />
-                                        {formik.touched.adressevalue && formik.errors.adressevalue ? (
+                                        {formik.touched.email && formik.errors.email ? (
                                             <div className="fv-plugins-message-container">
-                                                <div className="fv-help-block">{formik.errors.adressevalue}</div>
+                                                <div className="fv-help-block">{formik.errors.email}</div>
                                             </div>
                                         ) : null}
                                     </div>
@@ -251,14 +253,14 @@ function Contact(props) {
                                         <input
                                             type="text"
                                             className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                                "numrovalue"
+                                                "number"
                                             )}`}
-                                            name="numrovalue"
-                                            {...formik.getFieldProps("numrovalue")}
+                                            name="number"
+                                            {...formik.getFieldProps("number")}
                                         />
-                                        {formik.touched.numrovalue && formik.errors.numrovalue ? (
+                                        {formik.touched.number && formik.errors.number ? (
                                             <div className="fv-plugins-message-container">
-                                                <div className="fv-help-block">{formik.errors.numrovalue}</div>
+                                                <div className="fv-help-block">{formik.errors.number}</div>
                                             </div>
                                         ) : null}
                                     </div>
@@ -285,16 +287,16 @@ function Contact(props) {
                                 <div className="form-group fv-plugins-icon-container">
                                     <textarea
                                         className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                            "name"
+                                            "message"
                                         )}`}
-                                        name="name"
+                                        name="message"
                                         placeholder="Entrez votre message"
                                         rows="15"
-                                        {...formik.getFieldProps("name")}
+                                        {...formik.getFieldProps("message")}
                                     />
-                                    {formik.touched.name && formik.errors.name ? (
+                                    {formik.touched.message && formik.errors.message ? (
                                         <div className="fv-plugins-message-container">
-                                            <div className="fv-help-block">{formik.errors.name}</div>
+                                            <div className="fv-help-block">{formik.errors.message}</div>
                                         </div>
                                     ) : null}
                                 </div>
@@ -311,14 +313,14 @@ function Contact(props) {
                                         <input
                                             type="text"
                                             className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                                "nomsvalue"
+                                                "name"
                                             )}`}
-                                            name="nomsvalue"
-                                            {...formik.getFieldProps("nomsvalue")}
+                                            name="name"
+                                            {...formik.getFieldProps("name")}
                                         />
-                                        {formik.touched.nomsvalue && formik.errors.nomsvalue ? (
+                                        {formik.touched.name && formik.errors.name ? (
                                             <div className="fv-plugins-message-container">
-                                                <div className="fv-help-block">{formik.errors.nomsvalue}</div>
+                                                <div className="fv-help-block">{formik.errors.name}</div>
                                             </div>
                                         ) : null}
                                     </div>
@@ -327,14 +329,14 @@ function Contact(props) {
                                         <input
                                             type="text"
                                             className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                                "adressevalue"
+                                                "email"
                                             )}`}
-                                            name="adressevalue"
-                                            {...formik.getFieldProps("adressevalue")}
+                                            name="email"
+                                            {...formik.getFieldProps("email")}
                                         />
-                                        {formik.touched.adressevalue && formik.errors.adressevalue ? (
+                                        {formik.touched.email && formik.errors.email ? (
                                             <div className="fv-plugins-message-container">
-                                                <div className="fv-help-block">{formik.errors.adressevalue}</div>
+                                                <div className="fv-help-block">{formik.errors.email}</div>``
                                             </div>
                                         ) : null}
                                     </div>
@@ -343,14 +345,14 @@ function Contact(props) {
                                         <input
                                             type="text"
                                             className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                                "numrovalue"
+                                                "number"
                                             )}`}
-                                            name="numrovalue"
-                                            {...formik.getFieldProps("numrovalue")}
+                                            name="number"
+                                            {...formik.getFieldProps("number")}
                                         />
-                                        {formik.touched.numrovalue && formik.errors.numrovalue ? (
+                                        {formik.touched.number && formik.errors.number ? (
                                             <div className="fv-plugins-message-container">
-                                                <div className="fv-help-block">{formik.errors.numrovalue}</div>
+                                                <div className="fv-help-block">{formik.errors.number}</div>
                                             </div>
                                         ) : null}
                                     </div>
@@ -365,7 +367,8 @@ function Contact(props) {
 
                     </form>
 
-                </div>}
+                </div>
+            }
             {isTabletDevice1 && !isTabletDevice &&
                 <div className="container-contact w-max-750px w-450px mx-auto">
                     <form
@@ -403,14 +406,14 @@ function Contact(props) {
                                         <input
                                             type="text"
                                             className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                                "nomsvalue"
+                                                "name"
                                             )}`}
-                                            name="nomsvalue"
-                                            {...formik.getFieldProps("nomsvalue")}
+                                            name="name"
+                                            {...formik.getFieldProps("name")}
                                         />
-                                        {formik.touched.nomsvalue && formik.errors.nomsvalue ? (
+                                        {formik.touched.name && formik.errors.name ? (
                                             <div className="fv-plugins-message-container">
-                                                <div className="fv-help-block">{formik.errors.nomsvalue}</div>
+                                                <div className="fv-help-block">{formik.errors.name}</div>
                                             </div>
                                         ) : null}
                                     </div>
@@ -419,14 +422,14 @@ function Contact(props) {
                                         <input
                                             type="text"
                                             className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                                "adressevalue"
+                                                "email"
                                             )}`}
-                                            name="adressevalue"
-                                            {...formik.getFieldProps("adressevalue")}
+                                            name="email"
+                                            {...formik.getFieldProps("email")}
                                         />
-                                        {formik.touched.adressevalue && formik.errors.adressevalue ? (
+                                        {formik.touched.email && formik.errors.email ? (
                                             <div className="fv-plugins-message-container">
-                                                <div className="fv-help-block">{formik.errors.adressevalue}</div>
+                                                <div className="fv-help-block">{formik.errors.email}</div>
                                             </div>
                                         ) : null}
                                     </div>
@@ -435,14 +438,14 @@ function Contact(props) {
                                         <input
                                             type="text"
                                             className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                                "numrovalue"
+                                                "number"
                                             )}`}
-                                            name="numrovalue"
-                                            {...formik.getFieldProps("numrovalue")}
+                                            name="number"
+                                            {...formik.getFieldProps("number")}
                                         />
-                                        {formik.touched.numrovalue && formik.errors.numrovalue ? (
+                                        {formik.touched.number && formik.errors.number ? (
                                             <div className="fv-plugins-message-container">
-                                                <div className="fv-help-block">{formik.errors.numrovalue}</div>
+                                                <div className="fv-help-block">{formik.errors.number}</div>
                                             </div>
                                         ) : null}
                                     </div>
@@ -456,7 +459,6 @@ function Contact(props) {
                         </div>
 
                     </form>
-
                 </div>}
             {isTabletDevice &&
                 <div className="container-contact w-max-750px w-750px mx-auto">
@@ -470,16 +472,16 @@ function Contact(props) {
                                 <div className="form-group fv-plugins-icon-container">
                                     <textarea
                                         className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                            "name"
+                                            "message"
                                         )}`}
-                                        name="name"
+                                        name="message"
                                         placeholder="Entrez votre message"
                                         rows="15"
-                                        {...formik.getFieldProps("name")}
+                                        {...formik.getFieldProps("message")}
                                     />
-                                    {formik.touched.name && formik.errors.name ? (
+                                    {formik.touched.message && formik.errors.message ? (
                                         <div className="fv-plugins-message-container">
-                                            <div className="fv-help-block">{formik.errors.name}</div>
+                                            <div className="fv-help-block">{formik.errors.message}</div>
                                         </div>
                                     ) : null}
                                 </div>
@@ -498,14 +500,14 @@ function Contact(props) {
                                         <input
                                             type="text"
                                             className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                                "nomsvalue"
+                                                "name"
                                             )}`}
-                                            name="nomsvalue"
-                                            {...formik.getFieldProps("nomsvalue")}
+                                            name="name"
+                                            {...formik.getFieldProps("name")}
                                         />
-                                        {formik.touched.nomsvalue && formik.errors.nomsvalue ? (
+                                        {formik.touched.name && formik.errors.name ? (
                                             <div className="fv-plugins-message-container">
-                                                <div className="fv-help-block">{formik.errors.nomsvalue}</div>
+                                                <div className="fv-help-block">{formik.errors.name}</div>
                                             </div>
                                         ) : null}
                                     </div>
@@ -514,14 +516,14 @@ function Contact(props) {
                                         <input
                                             type="text"
                                             className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                                "adressevalue"
+                                                "email"
                                             )}`}
-                                            name="adressevalue"
-                                            {...formik.getFieldProps("adressevalue")}
+                                            name="email"
+                                            {...formik.getFieldProps("email")}
                                         />
-                                        {formik.touched.adressevalue && formik.errors.adressevalue ? (
+                                        {formik.touched.email && formik.errors.email ? (
                                             <div className="fv-plugins-message-container">
-                                                <div className="fv-help-block">{formik.errors.adressevalue}</div>
+                                                <div className="fv-help-block">{formik.errors.email}</div>
                                             </div>
                                         ) : null}
                                     </div>
@@ -530,42 +532,45 @@ function Contact(props) {
                                         <input
                                             type="text"
                                             className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
-                                                "numrovalue"
+                                                "number"
                                             )}`}
-                                            name="numrovalue"
-                                            {...formik.getFieldProps("numrovalue")}
+                                            name="number"
+                                            {...formik.getFieldProps("number")}
                                         />
-                                        {formik.touched.numrovalue && formik.errors.numrovalue ? (
+                                        {formik.touched.number && formik.errors.number ? (
                                             <div className="fv-plugins-message-container">
-                                                <div className="fv-help-block">{formik.errors.numrovalue}</div>
+                                                <div className="fv-help-block">{formik.errors.number}</div>
                                             </div>
                                         ) : null}
                                     </div>
 
                                 </div>
                                 <div className="text-right">
-                                    <div ><span className="text-dark-65 text-right m-2"> Votre message a bien été</span><Button variant="secondary">Envoyer </Button></div>
+                                    <div ><span className="text-dark-65 text-right m-2"> Votre message a bien été</span>
+                                    <Button variant="secondary" type="submit">Envoyer </Button></div>
                                 </div>
                                 {/* end: name */}
                             </div>
                         </div>
                         {/* <button
-          type="submit"
-          disabled={
-            formik.isSubmitting ||
-            !formik.isValid ||
-            !formik.values.acceptTerms
-          }
-          className="btn btn-primary send font-weight-bold px-9 py-4 my-3 mx-4 position-absolute"
-          style={{
-            left: "calc(50% - 50px)",
-            backgroundColor: "#CCB742"
-          }}
-        >
-          <span>Envoyer</span>
-          {loading && <span className="ml-3 spinner spinner-white"></span>}
-        </button> */}
-                    </form></div>}
+                            type="submit"
+                            disabled={
+                                formik.isSubmitting ||
+                                !formik.isValid ||
+                                !formik.values.acceptTerms
+                            }
+                            className="btn btn-primary send font-weight-bold px-9 py-4 my-3 mx-4 position-absolute"
+                            style={{
+                                left: "calc(50% - 50px)",
+                                backgroundColor: "#CCB742"
+                            }}
+                            >
+                            <span>Envoyer</span>
+                            {loading && <span className="ml-3 spinner spinner-white"></span>}
+                        </button> */}
+                    </form>
+            </div>
+        }
         </div>
     );
 }

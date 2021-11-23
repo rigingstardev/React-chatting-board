@@ -19,7 +19,8 @@
     "mongoose": "^5.9.16",
     "nodemailer": "^6.6.3",
     "sentiment": "^5.0.2",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.3.0",
+    "sweetalert2": "^11.2.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"

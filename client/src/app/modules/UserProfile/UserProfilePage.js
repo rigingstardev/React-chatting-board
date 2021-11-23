@@ -22,6 +22,10 @@ export default function UserProfilePage() {
               to="/user-profile/profile-overview"
             />
             <Route
+              path="/user-profile/profile-overview/:username"
+              component={ProfileOverview}
+            />
+            <Route
               path="/user-profile/profile-overview"
               component={ProfileOverview}
             />

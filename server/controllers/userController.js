@@ -36,7 +36,7 @@ exports.register = async (req, res) => {
       username,
       email,
       password,
-      job,
+      profession,
       field,
       industry,
       country,
@@ -105,7 +105,7 @@ exports.register = async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      job,
+      profession,
       field,
       industry,
       country,
@@ -146,12 +146,11 @@ exports.login = async (req, res) => {
   if (!isMatch) return res.status(401).json({
     success: false,
     errors: {
-      email: "Cette information d'identification n'est pas correcte."
+      email: "Ce mot de passe n'est pas correct."
     }
   });
 
   const token = await jwt.sign({ id: user.id }, process.env.SECRET);
-
   res.json({
     message: "Connecté avec succès!",
     token,
@@ -170,7 +169,22 @@ exports.getUser = async (req, res) => {
 
   res.json(user);
 };
+exports.getUserByName = async (req, res) => {
 
+  const user = await User.findOne({username: req.body.username});
+
+  if (!user) throw "Cet utilisateur n'existe pas!";
+
+  res.json(user);
+};
+
+exports.contact = async ( req, res) => {
+    const data = req.body.data;
+    const name = data.name;
+    const email = data.email;
+    const message = data.message;
+    sendEmail(email, message);
+};
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find({ _id: { $ne: req.user._id } }, { password: 0 }).sort({ socketId: -1 });
@@ -179,7 +193,7 @@ exports.getAllUsers = async (req, res) => {
       _id,
       username,
       email,
-      job,
+      profession,
       field,
       industry,
       country,
@@ -202,7 +216,7 @@ exports.getAllUsers = async (req, res) => {
         _id,
         username,
         email,
-        job,
+        profession,
         field,
         industry,
         country,
