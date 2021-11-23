@@ -6,6 +6,7 @@ export const REQUEST_PASSWORD_URL = `${backendurl}user/forgot-password`;
 export const RESET_PASSWRD_URL =  `${backendurl}user/password-reset/`;
 
 export const ME_URL = `${backendurl}user/me`;
+export const GETUSER_URL = `${backendurl}user/find/`;
 
 export function login(email, password) {
   // console.log(LOGIN_URL);
@@ -27,4 +28,8 @@ export function resetPassword(user_id, token, password) {
 export function getUserByToken() {
   // Authorization head should be fulfilled in interceptor.
   return axios.get(ME_URL);
+}
+
+export function getUserByName(username) {
+  return axios.post(GETUSER_URL, {username});
 }

@@ -1,10 +1,13 @@
 import React, {useEffect, useState} from "react";
+import {Link} from 'react-router-dom';
 import {connect} from "react-redux";
 import {injectIntl} from "react-intl";
 import {makeStyles, withTheme} from "@material-ui/core";
 import { toAbsoluteUrl, toImageUrl } from "../../_metronic/_helpers";
 import {InputGroup, Form} from 'react-bootstrap';
 import {Button} from 'react-bootstrap';
+import IconButton from '@material-ui/core/IconButton';
+import SearchIcon from '@material-ui/icons/Search';
 import {GetAllUsers} from './_redux/chatCrud';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -27,13 +30,14 @@ const useStyles = makeStyles(theme => ({
     },
     search: {
         backgroundColor: '#768690',
+        borderLeft:'3px solid black',
         height: 'auto',
         padding: '1.5rem'
     },
     header: {
         textAlign: "center",
         fontSize: "17px",
-        paddingTop: "10px",
+        marginBottom: "30px",
         color: "#E0E3E6"
     },
     label: {
@@ -47,7 +51,7 @@ const useStyles = makeStyles(theme => ({
             // Default transform is "translate(14px, 20px) scale(1)""
             // This lines up the label with the initial cursor position in the input
             // after changing its padding-left.
-            color:"white",
+            color:"#aaaaaa",
             transform: "translate(5px, 15px) scale(1);"
         },
         "& .MuiFormLabel-filled":{
@@ -57,14 +61,27 @@ const useStyles = makeStyles(theme => ({
             borderColor: "#5E6E79",
         },
         "&:hover .MuiOutlinedInput-notchedOutline": {
-            borderColor: "green"
+            borderColor: "green",
+            borderRadius: "0"
         },
+    },
+    firstColor:{
+        color:"#3399ff"
+    },
+    secondColor:{
+        color:"#99cc66"
+    },
+    thirdColor:{
+        color:"#ffcc00"
+    },
+    forthColor:{
+        color:"#ff9933"
     }
 }));
 
 const initialInputData={country:"",state:"",city:"",profession:"",username:"",expertise:""};
 const dataList = ["Red", "Green", "Black", "Blue", "Orange"];
-const userNameColors=["text-success", "text-primary", "text-danger"];
+// const userNameColors=["text-success", "text-primary", "text-danger"];
 
 function PersonList(props) {
     const classes = useStyles();
@@ -73,8 +90,8 @@ function PersonList(props) {
     const [inputData,setInputData]=useState({country:"",state:"",city:"",profession:"",username:"",expertise:""});
     const [update, setUpdate] = useState(0);
     const [val, setVal] = useState("");
-    const [userColor, setUserColor] = useState(0);
-
+    const userNameColors=[classes.firstColor, classes.secondColor, classes.thirdColor, classes.forthColor];
+    
     const getAllUsers = async () => {
         try {
             const {data} = await GetAllUsers();
@@ -92,7 +109,7 @@ function PersonList(props) {
         usersData.map((user)=>{
             var flg=true;
             for(let item in inputData){
-                if(inputData[item]=="" || inputData[item]==user[item])continue;
+                if(inputData[item]==="" || inputData[item]===user[item])continue;
                 flg=false;
             }
             if(flg)tmp.push(user);
@@ -102,8 +119,9 @@ function PersonList(props) {
     
     const refreshData =()=>{
         setVal([]);
-        setInputData(initialInputData);
+        setInputData({country:"",state:"",city:"",profession:"",username:"",expertise:""});
         setDisplayData(usersData);
+        console.log("initial", inputData);
         setUpdate(update+1);
         console.log("initial", initialInputData);
     }
@@ -248,12 +266,19 @@ function PersonList(props) {
                                   style={{ borderRadius: '0px !important', backgroundColor: '#5E6E79' }} />
                               )}
                             />
-                        <div style={{textAlign: "center"}}>
-                            <Button variant="secondary" onClick={refreshData}>Refaire</Button>
-                            <img alt="search" className="cursor-pointer w-40px ml-2" onClick={Filterdata}
-                                src={
-                                    toAbsoluteUrl('/media/person/search.png')
-                                }/>
+                        <div style={{textAlign: "center", marginTop: "30px"}}>
+                            <Button variant="secondary" 
+                                    size="large" 
+                                    className="rounded"
+                                    style={{fontSize:"20px"}} 
+                                    onClick={refreshData}>Refaire</Button>
+                            <Button className={"ml-3 rounded"}
+                                    style={{backgroundColor: '#0066cc', border:'none', fontSize:"20px",color: '#000000'}}
+                                    size="large"
+                                    onClick={Filterdata} 
+                            >       
+                                    <SearchIcon style={{fontSize:"30px"}}/>
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -263,6 +288,7 @@ function PersonList(props) {
                         displayData.map((user, i) => (
                             <div className="col-6 col-sm-4 col-lg-3 mt-3 mt-sm-0 px-5"
                                 key={i}>
+                                <Link to={`/user-profile/profile-overview/${user.username}`}>    
                                 <img className="w-100" alt="Logo"
                                     src={
                                         toImageUrl(user.avatar)
@@ -270,9 +296,10 @@ function PersonList(props) {
                                     style={
                                         {border: '2px solid #34829E'}
                                     }/>
+                                </Link>
                                 <div className="py-3">
                                     
-                                    <p className={"mb-0 mt-1 font-size-lg", userNameColors[i%3]}>
+                                    <p className={"mb-0 mt-1 font-size-lg", userNameColors[i%4]}>
                                         {user.username}
                                     </p>
                                     <p className="mb-0 text-white-50 font-size-lg">

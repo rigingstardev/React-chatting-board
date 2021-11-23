@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Card } from '../../../_metronic/_partials/controls/Card'
 import { Button, CardActionArea,  CardContent, makeStyles, Typography } from "@material-ui/core";
 import { toImageUrl } from "../../../_metronic/_helpers";
-import {getUserByToken} from '../Auth/_redux/authCrud';
+import {getUserByToken, getUserByName} from '../Auth/_redux/authCrud';
+import {useParams} from 'react-router-dom';
 
 const useStyles = makeStyles({
   card: {
@@ -19,14 +20,26 @@ const useStyles = makeStyles({
 export function ProfileOverview() {
   
   const [userData, setUserData] = useState([]);
-
+  const {username} = useParams();
+  
   const getUser = async () => {
-    try{
-      const {data} = await getUserByToken();
-      setUserData(data);
-      console.log(data);
-    }catch(error){
-      console.log(error)
+    console.log(username)
+    if(!username){
+      try{
+        const {data} = await getUserByToken();
+        setUserData(data);
+        console.log(data);
+      }catch(error){
+        console.log(error)
+      }
+    }else{
+      try{
+        const {data} = await getUserByName(username);
+        setUserData(data);
+        console.log(data);
+      }catch(error){
+        console.log(error)
+      }
     }
   }
   
@@ -127,17 +140,17 @@ export function ProfileOverview() {
                   </div>
                   <div className="col-12 col-sm-4 col-md-12 mt-15 text-sm-left text-center">
                     <div className="col-12 mb-5">
-                      <Button className="w-150px" variant="contained" color="secondary">
+                      <Button className="w-150px" variant="contained" style={{backgroundColor: "#073DC0"}}>
                         Carte de visite
                       </Button>
                     </div>
                     <div className="col-12 mb-5">
-                      <Button className="w-150px" variant="contained" color="secondary">
+                      <Button className="w-150px" variant="contained" style={{backgroundColor: "#073DC0"}}>
                         Imprimer le profil
                       </Button>
                     </div>
                     <div className="col-12 mb-5">
-                      <Button className="w-150px" variant="contained" color="secondary">
+                      <Button className="w-150px" variant="contained" style={{backgroundColor: "#073DC0"}}>
                         Envoyer le profil
                       </Button>
                     </div>

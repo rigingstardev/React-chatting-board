@@ -169,7 +169,22 @@ exports.getUser = async (req, res) => {
 
   res.json(user);
 };
+exports.getUserByName = async (req, res) => {
 
+  const user = await User.findOne({username: req.body.username});
+
+  if (!user) throw "Cet utilisateur n'existe pas!";
+
+  res.json(user);
+};
+
+exports.contact = async ( req, res) => {
+    const data = req.body.data;
+    const name = data.name;
+    const email = data.email;
+    const message = data.message;
+    sendEmail(email, message);
+};
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find({ _id: { $ne: req.user._id } }, { password: 0 }).sort({ socketId: -1 });

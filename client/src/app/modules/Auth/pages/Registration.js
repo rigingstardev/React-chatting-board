@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState, useRef, useEffect} from "react";
 import { useFormik} from "formik";
 import { connect } from "react-redux";
 import * as Yup from "yup";
@@ -13,9 +13,14 @@ import { Footer } from './../../../../_metronic/layout/components/footer/Footer'
 import { Header } from './../../../../_metronic/layout/components/header/Header';
 import { countryList, domainList, professionList } from "../../../constant";
 import TextField from '@material-ui/core/TextField';
+import Modal from '@material-ui/core/Modal';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import ReactCrop from 'react-image-crop';
 import './authentication.css';
-
+import 'react-image-crop/dist/ReactCrop.css'
+import swal from 'sweetalert2';
 
 const initialValues = {
   profession: "",
@@ -38,15 +43,71 @@ const initialValues = {
   acceptTerms: false,
 };
 
+const useStyles = (theme => ({
+  modalBox:{
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 800,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "stretch"
+  },
+  saveButton:{
+    backgroundColor: "blue"
+  },
+  modalButtonGroup:{
+    display: 'flex',
+    justifyContent: "space-between",
+  }
+}));
+
 const SUPPORTED_FORMATS = [
   'image/png',
   'image/jpeg'
 ]
+const initialCrop = {width: 400, height: 400};
+
+const ImageSizeWarning = (width, height) => {
+  swal.fire({
+    title: "Avertissement!",
+    text: `La taille de l'image doit être '${width}px vs ${height}px'!`,
+    icon: "warning",
+    showClass:{
+      popup: "animated flipInX"
+    },
+    customClass: {
+      confirmButton: 'btn btn-success'
+    },
+    buttonsStyling: false,
+  });
+}
 
 function Registration(props) {
+  const classes = useStyles();
   const { intl } = props;
   const [loading, setLoading] = useState(false);
   const [update, setUpdate] = useState(0);
+  const avatarInput = useRef(null);
+  const photoInput = useRef(null);
+  const imgRef = useRef(null);
+  const [upImg, setUpImg] = useState();
+  const [crop, setCrop] = useState(initialCrop);
+  const [cropToImage, setCropToImage] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+  const handleCancelModal = () => {
+    handleCloseModal();
+    avatarInput.current.value = null;
+    formik.setFieldValue("avatar", "");
+  }
   const RegistrationSchema = Yup.object().shape({
     email: Yup.string()
       .email("Format d'e-mail incorrect")
@@ -73,21 +134,21 @@ function Registration(props) {
       .required("Ce champ est requis."),
     phone: Yup.string()
       .required("Ce champ est requis."),
-    avatar: Yup.mixed()
-      .required("Ce champ est requis.")
-      .test('fileFormat', 'Type de fichier non pris en charge.', (value) => (value && SUPPORTED_FORMATS.includes(value.type)))
-    // .test('fileSize', 'Veuillez vérifier la dimension du fichier.', async (value) => { 
-    //   if(!value) return false;
-    //   const img = new Image();
-    //   img.src = URL.createObjectURL(value);
-    //   return await new Promise(resolve => {
-    //     img.decode().then(() => {
-    //       URL.revokeObjectURL(img.src);
-    //       return resolve(img.width >= 400 && img.height >= 400);
-    //     });
-    //   });
-    // }),
-    ,
+    // avatar: Yup.mixed()
+    //   .required("Ce champ est requis.")
+    //   .test('fileFormat', 'Type de fichier non pris en charge.', (value) => (value && SUPPORTED_FORMATS.includes(value.type)))
+    // // .test('fileSize', 'Veuillez vérifier la dimension du fichier.', async (value) => { 
+    // //   if(!value) return false;
+    // //   const img = new Image();
+    // //   img.src = URL.createObjectURL(value);
+    // //   return await new Promise(resolve => {
+    // //     img.decode().then(() => {
+    // //       URL.revokeObjectURL(img.src);
+    // //       return resolve(img.width >= 400 && img.height >= 400);
+    // //     });
+    // //   });
+    // // }),
+    // ,
     photo: Yup.mixed()
       .required("Ce champ est requis.")
       .test('fileFormat', 'Type de fichier non pris en charge.', (value) => (value && SUPPORTED_FORMATS.includes(value.type)))
@@ -117,6 +178,83 @@ function Registration(props) {
     // ),
   });
 
+  const onSelectFile = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const reader = new FileReader()
+      reader.addEventListener('load', () => setUpImg(reader.result))
+      reader.readAsDataURL(e.target.files[0])
+    }
+
+    handleOpenModal()
+    setCrop(initialCrop)
+  };
+
+  const saveCropImage = () =>{
+      handleCloseModal()
+      formik.setFieldValue("avatar", cropToImage)
+  }
+  const onLoad = useCallback((img)=>{
+    console.log("width = ", img.width)
+    console.log("height = ", img.height)
+    if(img.width < 400 || img.height < 400) {
+      handleCancelModal();
+      ImageSizeWarning(400, 400);
+      setUpImg(null);
+    }
+    imgRef.current = img;
+  });
+
+  const photoLoad = (e) => {
+    console.log(e.target.files[0]);
+    const file = e.target.files[0];
+    let img = new Image()
+    img.src = window.URL.createObjectURL(file)
+    img.onload = () => {
+      if(img.width < 1140 || img.height < 470){
+        ImageSizeWarning(1140, 470)
+        formik.setFieldValue("photo", "")
+        photoInput.current.value = null
+      }else{
+        formik.setFieldValue("photo", file)
+      }
+    }
+  }
+  async function cropImage(crop) {
+    if (imgRef && crop.width && crop.height) {
+      const croppedImage = await getCroppedImage(
+        imgRef.current,
+        crop,
+        "croppedImage.jpeg" // destination filename
+      );
+      
+      setCropToImage(croppedImage);
+    }
+  }
+
+  function getCroppedImage(sourceImage, cropConfig, fileName) {
+    const canvas = document.createElement("canvas");
+    const scaleX = sourceImage.naturalWidth / sourceImage.width;
+    const scaleY = sourceImage.naturalHeight / sourceImage.height;
+    canvas.width = cropConfig.width;
+    canvas.height = cropConfig.height;
+    const ctx = canvas.getContext("2d");
+
+    ctx.drawImage(
+      sourceImage,
+      cropConfig.x * scaleX,
+      cropConfig.y * scaleY,
+      cropConfig.width * scaleX,
+      cropConfig.height * scaleY,
+      0,
+      0,
+      cropConfig.width,
+      cropConfig.height
+    );
+
+    const base64Image = canvas.toDataURL("image/jpeg");
+    return base64Image;
+  }
+
   const enableLoading = () => {
     setLoading(true);
   };
@@ -124,6 +262,7 @@ function Registration(props) {
   const disableLoading = () => {
     setLoading(false);
   };
+  
   const getInputClasses = (fieldname) => {
     if (formik.touched[fieldname] && formik.errors[fieldname]) {
       return "is-invalid";
@@ -547,25 +686,50 @@ function Registration(props) {
 
                         <div className="col-12 col-md-8 col-sm-8">
                           {/* begin: avatar */}
-                          <div className="form-group fv-plugins-icon-container">
-                            <div style={{ display: "flex" }}>
+                            <div className="form-group fv-plugins-icon-container">
+                              <div style={{ display: "flex" }}>
                               <input
                                 type="file"
+                                ref={avatarInput}
                                 className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
                                   "avatar"
                                 )}`}
                                 name="avatar"
                                 accept=".png, .jpg, .jpeg"
-                                onChange={evt => { formik.setFieldValue("avatar", evt.target.files[0]); }}
+                                onChange={onSelectFile}
                               />
                               <button type="reset" onClick={() => { formik.setFieldValue("avatar", ""); formik.setFieldValue("photo", ""); }} style={{ width: "45px", marginLeft: "10px" }}><i className="fas fa-trash" style={{ color: "black" }}></i></button>
-                            </div>
-                            {formik.touched.avatar && formik.errors.avatar ? (
-                              <div className="fv-plugins-message-container">
-                                <div className="fv-help-block">{formik.errors.avatar}</div>
                               </div>
-                            ) : null}
-                          </div>
+                              <Modal 
+                                open={openModal}
+                                onClose={handleCancelModal}
+                                aria-labelledby="modal-modal-title"
+                                aria-describedby="modal-modal-description">
+                                <Box sx={classes.modalBox}>
+                                  <Box>
+                                    <ReactCrop
+                                      src={upImg}
+                                      onImageLoaded={onLoad}
+                                      crop={crop}
+                                      locked="true"
+                                      onChange={(crop) => setCrop(crop)}
+                                      onComplete={(crop) => cropImage(crop)}
+                                    />
+                                    {/* <img src={cropToImage} alt="cropped Image"></img> */}
+                                  </Box>
+                                  <Box sx={classes.modalButtonGroup}>
+                                    <Button variant="contained" color="secondary" onClick={saveCropImage}>Save</Button>
+                                    <Button variant="contained" onClick={handleCancelModal}>Cancel</Button>
+                                  </Box>
+                                </Box>
+                              </Modal>
+                              {formik.touched.avatar && formik.errors.avatar ? (
+                                <div className="fv-plugins-message-container">
+                                  <div className="fv-help-block">{formik.errors.avatar}</div>
+                                </div>
+                              ) : null}
+                            </div>
+                              {/* <img src={cropToImage}></img> */}
                           {/* end: avatar */}
                         </div>
                         <div className="col-12 col-md-4 col-sm-4 text-sm-right pt-0">
@@ -580,12 +744,13 @@ function Registration(props) {
                           <div className="form-group fv-plugins-icon-container">
                             <input
                               type="file"
+                              ref={photoInput}
                               className={`form-control form-control-solid h-auto px-6 ${getInputClasses(
                                 "photo"
                               )}`}
                               accept=".png, .jpg, .jpeg"
                               name="photo"
-                              onChange={evt => formik.setFieldValue("photo", evt.target.files[0])}
+                              onChange={photoLoad}
                               style={{ width: "342.52px" }}
                             />
                             {formik.touched.photo && formik.errors.photo ? (
