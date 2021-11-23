@@ -390,14 +390,14 @@ function Registration(props) {
                               onChange={(event, values) => {
                                 formik.values.profession = values;
                                 setUpdate(update + 1);
-                                // console.log(formik.values.profession);
+                                console.log(formik.values.profession);
                               }}
                               name="profession"
                               renderInput={(params) => (
                                 <TextField {...params}
                                   variant="outlined"
                                   onChange={(event) => {
-                                    // console.log(event.target.value);
+                                    console.log(event.target.value);
                                     formik.values.profession = event.target.value;
                                   }}
                                   style={{ borderRadius: '0px !important', backgroundColor: 'rgb(232, 240, 254)' }} />

@@ -123,6 +123,7 @@ function PersonList(props) {
         setDisplayData(usersData);
         console.log("initial", inputData);
         setUpdate(update+1);
+        console.log("initial", initialInputData);
     }
     useEffect(() => {
         getAllUsers();
