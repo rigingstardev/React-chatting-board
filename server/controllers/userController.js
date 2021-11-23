@@ -86,12 +86,15 @@ exports.register = async (req, res) => {
     let avatar = "";
     let photo = "";
     try {
-      let avatarFile = files.avatar;
+      let avatarFile = fields.avatar;
       let photoFile = files.photo;
       // renames the file in the directory
       if (avatarFile) {
-        fs.renameSync(avatarFile.path, path.join(uploadFolder, `${username}-${avatarFile.name}`));
-        avatar = `${username}-${avatarFile.name}`;
+        // fs.renameSync(avatarFile.path, path.join(uploadFolder, `${username}-${avatarFile.name}`));
+        const imageFile = avatarFile.replace(/^data:image\/jpeg;base64,/, "");
+        console.error(imageFile);
+        fs.writeFileSync(path.join(uploadFolder, `${username}-avatar.jpg`), imageFile, 'base64');
+        avatar = `${username}-avatar.jpg`;
       }
       if (photoFile) {
         fs.renameSync(photoFile.path, path.join(uploadFolder, `${username}-${photoFile.name}`));
@@ -178,13 +181,13 @@ exports.getUserByName = async (req, res) => {
   res.json(user);
 };
 
-exports.contact = async ( req, res) => {
-    const data = req.body.data;
-    const name = data.name;
-    const email = data.email;
-    const message = data.message;
-    sendEmail(email, message);
-};
+// exports.contact = async ( req, res) => {
+//     const data = req.body.data;
+//     const name = data.name;
+//     const email = data.email;
+//     const message = data.message;
+//     sendEmail(email, message);
+// };
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find({ _id: { $ne: req.user._id } }, { password: 0 }).sort({ socketId: -1 });

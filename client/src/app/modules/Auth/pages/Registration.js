@@ -49,7 +49,6 @@ const useStyles = (theme => ({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 800,
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -77,14 +76,13 @@ const ImageSizeWarning = (width, height) => {
   swal.fire({
     title: "Avertissement!",
     text: `La taille de l'image doit être '${width}px vs ${height}px'!`,
-    icon: "warning",
     showClass:{
       popup: "animated flipInX"
     },
     customClass: {
-      confirmButton: 'btn btn-success'
+      confirmButton: 'btn'
     },
-    buttonsStyling: false,
+    confirmButtonColor: '#384553'
   });
 }
 
@@ -102,7 +100,10 @@ function Registration(props) {
   const [openModal, setOpenModal] = useState(false);
 
   const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setCrop(initialCrop);
+  }
   const handleCancelModal = () => {
     handleCloseModal();
     avatarInput.current.value = null;
@@ -179,33 +180,34 @@ function Registration(props) {
   });
 
   const onSelectFile = (e) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const reader = new FileReader()
-      reader.addEventListener('load', () => setUpImg(reader.result))
-      reader.readAsDataURL(e.target.files[0])
+    const file = e.target.files[0];
+    let img = new Image()
+    img.src = window.URL.createObjectURL(file)
+    
+    img.onload = () => {
+      console.log(img.width, img.height)
+      if(img.width < 400 || img.height < 400){
+        ImageSizeWarning(400, 400);
+        avatarInput.current.value = null;
+      }else{
+        console.log(img.width, img.height)
+        setUpImg(img.src)
+        handleOpenModal()
+      }
     }
-
-    handleOpenModal()
-    setCrop(initialCrop)
   };
 
   const saveCropImage = () =>{
-      handleCloseModal()
-      formik.setFieldValue("avatar", cropToImage)
+    handleCloseModal()
+    formik.setFieldValue("avatar", cropToImage)
   }
   const onLoad = useCallback((img)=>{
     console.log("width = ", img.width)
     console.log("height = ", img.height)
-    if(img.width < 400 || img.height < 400) {
-      handleCancelModal();
-      ImageSizeWarning(400, 400);
-      setUpImg(null);
-    }
     imgRef.current = img;
   });
 
   const photoLoad = (e) => {
-    console.log(e.target.files[0]);
     const file = e.target.files[0];
     let img = new Image()
     img.src = window.URL.createObjectURL(file)
@@ -220,35 +222,37 @@ function Registration(props) {
     }
   }
   async function cropImage(crop) {
-    if (imgRef && crop.width && crop.height) {
-      const croppedImage = await getCroppedImage(
-        imgRef.current,
-        crop,
-        "croppedImage.jpeg" // destination filename
-      );
+    if (imgRef) {
+      const img = imgRef.current;
+      const scaleX = img.naturalWidth / img.width;
+      const scaleY = img.naturalHeight / img.height;
+      const scale = Math.max(scaleX, scaleY);
+      crop.width = 400 / scale;
+      crop.height = 400 / scale;
+      const croppedImage = await getCroppedImage(img,crop);
       
       setCropToImage(croppedImage);
     }
   }
 
-  function getCroppedImage(sourceImage, cropConfig, fileName) {
+  function getCroppedImage(sourceImage, cropConfig) {
     const canvas = document.createElement("canvas");
     const scaleX = sourceImage.naturalWidth / sourceImage.width;
     const scaleY = sourceImage.naturalHeight / sourceImage.height;
-    canvas.width = cropConfig.width;
-    canvas.height = cropConfig.height;
+    canvas.width = 400;
+    canvas.height = 400;
     const ctx = canvas.getContext("2d");
 
     ctx.drawImage(
       sourceImage,
       cropConfig.x * scaleX,
       cropConfig.y * scaleY,
-      cropConfig.width * scaleX,
-      cropConfig.height * scaleY,
+      400,
+      400,
       0,
       0,
-      cropConfig.width,
-      cropConfig.height
+      400,
+      400
     );
 
     const base64Image = canvas.toDataURL("image/jpeg");
@@ -715,7 +719,7 @@ function Registration(props) {
                                       onChange={(crop) => setCrop(crop)}
                                       onComplete={(crop) => cropImage(crop)}
                                     />
-                                    {/* <img src={cropToImage} alt="cropped Image"></img> */}
+                                    {/* <img src={upImg} alt="cropped Image"></img> */}
                                   </Box>
                                   <Box sx={classes.modalButtonGroup}>
                                     <Button variant="contained" color="secondary" onClick={saveCropImage}>Save</Button>

@@ -4,11 +4,11 @@ const userController = require("../controllers/userController");
 const auth = require("../middlewares/auth");
 
 
-const express = require("express");
-const cors = require("cors");
-const app = express();
-app.use(cors());
-app.use(express.json());
+// const express = require("express");
+// const cors = require("cors");
+// const app = express();
+// app.use(cors());
+// app.use(express.json());
 
 router.get("/me", auth, catchErrors(userController.me));
 router.get("/", auth, catchErrors(userController.getAllUsers));
