@@ -18,7 +18,7 @@ export default function App({ store, persistor, basename }) {
   if (!notifyFlag) {
     WindowsNotify('Successful', 'Now you can get windows notification!')
     localStorage.setItem('notifySetting', true);
-  }
+  }  
 
   return (
     /* Provide Redux store */

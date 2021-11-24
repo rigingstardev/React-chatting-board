@@ -87,7 +87,7 @@ exports.register = async (req, res) => {
     let photo = "";
     try {
       let avatarFile = fields.avatar;
-      let photoFile = files.photo;
+      let photoFile = fields.photo;
       // renames the file in the directory
       if (avatarFile) {
         // fs.renameSync(avatarFile.path, path.join(uploadFolder, `${username}-${avatarFile.name}`));
@@ -97,8 +97,11 @@ exports.register = async (req, res) => {
         avatar = `${username}-avatar.jpg`;
       }
       if (photoFile) {
-        fs.renameSync(photoFile.path, path.join(uploadFolder, `${username}-${photoFile.name}`));
-        photo = `${username}-${photoFile.name}`;
+        // fs.renameSync(photoFile.path, path.join(uploadFolder, `${username}-${photoFile.name}`));
+        const imageFile = photoFile.replace(/^data:image\/jpeg;base64,/, "");
+        console.error(imageFile);
+        fs.writeFileSync(path.join(uploadFolder, `${username}-photo.jpg`), imageFile, 'base64');
+        photo = `${username}-photo.jpg`;
       }
     } catch (error) {
       console.log(error);
