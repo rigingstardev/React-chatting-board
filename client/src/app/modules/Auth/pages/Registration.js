@@ -322,6 +322,7 @@ function Registration(props) {
           formData.append(key, value)
         }
       }
+      console.log(formData);
       register(formData)
         .then(({ data: { accessToken } }) => {
           props.history.push('/auth/login');
