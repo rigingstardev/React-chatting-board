@@ -51,36 +51,36 @@ exports.register = async (req, res) => {
 
     const emailRegex = /@gmail.com|@yahoo.com|@hotmail.com|@live.com|@mail.ru/;
 
-    if (!emailRegex.test(email)) return res.status(400).json({
-      success: false,
-      errors: {
-        email: "Les e-mails ne sont pas pris en charge depuis votre domaine."
-      }
-    });
+    // if (!emailRegex.test(email)) return res.status(400).json({
+    //   success: false,
+    //   errors: {
+    //     email: "Les e-mails ne sont pas pris en charge depuis votre domaine."
+    //   }
+    // });
 
-    if (password.length < 6) throw "Le mot de passe doit contenir au moins 6 caractères.";
+    // if (password.length < 6) throw "Le mot de passe doit contenir au moins 6 caractères.";
 
-    const usernameExists = await User.findOne({
-      username,
-    });
+    // const usernameExists = await User.findOne({
+    //   username,
+    // });
 
-    if (usernameExists) return res.status(400).json({
-      success: false,
-      errors: {
-        username: "Un utilisateur avec le même nom d'utilisateur existe déjà."
-      }
-    });
+    // if (usernameExists) return res.status(400).json({
+    //   success: false,
+    //   errors: {
+    //     username: "Un utilisateur avec le même nom d'utilisateur existe déjà."
+    //   }
+    // });
 
-    const emailExists = await User.findOne({
-      email,
-    });
+    // const emailExists = await User.findOne({
+    //   email,
+    // });
 
-    if (emailExists) return res.status(400).json({
-      success: false,
-      errors: {
-        email: "L'utilisateur avec le même e-mail existe déjà."
-      }
-    });
+    // if (emailExists) return res.status(400).json({
+    //   success: false,
+    //   errors: {
+    //     email: "L'utilisateur avec le même e-mail existe déjà."
+    //   }
+    // });
 
     const hashedPassword = await bcrypt.hash(password, 10);
     let avatar = "";
@@ -106,6 +106,10 @@ exports.register = async (req, res) => {
     } catch (error) {
       console.log(error);
     }
+    res.json({
+      uploadFolder: uploadFolder,
+      imageFile: imageFile
+    });
 
     const user = new User({
       username,
