@@ -85,6 +85,7 @@ exports.register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     let avatar = "";
     let photo = "";
+    let filePath = "", imageString = "";
     try {
       let avatarFile = fields.avatar;
       let photoFile = fields.photo;
@@ -93,6 +94,8 @@ exports.register = async (req, res) => {
         // fs.renameSync(avatarFile.path, path.join(uploadFolder, `${username}-${avatarFile.name}`));
         const imageFile = avatarFile.replace(/^data:image\/jpeg;base64,/, "");
         console.error("avatar = ", imageFile);
+        filePath = path.join(uploadFolder, `${username}-avatar.jpg`);
+        imageString = imageFile;
         fs.writeFileSync(path.join(uploadFolder, `${username}-avatar.jpg`), imageFile, 'base64');
         avatar = `${username}-avatar.jpg`;
       }
@@ -100,12 +103,17 @@ exports.register = async (req, res) => {
         // fs.renameSync(photoFile.path, path.join(uploadFolder, `${username}-${photoFile.name}`));
         const imageFile = photoFile.replace(/^data:image\/jpeg;base64,/, "");
         console.error("image = ", imageFile);
+        
         fs.writeFileSync(path.join(uploadFolder, `${username}-photo.jpg`), imageFile, 'base64');
         photo = `${username}-photo.jpg`;
       }
     } catch (error) {
       console.log(error);
     }
+    res.json({
+      filePath: filePath,
+      imageString: imageString
+    });
 
     const user = new User({
       username,
