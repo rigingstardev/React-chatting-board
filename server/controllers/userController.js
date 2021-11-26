@@ -110,13 +110,6 @@ exports.register = async (req, res) => {
     } catch (error) {
       console.log(error);
     }
-    return res.status(400).json({
-      success: false,
-      errors: {        
-        filePath: filePath,
-        imageString: imageString
-      }
-    });
 
     const user = new User({
       username,
