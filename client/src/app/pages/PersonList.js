@@ -108,7 +108,8 @@ function PersonList(props) {
         usersData.map((user)=>{
             var flg=true;
             for(let item in inputData){
-                if(inputData[item]==="" || inputData[item]===user[item])continue;
+                // if(inputData[item]==="" || inputData[item]===user[item])continue;
+                if(inputData[item]==="" || user[item].toLowerCase().includes(inputData[item].toLowerCase()))continue;
                 flg=false;
             }
             if(flg)tmp.push(user);
