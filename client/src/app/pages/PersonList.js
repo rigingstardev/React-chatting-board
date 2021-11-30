@@ -91,12 +91,24 @@ function PersonList(props) {
     const [val, setVal] = useState("");
     const userNameColors=[classes.firstColor, classes.secondColor, classes.thirdColor, classes.forthColor];
     
+    const shuffleArray = array => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+        const shuffledUser = [];
+        for(let i = 0 ; i < Math.min(20, array.length) ; i ++) shuffledUser.push(array[i]);
+        
+        setDisplayData(shuffledUser);
+    }
     const getAllUsers = async () => {
         try {
             const {data} = await GetAllUsers();
             console.log("allusers", data);
             setUsers(data); 
-            setDisplayData(data);
+            shuffleArray(data);
         } catch (error) {
             console.error(error);
         }

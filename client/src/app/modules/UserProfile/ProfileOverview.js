@@ -17,6 +17,9 @@ const useStyles = makeStyles({
   },
   myButton:{
     width: "170px"
+  },
+  myFont:{
+    color:"#b6ceff"
   }
 });
 
@@ -97,7 +100,8 @@ export function ProfileOverview(props) {
                       SECTEUR
                     </Typography>
                     <Typography className="text-white-50" variant="body2" color="textSecondary" component="p">
-                      Économie
+                      {/* Économie */}
+                      {userData.field}
                     </Typography>
                   </div>
                   <div className="mr-5 mr-sm-15">
@@ -105,7 +109,8 @@ export function ProfileOverview(props) {
                       SPECIALITE
                     </Typography>
                     <Typography className="text-white-50" variant="body2" color="textSecondary" component="p">
-                      Finances
+                      {/* Finances */}
+                      {userData.industry}
                     </Typography>
                   </div>
                   <div>
@@ -113,29 +118,32 @@ export function ProfileOverview(props) {
                       PORTFOLIO
                     </Typography>
                     <Typography className="text-white-50" variant="body2" color="textSecondary" component="p">
-                      www.youtube.com
+                      {/* www.youtube.com */}
+                      {userData.email}
                     </Typography>
                   </div>
                 </div>
               </div>
               <div className="col-12 col-sm-12 col-md-4">
                 <div className="row pl-0 pl-md-20">
-                  <div className="col-12 col-sm-8 col-md-12 mt-sm-20 mt-20 mt-md-0">
-                    <Typography className="text-white" gutterBottom variant="subtitle1">
+                  <div className="col-6 col-sm-8 col-md-12 mt-sm-20 mt-20 mt-md-0 d-flex justify-content-end">
+                    <div>
+                    <Typography className={classes.myFont} gutterBottom variant="subtitle1">
                       Coordonnées
                     </Typography>
                     <Typography className="text-white-50" gutterBottom variant="body2" color="textSecondary" component="p">
-                      Tél. portable : <b className="text-white">{userData.phone}</b>
+                      Tél. portable : <b className={classes.myFont}>{userData.phone}</b>
                     </Typography>
                     <Typography className="text-white-50" gutterBottom variant="body2" color="textSecondary" component="p">
-                      Tél. bureau : <b className="text-white">{userData.telephone}</b>
+                      Tél. bureau : <b className={classes.myFont}>{userData.telephone}</b>
                     </Typography>
                     <Typography className="text-white-50" gutterBottom variant="body2" color="textSecondary" component="p">
-                      E-mail : <b className="text-white">{userData.email}</b>
+                      E-mail : <b className={classes.myFont}>{userData.email}</b>
                     </Typography>
                     <Typography className="text-white-50" gutterBottom variant="body2" color="textSecondary" component="p">
-                      État : <b className="text-white">{userData.state}</b>
+                      État : <b className={classes.myFont}>{userData.state}</b>
                     </Typography>
+                    </div>
                   </div>
                   <div className="col-12 col-sm-4 col-md-12 mt-15 text-right">
                     <div className="col-12 mb-5">
