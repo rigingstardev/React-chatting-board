@@ -3,7 +3,7 @@ import { Card } from '../../../_metronic/_partials/controls/Card'
 import { Button, CardActionArea,  CardContent, makeStyles, Typography } from "@material-ui/core";
 import { toImageUrl } from "../../../_metronic/_helpers";
 import {getUserByToken, getUserByName} from '../Auth/_redux/authCrud';
-import {useParams} from 'react-router-dom';
+import {useParams, useLocation} from 'react-router-dom';
 
 const useStyles = makeStyles({
   card: {
@@ -15,20 +15,25 @@ const useStyles = makeStyles({
     width: "100%",
     height: 550,
   },
+  myButton:{
+    width: "170px"
+  }
 });
 
-export function ProfileOverview() {
+export function ProfileOverview(props) {
   
   const [userData, setUserData] = useState([]);
+  const [note, setNote] = useState('');
   const {username} = useParams();
-  
+
   const getUser = async () => {
     console.log(username)
     if(!username){
       try{
         const {data} = await getUserByToken();
         setUserData(data);
-        console.log(data);
+        // console.log(data);
+        setNote(data.note);
       }catch(error){
         console.log(error)
       }
@@ -36,7 +41,8 @@ export function ProfileOverview() {
       try{
         const {data} = await getUserByName(username);
         setUserData(data);
-        console.log(data);
+        setNote(data.note);
+        // console.log(data);
       }catch(error){
         console.log(error)
       }
@@ -81,16 +87,9 @@ export function ProfileOverview() {
             <div className="row">
               <div className="col-12 col-sm-12 col-md-8">
                 <Typography className="text-white-50" variant="body2" color="textSecondary" component="p">
-                  {/* Pulitzer Ce nter on Crisis Reporting – Fellow/Correspondent. Traveled across Congo for several weeks to report on election developments, and to raise awareness of the Congo conflict in US media.  Embedded with Moroccan, Pakistani and Uruguayan United Nations peacekeepers in Ituri, Lake Albert and South Kivu. Accredited with Ministry of Information and United Nations Mission in Congo (Summer 2006).
-                  <br />
-                  <br />
-                  Stanford University - William C. and Barbara H. Edwards Media Fellow at the Hoover Institution (Fall 2005). United Press International - Columnist. Wrote a weekly column -- Eye on Africa -- an analysis of political developments on the continent with worldwide distribution (2004-2005).
-                  <br />
-                  <br />
-                  Produced Congo’s Bloody Coltan, a documentary report on the relation between the Congo conflict and the scramble for mineral resources (Fall 2006). Aired on PBS’ Foreign Exchange with Fareed Zakaria. Guest appearances on BBC’s World News Update, PBS’ NewsHour with Jim Lehrer and Foreign Exchange with Fareed Zakaria, NPR’s Diane Rehm Show, Al Jazeera’s World News, VOA’s Washington Forum and Straight Talk Africa, and Radio Canada’s Dimanche Magazine
-                  <br />
-                  <br /> */}
-                  {userData.note}
+                  {note.split("\n").map((i, key)=>{
+                      return <p key={key}>{i}</p>
+                  })}
                 </Typography>
                 <div className="mt-10 d-flex align-items-center flex-wrap">
                   <div className="mr-5 mr-sm-15">
@@ -138,22 +137,28 @@ export function ProfileOverview() {
                       État : <b className="text-white">{userData.state}</b>
                     </Typography>
                   </div>
-                  <div className="col-12 col-sm-4 col-md-12 mt-15 text-sm-left text-center">
+                  <div className="col-12 col-sm-4 col-md-12 mt-15 text-right">
                     <div className="col-12 mb-5">
-                      <Button className="w-150px" variant="contained" style={{backgroundColor: "#073DC0"}}>
+                      <Button className={classes.myButton} variant="contained" style={{backgroundColor: "#0766C0"}}>
                         Carte de visite
                       </Button>
                     </div>
                     <div className="col-12 mb-5">
-                      <Button className="w-150px" variant="contained" style={{backgroundColor: "#073DC0"}}>
+                      <Button className={classes.myButton} variant="contained" style={{backgroundColor: "#0758C0"}}>
                         Imprimer le profil
                       </Button>
                     </div>
                     <div className="col-12 mb-5">
-                      <Button className="w-150px" variant="contained" style={{backgroundColor: "#073DC0"}}>
+                      <Button className={classes.myButton} variant="contained" style={{backgroundColor: "#073DC0"}}>
                         Envoyer le profil
                       </Button>
                     </div>
+                    {!username && <div className="col-12 mb-5">
+                      <Button className={classes.myButton} variant="contained" style={{backgroundColor: "#073DC0"}}>
+                        Modifier votre profil
+                      </Button>
+                    </div>
+                    }
                   </div>
                 </div>
               </div>

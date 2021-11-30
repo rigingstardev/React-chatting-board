@@ -30,7 +30,6 @@ const useStyles = makeStyles(theme => ({
     },
     search: {
         backgroundColor: '#768690',
-        borderLeft:'3px solid black',
         height: 'auto',
         padding: '1.5rem'
     },
@@ -282,7 +281,7 @@ function PersonList(props) {
                         </div>
                     </div>
                 </div>
-                <div className="col-12 col-sm-8 col-xxl-9" style={{height:"calc(100vh - 176px)", overflowY:"scroll"}}>
+                <div className="col-12 col-sm-8 col-xxl-9" style={{height:"calc(100vh - 176px)", overflowY:displayData.length>8 ? "scroll" : "none"}}>
                     <div className="row">
                         {
                         displayData.map((user, i) => (
@@ -298,15 +297,14 @@ function PersonList(props) {
                                     }/>
                                 </Link>
                                 <div className="py-3">
-                                    
-                                    <p className={"mb-0 mt-1 font-size-lg", userNameColors[i%4]}>
+                                    <p className={`mb-1 font-size-lg ${userNameColors[i%4]}`}>
                                         {user.username}
                                     </p>
-                                    <p className="mb-0 text-white-50 font-size-lg">
-                                        {user.industry}
-                                    </p>
-                                    <p className="mb-0 text-white-50 font-size-lg">
+                                    <p className="mb-1 text-white-50 font-size-lg">
                                         {user.profession}
+                                    </p>
+                                    <p className="mb-1 text-white-50 font-size-lg">
+                                        {`${user.city}/${user.country}`}
                                     </p>
                                 </div>
                             </div>

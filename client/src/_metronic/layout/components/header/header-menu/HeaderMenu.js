@@ -38,7 +38,10 @@ export function HeaderMenu({ layoutProps }) {
             {/*end::1 Level*/}
             {/*begin::1 Level*/}
             <li className={`menu-item menu-item-rel ${getMenuItemActive('/user-profile')}`}>
-                <NavLink className="menu-link" to="/user-profile">
+                <NavLink className="menu-link" to={{
+                    pathname:'/user-profile',
+                    state: {title:'from home page'}
+                    }}>
                     <span className="menu-text">INFORMATIONS</span>
                     {layoutProps.rootArrowEnabled && (<i className="menu-arrow" />)}
                 </NavLink>
