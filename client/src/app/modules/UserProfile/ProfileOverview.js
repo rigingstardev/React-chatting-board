@@ -3,7 +3,7 @@ import { Card } from '../../../_metronic/_partials/controls/Card'
 import { Button, CardActionArea,  CardContent, makeStyles, Typography } from "@material-ui/core";
 import { toImageUrl } from "../../../_metronic/_helpers";
 import {getUserByToken, getUserByName} from '../Auth/_redux/authCrud';
-import {useParams, useLocation} from 'react-router-dom';
+import {useParams, useLocation, Link} from 'react-router-dom';
 
 const useStyles = makeStyles({
   card: {
@@ -119,7 +119,7 @@ export function ProfileOverview(props) {
                     </Typography>
                     <Typography className="text-white-50" variant="body2" color="textSecondary" component="p">
                       {/* www.youtube.com */}
-                      {userData.email}
+                      <Link className="text-white-50" to={{pathname: `http://${userData.website}`}} target="_blank">{userData.website}</Link>
                     </Typography>
                   </div>
                 </div>
@@ -134,11 +134,20 @@ export function ProfileOverview(props) {
                     <Typography className="text-white-50" gutterBottom variant="body2" color="textSecondary" component="p">
                       Tél. portable : <b className={classes.myFont}>{userData.phone}</b>
                     </Typography>
-                    <Typography className="text-white-50" gutterBottom variant="body2" color="textSecondary" component="p">
+                    {userData.telephone !=="" && <Typography className="text-white-50" gutterBottom variant="body2" color="textSecondary" component="p">
                       Tél. bureau : <b className={classes.myFont}>{userData.telephone}</b>
-                    </Typography>
+                    </Typography>}
                     <Typography className="text-white-50" gutterBottom variant="body2" color="textSecondary" component="p">
-                      E-mail : <b className={classes.myFont}>{userData.email}</b>
+                      E-mail : 
+                      <Link
+                        to='#'
+                        onClick={(e) => {
+                            window.location = `mailto:${userData.email}`;
+                            e.preventDefault();
+                        }}
+                      >
+                        <b className={classes.myFont}>{userData.email}</b>
+                    </Link>
                     </Typography>
                     <Typography className="text-white-50" gutterBottom variant="body2" color="textSecondary" component="p">
                       État : <b className={classes.myFont}>{userData.state}</b>

@@ -30,6 +30,10 @@ export default function UserProfilePage() {
               component={ProfileOverview}
             />
             <Route
+              path="/user-profile/profile-update/:username"
+              component={ProfileOverview}
+            />
+            <Route
               path="/user-profile/account-information"
               component={AccountInformation}
             />
