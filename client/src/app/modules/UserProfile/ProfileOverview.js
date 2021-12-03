@@ -239,17 +239,18 @@ function ProfileOverview(props) {
                   </div>
                 </div>
               </div>
-              <div className="col-12 col-sm-12 col-md-12 d-flex justify-content-around">
-                    <Button className={classes.myButton} variant="contained" style={{backgroundColor: "#0766C0"}}>
-                      Photo de profil
-                    </Button>
-                    <Button className={classes.myButton} variant="contained" style={{backgroundColor: "#0766C0"}}>
-                      Photo de page
-                    </Button>
-                    <Button className={classes.myButton} variant="contained" style={{backgroundColor: "#0766C0"}}>
-                      Sauvegarder
-                    </Button>
+              {editPage && <div className="col-12 col-sm-12 col-md-12 d-flex justify-content-around">
+                <Button className={classes.myButton} variant="contained" style={{backgroundColor: "#0766C0"}}>
+                  Photo de profil
+                </Button>
+                <Button className={classes.myButton} variant="contained" style={{backgroundColor: "#0766C0"}}>
+                  Photo de page
+                </Button>
+                <Button className={classes.myButton} variant="contained" style={{backgroundColor: "#0766C0"}}>
+                  Sauvegarder
+                </Button>
               </div>
+              }
             </div>
           </div>
         </div>
