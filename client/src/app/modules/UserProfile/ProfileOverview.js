@@ -110,7 +110,7 @@ function ProfileOverview(props) {
                   userData.username : 
                   <input 
                     defaultValue={userData.username}
-                    {...formik.getFieldProps("name")}
+                    // {...formik.getFieldProps("name")}
                   />
               }
             </Typography>
@@ -135,12 +135,12 @@ function ProfileOverview(props) {
                       name="note"
                       rows="10"
                       defaultValue={note}
-                      {...formik.getFieldProps("note")}
+                      // {...formik.getFieldProps("note")}
                     />
                 }
                 </Typography>
-                <div className="mt-10 d-flex align-items-center flex-wrap">
-                  <div className="mr-5 mr-sm-15">
+                <div className="mt-10 row d-flex align-items-center flex-wrap">
+                  <div className="col-4">
                     <Typography className="text-white-50" gutterBottom variant="subtitle1">
                       SECTEUR
                     </Typography>
@@ -148,12 +148,12 @@ function ProfileOverview(props) {
                       {editPage === false ? userData.field :
                         <input 
                           defaultValue={userData.field}
-                          {...formik.getFieldProps("field")}
+                          // {...formik.getFieldProps("field")}
                         />
                       }
                     </Typography>
                   </div>
-                  <div className="mr-5 mr-sm-15">
+                  <div className="col-4">
                     <Typography className="text-white-50" gutterBottom variant="subtitle1">
                       SPECIALITE
                     </Typography>
@@ -161,11 +161,11 @@ function ProfileOverview(props) {
                       {editPage === false ? userData.industry :
                       <input 
                         defaultValue={userData.industry}
-                        {...formik.getFieldProps("industry")}
+                        // {...formik.getFieldProps("industry")}
                       />}
                     </Typography>
                   </div>
-                  <div>
+                  <div className="col-4">
                     <Typography className="text-white-50" gutterBottom variant="subtitle1">
                       PORTFOLIO
                     </Typography>
@@ -175,7 +175,7 @@ function ProfileOverview(props) {
                         :
                         <input 
                           defaultValue={userData.website}
-                          {...formik.getFieldProps("website")}
+                          // {...formik.getFieldProps("website")}
                         />
                       }                    
                     </Typography>
