@@ -103,7 +103,7 @@ function ProfileOverview(props) {
       <Card className={classes.card}>
         <form id="Update_Profile" onSubmit={formik.handleSubmit}>
         <div>    
-          <img src={toImageUrl(encodeURIComponent(userData.photo))} className="w-100 px-5" />
+          <img src={toImageUrl(encodeURIComponent(userData.photo))} className="w-100" />
           <div>
             <Typography className="text-white my-5" gutterBottom variant="h5" component="h2">
               {editPage === false ? 
@@ -175,7 +175,7 @@ function ProfileOverview(props) {
                         :
                         <input 
                           defaultValue={userData.website}
-                          // {...formik.getFieldProps("website")}
+                          {...formik.getFieldProps("website")}
                         />
                       }                    
                     </Typography>
@@ -240,13 +240,15 @@ function ProfileOverview(props) {
                 </div>
               </div>
               {editPage && <div className="col-12 col-sm-12 col-md-12 d-flex justify-content-around">
-                <Button className={classes.myButton} variant="contained" style={{backgroundColor: "#0766C0"}}>
+                <Button className={classes.myButton} variant="contained" style={{backgroundColor: "#073DC0"}}>
                   Photo de profil
                 </Button>
-                <Button className={classes.myButton} variant="contained" style={{backgroundColor: "#0766C0"}}>
+                <Button className={classes.myButton} variant="contained" style={{backgroundColor: "#073DC0"}}>
                   Photo de page
                 </Button>
-                <Button className={classes.myButton} variant="contained" style={{backgroundColor: "#0766C0"}}>
+                <Button
+                  type="submit" 
+                  className={classes.myButton} variant="contained" style={{backgroundColor: "#073DC0"}}>
                   Sauvegarder
                 </Button>
               </div>
