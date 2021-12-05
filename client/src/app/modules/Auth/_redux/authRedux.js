@@ -7,6 +7,7 @@ export const actionTypes = {
   Login: "[Login] Action",
   Logout: "[Logout] Action",
   Register: "[Register] Action",
+  Update: "[Update] Action",
   UserRequested: "[Request User] Action",
   UserLoaded: "[Load User] Auth API",
   SetUser: "[Set User] Action",
@@ -33,6 +34,11 @@ export const reducer = persistReducer(
         return { authToken, user: undefined };
       }
 
+      case actionTypes.Update: {
+        const { authToken } = action.payload;
+
+        return { authToken, user: undefined };
+      }
       case actionTypes.Logout: {
         // TODO: Change this code. Actions in reducer aren't allowed.
         return initialAuthState;
@@ -56,17 +62,12 @@ export const reducer = persistReducer(
 
 export const actions = {
   login: (authToken) => ({ type: actionTypes.Login, payload: { authToken } }),
-  register: (authToken) => ({
-    type: actionTypes.Register,
-    payload: { authToken },
-  }),
+  register: (authToken) => ({type: actionTypes.Register, payload: { authToken }}),
+  update:(authToken) => ({type: actionTypes.Update, payload: {authToken}}),
   logout: () => ({ type: actionTypes.Logout }),
-  requestUser: (user) => ({
-    type: actionTypes.UserRequested,
-    payload: { user },
-  }),
-  fulfillUser: (user) => ({ type: actionTypes.UserLoaded, payload: { user } }),
-  setUser: (user) => ({ type: actionTypes.SetUser, payload: { user } }),
+  requestUser: (user) => ({type: actionTypes.UserRequested,payload: { user }}),
+  fulfillUser: (user) => ({ type: actionTypes.UserLoaded, payload: { user }}),
+  setUser: (user) => ({ type: actionTypes.SetUser, payload: { user }}),
 };
 
 export function* saga() {
@@ -75,6 +76,10 @@ export function* saga() {
   });
 
   yield takeLatest(actionTypes.Register, function* registerSaga() {
+    yield put(actions.requestUser());
+  });
+
+  yield takeLatest(actionTypes.Update, function* updateSaga() {
     yield put(actions.requestUser());
   });
 

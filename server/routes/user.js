@@ -15,6 +15,7 @@ router.get("/", auth, catchErrors(userController.getAllUsers));
 
 router.post("/login", catchErrors(userController.login));
 router.post("/signup", catchErrors(userController.register));
+router.post("/update", catchErrors(userController.update));
 router.post("/forgot-password", catchErrors(userController.forgotPassword));
 router.post("/password-reset/:userId/:token", catchErrors(userController.resetPassword));
 router.post("/find", catchErrors(userController.getUserByName));

@@ -5,7 +5,7 @@ const UserSchema = new mongoose.Schema(
   {
     username: {
       type: String,
-      required: "Username is required!",
+      // required: "Username is required!",
     },
     email: {
       type: String,
@@ -13,7 +13,7 @@ const UserSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: "Password is required!",
+      // required: "Password is required!",
     },
     totalMessages: {
       type: Number,

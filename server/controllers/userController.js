@@ -138,6 +138,50 @@ exports.register = async (req, res) => {
   });
 };
 
+exports.update = async (req, res) => {
+
+  const form = formidable.IncomingForm();
+
+  const uploadFolder = path.join(__dirname, "../", "public", "files");
+  form.uploadDir = uploadFolder;
+
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      console.log("Error parsing the files");
+      return res.status(400).json({
+        success: false,
+        message: "There was an error parsing the files",
+        error: err,
+      });
+    }
+    
+    const {
+      email,
+      name,
+      profession,
+      note,
+      field,
+      industry,
+      website
+    } = fields;
+
+    const user = await User.findOne({email});
+
+    user.username = name;
+    user.profession = profession;
+    user.note = note;
+    user.field = field;
+    user.industry = industry;
+    user.website = website;
+    console.error(user);
+    
+    await user.save();
+
+    res.json({
+      message: "Success [" + name + "] updated!",
+    });
+  });
+};
 exports.login = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({

@@ -2,14 +2,13 @@ import React, { useEffect, useState, useRef } from "react";
 import { Card } from '../../../_metronic/_partials/controls/Card'
 import { Button, CardActionArea,  CardContent, makeStyles, Typography } from "@material-ui/core";
 import { toImageUrl } from "../../../_metronic/_helpers";
-import {getUserByToken, getUserByName} from '../Auth/_redux/authCrud';
+import {getUserByToken, getUserByName, update} from '../Auth/_redux/authCrud';
 import {useParams, useLocation, Link} from 'react-router-dom';
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 import * as auth from "../Auth/_redux/authRedux";
 import * as Yup from "yup";
 import { useFormik} from "formik";
-
 
 const useStyles = makeStyles({
   card: {
@@ -60,38 +59,43 @@ function ProfileOverview(props) {
   }
 
   const EditionSchema = Yup.object().shape({
-    name:Yup.string().required("email required"),
+    name:Yup.string().required("name required"),
+    profession:Yup.string().required("profession required"),
+    note:Yup.string().required("note required"),
+    field:Yup.string().required("field required"),
+    industry:Yup.string().required("industry required"),
+    website:Yup.string().required("website required"),
   });
   const formik = useFormik({
+    enableReinitialize: true,
+    initialValues : {
+      name: userData.username ? userData.username : '',
+      email:userData.email ? userData.email : '',
+      profession: userData.profession ? userData.profession : '',
+      note: userData.note ? userData.note : '',
+      field: userData.field ? userData.field : '',
+      industry: userData.industry ? userData.industry : '',
+      website: userData.website ? userData.website : '',
+    },
     validationSchema: EditionSchema,
-    onSubmit: (values, { setStatus, setErrors, setSubmitting}) => {
-      // setSubmitting(true);
-      // enableLoading();
+    onSubmit: (values, {setStatus, setSubmitting}) => {
       console.log(values);
       let formData = new FormData();
       for (const key in values) {
-        if (Object.hasOwnProperty.call(values, key)) {
-          const value = values[key];
-          formData.append(key, value)
-        }
+        const value = values[key];
+        formData.append(key, value)
       }
-      console.log(formData);
-      // (formData)
-      //   .then(({ data: { accessToken } }) => {
-      //     props.history.push('/auth/login');
-      //     // disableLoading();
-      //     // setSubmitting(false);
-      //   })
-      //   .catch((err) => {
-      //     // setSubmitting(false);
-      //     // setErrors(err.response.data.errors);
-      //     setStatus(
-      //       intl.formatMessage({
-      //         id: "AUTH.VALIDATION.INVALID_LOGIN",
-      //       })
-      //     );
-      //     // disableLoading();
-      //   });
+      update(formData)
+        .then(() => {
+          props.history.go(0);
+        })
+        .catch((err) => {
+          setStatus(
+            intl.formatMessage({
+              id: "AUTH.VALIDATION.INVALID_LOGIN",
+            })
+          );
+        });
     },
   });
 
@@ -100,17 +104,15 @@ function ProfileOverview(props) {
   }, []);
   return (
     <div className="row">
-      <Card className={classes.card}>
-        <form id="Update_Profile" onSubmit={formik.handleSubmit}>
-        <div>    
-          <img src={toImageUrl(encodeURIComponent(userData.photo))} className="w-100" />
-          <div>
+        <img src={toImageUrl(encodeURIComponent(userData.photo))} className="w-100" />
+        <form id="update_profile" onSubmit={formik.handleSubmit}>
+          <div>            
             <Typography className="text-white my-5" gutterBottom variant="h5" component="h2">
               {editPage === false ? 
                   userData.username : 
-                  <input 
-                    defaultValue={userData.username}
-                    // {...formik.getFieldProps("name")}
+                  <input
+                    name="name"
+                    {...formik.getFieldProps("name")} 
                   />
               }
             </Typography>
@@ -118,14 +120,15 @@ function ProfileOverview(props) {
               {editPage === false ? 
                   userData.profession :
                   <input 
-                    defaultValue={userData.profession}
-                    {...formik.getFieldProps("profession")}
+                    type="text"
+                    name="profession"
+                    {...formik.getFieldProps("profession")} 
                   />
               }
             </Typography>
             <div className="row">
               <div className="col-12 col-sm-12 col-md-8">
-                <Typography className="text-white-50" variant="body2" color="textSecondary" component="p">
+                <Typography className="text-white-50" variant="body2" color="textSecondary" component="div">
                 { editPage === false ? 
                     note.split("\n").map((i, key)=>{
                       return <p key={key}>{i}</p>
@@ -134,8 +137,8 @@ function ProfileOverview(props) {
                       className={`form-control form-control-solid h-auto px-6`}
                       name="note"
                       rows="10"
-                      defaultValue={note}
-                      // {...formik.getFieldProps("note")}
+                      name="note"
+                      {...formik.getFieldProps("note")} 
                     />
                 }
                 </Typography>
@@ -147,8 +150,8 @@ function ProfileOverview(props) {
                     <Typography className="text-white-50" variant="body2" color="textSecondary" component="p">
                       {editPage === false ? userData.field :
                         <input 
-                          defaultValue={userData.field}
-                          // {...formik.getFieldProps("field")}
+                          name="field"
+                          {...formik.getFieldProps("field")} 
                         />
                       }
                     </Typography>
@@ -160,8 +163,8 @@ function ProfileOverview(props) {
                     <Typography className="text-white-50" variant="body2" color="textSecondary" component="p">
                       {editPage === false ? userData.industry :
                       <input 
-                        defaultValue={userData.industry}
-                        // {...formik.getFieldProps("industry")}
+                        name="industry"
+                        {...formik.getFieldProps("industry")} 
                       />}
                     </Typography>
                   </div>
@@ -174,8 +177,8 @@ function ProfileOverview(props) {
                         <Link className="text-white-50" to={{pathname: `http://${userData.website}`}} target="_blank">{userData.website}</Link>
                         :
                         <input 
-                          defaultValue={userData.website}
-                          {...formik.getFieldProps("website")}
+                          name="website"
+                          {...formik.getFieldProps("website")} 
                         />
                       }                    
                     </Typography>
@@ -214,51 +217,56 @@ function ProfileOverview(props) {
                   </div>
                   <div className="col-6 col-sm-4 col-md-12 mt-15 text-right">
                     <div className="col-12 mb-5">
-                      <Button className={classes.myButton} variant="contained" style={{backgroundColor: "#0766C0"}}>
+                      <Button
+                      type="button"
+                      className={classes.myButton} variant="contained" style={{backgroundColor: "#0766C0"}}>
                         Carte de visite
                       </Button>
                     </div>
                     <div className="col-12 mb-5">
-                      <Button className={classes.myButton} variant="contained" style={{backgroundColor: "#0758C0"}}>
+                      <Button 
+                      type="button"
+                      className={classes.myButton} variant="contained" style={{backgroundColor: "#0758C0"}}>
                         Imprimer le profil
                       </Button>
                     </div>
                     <div className="col-12 mb-5">
-                      <Button className={classes.myButton} variant="contained" style={{backgroundColor: "#073DC0"}}>
+                      <Button
+                      type="button"
+                      className={classes.myButton} variant="contained" style={{backgroundColor: "#073DC0"}}>
                         Envoyer le profil
                       </Button>
                     </div>
                     {!username && <div className="col-12 mb-5">
-                      <Button onClick={()=>{
+                      <Button
+                      type="button"
+                      onClick={()=>{
                         setEditPage(true)
                       }}className={classes.myButton} variant="contained" style={{backgroundColor: "#073DC0"}}>
                         Modifier votre profil
                       </Button>
-                    </div>
-                    }
+                    </div>}
                   </div>
                 </div>
               </div>
               {editPage && <div className="col-12 col-sm-12 col-md-12 d-flex justify-content-around">
-                <Button className={classes.myButton} variant="contained" style={{backgroundColor: "#073DC0"}}>
+                <Button type="button" className={classes.myButton} variant="contained" style={{backgroundColor: "#073DC0"}}>
                   Photo de profil
                 </Button>
-                <Button className={classes.myButton} variant="contained" style={{backgroundColor: "#073DC0"}}>
+                <Button type="button" className={classes.myButton} variant="contained" style={{backgroundColor: "#073DC0"}}>
                   Photo de page
                 </Button>
                 <Button
+                  id="btn_submit"
                   type="submit" 
                   className={classes.myButton} variant="contained" style={{backgroundColor: "#073DC0"}}>
                   Sauvegarder
                 </Button>
-              </div>
-              }
+              </div>}
             </div>
           </div>
-        </div>
         </form>
-      </Card>
     </div>
   );
 }
-export default injectIntl(connect(null, auth.actions)(ProfileOverview));
+export default ProfileOverview;

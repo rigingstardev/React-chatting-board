@@ -2,6 +2,7 @@ import axios from "axios";
 const backendurl = process.env.REACT_APP_BACKEND_URL;
 export const LOGIN_URL = `${backendurl}user/login`;
 export const REGISTER_URL = `${backendurl}user/signup`;
+export const UPDATE_URL = `${backendurl}user/update`;
 export const REQUEST_PASSWORD_URL = `${backendurl}user/forgot-password`;
 export const RESET_PASSWRD_URL =  `${backendurl}user/password-reset/`;
 
@@ -17,6 +18,9 @@ export function register(formData) {
   return axios.post(REGISTER_URL, formData);
 }
 
+export function update(formData) {
+  return axios.post(UPDATE_URL, formData);
+}
 export function requestPassword(email) {
   return axios.post(REQUEST_PASSWORD_URL, { email });
 }
