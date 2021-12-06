@@ -232,8 +232,6 @@ function Registration(props) {
     formik.setFieldValue("photo", "");
   }
   const onLoad = useCallback((img)=>{
-    // console.log("width = ", img.width)
-    // console.log("height = ", img.height)
     imgRef.current = img;
   });
 

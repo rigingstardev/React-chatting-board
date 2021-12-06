@@ -167,6 +167,29 @@ exports.update = async (req, res) => {
 
     const user = await User.findOne({email});
 
+    let avatar = "";
+    let photo = "";
+    try {
+      let avatarFile = fields.avatar;
+      let photoFile = fields.photo;
+      if (avatarFile !== '') {
+        const imageFile = avatarFile.replace(/^data:image\/jpeg;base64,/, "");
+        filePath = path.join(uploadFolder, `${name}-avatar.jpg`);
+        imageString = imageFile;
+        fs.writeFileSync(path.join(uploadFolder, `${name}-avatar.jpg`), imageFile, 'base64');
+        avatar = `${name}-avatar.jpg`;
+        user.avatar = avatar;
+      }
+      if (photoFile !== '') {
+        const imageFile = photoFile.replace(/^data:image\/jpeg;base64,/, "");
+        fs.writeFileSync(path.join(uploadFolder, `${name}-photo.jpg`), imageFile, 'base64');
+        photo = `${name}-photo.jpg`;
+        user.photo = photo;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    
     user.username = name;
     user.profession = profession;
     user.note = note;
@@ -179,6 +202,7 @@ exports.update = async (req, res) => {
 
     res.json({
       message: "Success [" + name + "] updated!",
+      user,
     });
   });
 };

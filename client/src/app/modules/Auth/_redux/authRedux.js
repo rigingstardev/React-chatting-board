@@ -74,6 +74,10 @@ export function* saga() {
   yield takeLatest(actionTypes.Login, function* loginSaga() {
     yield put(actions.requestUser());
   });
+  
+  yield takeLatest(actionTypes.SetUser, function* loginSaga() {
+    yield put(actions.requestUser());
+  });
 
   yield takeLatest(actionTypes.Register, function* registerSaga() {
     yield put(actions.requestUser());
