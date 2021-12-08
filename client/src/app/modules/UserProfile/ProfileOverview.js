@@ -26,7 +26,8 @@ const useStyles = makeStyles({
     alignItems: "stretch"
   },
   myButton:{
-    width: "170px"
+    width: "170px",
+    borderRadius: "0px !important"
   },
   myFont:{
     color:"#b6ceff"
@@ -335,6 +336,92 @@ function ProfileOverview(props) {
                     </Typography>
                   </div>
                 </div>
+                {editPage &&  <div className="my-10 row d-flex">
+                  <div id="btn_avatar" className="col-4">
+                      <input 
+                        type="file"
+                        id="avatar_input"
+                        ref={avatarInput}
+                        name="avatar"
+                        accept=".png, .jpg, .jpeg"
+                        onChange={onAvatarSelectFile}
+                        style={{display: 'none'}}
+                        />
+                      <label htmlFor="avatar_input" className="mb-0">
+                        <Button type="button" className={classes.myButton} component="span" variant="contained" style={{backgroundColor: "#073DC0"}}>
+                          Photo de profil
+                        </Button>
+                      </label>
+                      <Modal 
+                        open={openAvatarModal}
+                        onClose={cancelAvatarModal}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description">
+                        <Box className={classes.modalBox}>
+                          <Box>
+                            <ReactCrop
+                              src={upImg}
+                              onImageLoaded={onLoad}
+                              crop={crop}
+                              locked="true"
+                              onChange={(crop) => setCrop(crop)}
+                              onComplete={(crop) => cropAvatar(crop)}
+                            />
+                          </Box>
+                          <Box className="d-flex justify-content-between">
+                            <Button variant="contained" color="secondary" onClick={saveAvatar}>Save</Button>
+                            <Button variant="contained" onClick={cancelAvatarModal}>Cancel</Button>
+                          </Box>
+                        </Box>
+                      </Modal>
+                    </div>
+                  <div id="btn_photo" className="col-4">
+                        <input
+                          type="file"
+                          id="photo_input"
+                          ref={photoInput}
+                          accept=".png, .jpg, .jpeg"
+                          name="photo"
+                          onChange={onPhotoSelectFile}
+                          style={{ width: "342.52px", display:"none" }}
+                        />
+                        <label htmlFor="photo_input" className="mb-0">
+                          <Button type="button" className={classes.myButton} component="span" variant="contained" style={{backgroundColor: "#073DC0"}}>
+                            Photo de page
+                          </Button>
+                        </label>
+                        <Modal 
+                          open={openPhotoModal}
+                          onClose={cancelPhotoModal}
+                          aria-labelledby="modal-modal-title"
+                          aria-describedby="modal-modal-description">
+                          <Box className={classes.modalBox}>
+                            <Box>
+                              <ReactCrop
+                                src={upImg}
+                                onImageLoaded={onLoad}
+                                crop={crop}
+                                locked="true"
+                                onChange={(crop) => setCrop(crop)}
+                                onComplete={(crop) => cropPhoto(crop)}
+                              />
+                            </Box>
+                            <Box className="d-flex justify-content-between">
+                              <Button variant="contained" color="secondary" onClick={savePhoto}>Save</Button>
+                              <Button variant="contained" onClick={cancelPhotoModal}>Cancel</Button>
+                            </Box>
+                          </Box>
+                        </Modal>
+                      </div>
+                  <div id="btn_save" className="col-4">
+                    <Button
+                      id="btn_submit"
+                      type="submit" 
+                      className={classes.myButton} variant="contained" style={{backgroundColor: "#073DC0"}}>
+                      Sauvegarder
+                    </Button>
+                    </div>
+                </div>}
               </div>
               <div className="col-12 col-sm-12 col-md-4">
                 <div className="row pl-0 pl-md-20">
@@ -400,92 +487,6 @@ function ProfileOverview(props) {
                   </div>
                 </div>
               </div>
-              {editPage && <div className="col-12 col-sm-12 col-md-12 d-flex justify-content-around">
-                <div id="btn_avatar">
-                  <input 
-                    type="file"
-                    id="avatar_input"
-                    ref={avatarInput}
-                    name="avatar"
-                    accept=".png, .jpg, .jpeg"
-                    onChange={onAvatarSelectFile}
-                    style={{display: 'none'}}
-                    />
-                  <label htmlFor="avatar_input">
-                    <Button type="button" className={classes.myButton} component="span" variant="contained" style={{backgroundColor: "#073DC0"}}>
-                      Photo de profil
-                    </Button>
-                  </label>
-                  <Modal 
-                    open={openAvatarModal}
-                    onClose={cancelAvatarModal}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description">
-                    <Box className={classes.modalBox}>
-                      <Box>
-                        <ReactCrop
-                          src={upImg}
-                          onImageLoaded={onLoad}
-                          crop={crop}
-                          locked="true"
-                          onChange={(crop) => setCrop(crop)}
-                          onComplete={(crop) => cropAvatar(crop)}
-                        />
-                      </Box>
-                      <Box className="d-flex justify-content-between">
-                        <Button variant="contained" color="secondary" onClick={saveAvatar}>Save</Button>
-                        <Button variant="contained" onClick={cancelAvatarModal}>Cancel</Button>
-                      </Box>
-                    </Box>
-                  </Modal>
-                </div>
-                <div id="btn_photo">
-                  <input
-                    type="file"
-                    id="photo_input"
-                    ref={photoInput}
-                    accept=".png, .jpg, .jpeg"
-                    name="photo"
-                    onChange={onPhotoSelectFile}
-                    style={{ width: "342.52px", display:"none" }}
-                  />
-                  <label htmlFor="photo_input">
-                    <Button type="button" className={classes.myButton} component="span" variant="contained" style={{backgroundColor: "#073DC0"}}>
-                      Photo de page
-                    </Button>
-                  </label>
-                  <Modal 
-                    open={openPhotoModal}
-                    onClose={cancelPhotoModal}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description">
-                    <Box className={classes.modalBox}>
-                      <Box>
-                        <ReactCrop
-                          src={upImg}
-                          onImageLoaded={onLoad}
-                          crop={crop}
-                          locked="true"
-                          onChange={(crop) => setCrop(crop)}
-                          onComplete={(crop) => cropPhoto(crop)}
-                        />
-                      </Box>
-                      <Box className="d-flex justify-content-between">
-                        <Button variant="contained" color="secondary" onClick={savePhoto}>Save</Button>
-                        <Button variant="contained" onClick={cancelPhotoModal}>Cancel</Button>
-                      </Box>
-                    </Box>
-                  </Modal>
-                </div>
-                <div id="btn_save">
-                <Button
-                  id="btn_submit"
-                  type="submit" 
-                  className={classes.myButton} variant="contained" style={{backgroundColor: "#073DC0"}}>
-                  Sauvegarder
-                </Button>
-                </div>
-              </div>}
             </div>
           </div>
         </form>
@@ -493,5 +494,3 @@ function ProfileOverview(props) {
   );
 }
 export default injectIntl(connect(null, auth.actions)(ProfileOverview));
-
-// export default ProfileOverview;
