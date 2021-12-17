@@ -12,7 +12,6 @@ import {GetAllUsers} from './_redux/chatCrud';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {professionList, countryList} from '../constant';
-
 /*
   INTL (i18n) docs:
   https://github.com/formatjs/react-intl/blob/master/docs/Components.md#formattedmessage

@@ -12,7 +12,11 @@ const ChannelSchema = new mongoose.Schema({
   users: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
-  }]
+  }],
+  avatar: {
+    type: String,
+    default:"",
+  }
 });
 
 const Channel = mongoose.model("Channel", ChannelSchema);

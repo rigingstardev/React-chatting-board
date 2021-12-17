@@ -10,6 +10,6 @@ router.get(
   auth,
   catchErrors(channelController.getChannelSentiment)
 );
+router.post("/update", auth, catchErrors(channelController.updateChannel));
 router.post("/", auth, catchErrors(channelController.createChannel));
-
 module.exports = router;

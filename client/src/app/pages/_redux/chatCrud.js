@@ -4,16 +4,20 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 export const CHANNELADDGET_URL = BACKEND_URL + "channel";
 export const MESSAGEGET_URL = BACKEND_URL + "messages/";
 export const GETALLUSER_URL = BACKEND_URL + "user/";
+export const CHANNELUPDATE_URL = BACKEND_URL + "channel/update";
 
 // CREATE =>  POST: add a new customer to the server
-export function CreateChannel(name, users) {
-  return axios.post(CHANNELADDGET_URL, { name, users });
+export function CreateChannel(name, users, avatar) {
+  return axios.post(CHANNELADDGET_URL, { name, users, avatar});
 }
 
 export function GetChannel() {
   return axios.get(CHANNELADDGET_URL);
 }
 
+export function UpdateChannel(type, data){
+  return axios.post(CHANNELUPDATE_URL, {type, data});
+}
 export function GetMessage(id, type = "private") {
   let url = MESSAGEGET_URL;
   if (type === "private") {

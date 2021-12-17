@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Channel = mongoose.model("Channel");
 
 exports.createChannel = async (req, res) => {
-  const { name, users } = req.body;
+  const { name, users, avatar } = req.body;
 
   const nameRegex = /^[A-Za-z\s]+$/;
 
@@ -13,7 +13,8 @@ exports.createChannel = async (req, res) => {
 
   const channel = new Channel({
     name,
-    users: [...users, req.user._id]
+    users: [...users, req.user._id],
+    avatar,
   });
 
   await channel.save();
@@ -44,3 +45,37 @@ exports.getAllChannels = async (req, res) => {
   const channels = await Channel.find({ users: req.user._id }).populate('users', { password: 0 }, { _id: { $ne: req.user._id } });
   res.json(channels);
 };
+
+exports.updateChannel = async (req, res) => {
+    const { type} = req.body;
+    const {name, deleteUser, newGroupName} = req.body.data;
+
+    switch(type){
+      case "deleteUser":
+        try{
+          console.error(type, deleteUser);
+          const channel = await Channel.findOne({name});
+          channel.users = channel.users.filter(id => id.toString() !== deleteUser._id);
+          
+          await channel.save();
+          res.json({
+            message:"Deleted user = " + deleteUser.username + " from " + name     
+          })
+        } catch(e){}
+      
+        break;
+      case "updateGroupName":
+        try{ 
+          console.error(type, newGroupName);
+          const channel = await Channel.findOne({name});
+          channel.name = newGroupName;
+          await channel.save();
+          res.json({
+            message:"Group name changed from " + name + " to " + newGroupName     
+          })
+        }catch(e){}
+        
+        break;
+      default: break;
+    }
+}

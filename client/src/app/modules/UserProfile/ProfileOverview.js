@@ -258,7 +258,7 @@ function ProfileOverview(props) {
             <img src={cropToPhoto}/>
         }
         <form id="update_profile" onSubmit={formik.handleSubmit}>
-          <div>            
+          <div style={{paddingBottom:50}}>            
             <Typography className="text-white my-5" gutterBottom variant="h5" component="h2">
               {editPage === false ? 
                   userData.username : 

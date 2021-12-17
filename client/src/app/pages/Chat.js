@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { shallowEqual, useSelector } from "react-redux";
-import { Avatar,  Divider, InputAdornment, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, makeStyles, TextField, Typography, Input } from "@material-ui/core";
+import { Box, Avatar,  Divider, InputAdornment, Tooltip, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, makeStyles, TextField, Typography, Input, IconButton} from "@material-ui/core";
 import SVG from 'react-inlinesvg';
 import AddIcon from '@material-ui/icons/Add';
 import { toAbsoluteUrl, toImageUrl } from "../../_metronic/_helpers";
@@ -16,9 +16,12 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import AddChannelModal from './AddChannelModal';
-import { CreateChannel, GetChannel, GetMessage, GetAllUsers, ReadDirectMessage } from './_redux/chatCrud';
+import UpdateChannelModal from './UpdateChannelModal';
+import { CreateChannel, GetChannel, GetMessage, GetAllUsers, ReadDirectMessage, UpdateChannel } from './_redux/chatCrud';
 import { WindowsNotify } from "../../helpers/WinNotify";
 import { Badge } from 'react-bootstrap';
+
+import Settings from '@material-ui/icons/Settings';
 
 /*
   INTL (i18n) docs:
@@ -59,16 +62,13 @@ const useStyles = makeStyles(theme => ({
   },
   listRoot: {
     cursor: 'pointer',
-    "& .MuiListItem-container, & .MuiListItem-root.MuiListItem-gutters": {
+    "& .MuiListItem-root.MuiListItem-gutters": {
       marginTop: 1,
       backgroundColor: "#3F5060",
+      paddingLeft:10,
     },
     "& .MuiListItem-root.MuiListItem-gutters.groups": {
       display: 'block',
-    },
-    "& .MuiListItem-root.MuiListItem-gutters > div.group-users": {
-      display: 'flex',
-      alignItems: 'center'
     },
     "& .MuiTypography-root": {
       color: '#b6ceffbd',
@@ -77,25 +77,39 @@ const useStyles = makeStyles(theme => ({
       color: '#112233cc'
     },
     "& .MuiAvatar-root": {
-      width: 50,
-      height: 50
-    }
+      width: 75,
+      height: 75,
+      marginRight: 5,
+    },
   },
   color: {
     color: '#b6ceffbd',
   },
   plusUsersNumber: {
-    width: '50px',
-    height: '50px',
+    width: 75,
+    height: 75,
     borderRadius: '50%',
-    backgroundColor: "#112233",
+  },
+  transBox:{
+    width:'100%',
+    height:'100%',
+    borderRadius: '50%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: '#b6ceffbd'
+    backgroundColor: "#112233",
+    opacity:0.8,
+    color:'white',
+    '&:hover':{
+      opacity:0,
+    }
   },
   active: {
     borderLeft: "6px solid #eee",
+  },
+  settingsButton:{
+    padding:"unset",
+    color:"#b6ceffbd",
   }
 }));
 //////////////////////
@@ -124,13 +138,17 @@ function Chat(props) {
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [notifyFlag, setNotifyFlag] = useState(false);
-  const [modalShow, setModalValue] = useState(false);
+  const [addChannelModalShow, setModalShow] = useState(false);
   const [message, setMessage] = useState("");
   const [users, setUsers] = useState([]);
   const [channels, setChannels] = useState([]);
   const [currentId, setCurrentId] = useState("");
   const [messageType, setMessageType] = useState('private');
   const [messageData, setMessageData] = useState([]);
+  const [update, setUpdate] = useState(0);
+  const [groupSetting, setGroupSetting] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState([]);
+  
   //////////////
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState(
@@ -225,7 +243,7 @@ function Chat(props) {
   }
 
   const adduser = () => {
-    setModalValue(true);
+    setModalShow(true);
   }
 
   const groupitem = async (id, type = "private") => {
@@ -246,22 +264,42 @@ function Chat(props) {
   //   }
   // }, [currentGroup._id, channels])
 
-  const modalClose = () => {
-    setModalValue(false);
+  const addChannelModalClose = async () => {
+    await setUpdate(update + 1);
+    setModalShow(false);
   }
-  const addChannel = async (name, selUsers) => {
+  const groupSettingModalClose = async () => {
+    await setUpdate(update + 1);
+    setGroupSetting(false);
+  }
+  const addChannel = async (name, selUsers, avatar) => {
+    console.log(avatar);
     try {
-      await CreateChannel(name, selUsers);
+      await CreateChannel(name, selUsers, avatar);
       if (socket) {
         socket.emit("newChannel", { channelName: name });
       }
-      modalClose();
+      addChannelModalClose();
     } catch (error) {
       console.error(error);
-      // modalClose();
+      // addChannelModalClose();
     }
-
   };
+
+  const updateChannel = async (type, data) => {
+    console.log(data);
+    try{
+      await UpdateChannel(type, data);
+      getChannel();
+      if(socket){
+        socket.emit("updatedChannel", { channelName: data.name });
+      }
+      groupSettingModalClose();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
   const getChannel = async () => {
     try {
@@ -436,7 +474,7 @@ function Chat(props) {
                 ),
               }}
             />
-            {/* <Typography className={"px-10 " + classes.color} variant="subtitle1" gutterBottom>
+            {/* <Typography className={"px-10 " + classes.color} variant="subtitle1" >
               CONVERSATIONS
             </Typography> */}
             <div className={classes.color}>
@@ -491,21 +529,42 @@ function Chat(props) {
                   </List>
                 </TabContainer>
                 <TabContainer dir={theme.direction}>
-                  <Typography className={"cursor-pointer px-10 mt-5 " + classes.color} onClick={adduser} variant="subtitle1" gutterBottom >
+                  <Typography className={"cursor-pointer px-10 mt-5 " + classes.color} onClick={adduser} variant="subtitle1"  >
                     GROUPES DE TRAVAIL <AddIcon fontSize="large"/>
                     <AddChannelModal
-                      show={modalShow}
-                      onHide={modalClose}
+                      show={addChannelModalShow}
+                      onHide={addChannelModalClose}
                       onAddChannel={addChannel}
                       users={users}
+                    />
+                    <UpdateChannelModal 
+                      show={groupSetting}
+                      onHide={() => {groupSettingModalClose()}}
+                      onAddChannel={addChannel}
+                      // users={selectedGroup.users}
+                      // groupname={selectedGroup.groupname}
+                      groupId = {selectedGroup}
                     />
                   </Typography>
                   <List className={classes.listRoot} style={{ overflowY: "auto", marginTop: "10px" }}>
                     {channels.map((group, i) => {
                       return (<ListItem className={clsx("groups cursor-pointer", group._id === currentId && classes.active)} key={i} onClick={() => groupitem(group._id, "channel")}>
-                        <Typography variant="subtitle1" gutterBottom>
-                          {group.name}
-                        </Typography>
+                        <Box display="flex" justifyContent="space-between">                        
+                          <Typography variant="subtitle1" >
+                            {group.name}
+                          </Typography>
+                          <IconButton 
+                            className={classes.settingsButton}
+                            onClick={()=>{
+                              setGroupSetting(!groupSetting);
+                              console.log(group.users);
+                              // setSelectedGroup({users:group.users, groupname:group.name});
+                              setSelectedGroup(i);
+                            }}
+                          >
+                            <Settings />
+                          </IconButton>
+                        </Box>
                         <div className="group-users">
                           {!!(group.users && group.users.length) && group.users.map((user, j, gUsers) => {
                             if (gUsers.length >= 5) {
@@ -585,7 +644,7 @@ function Chat(props) {
               </SwipeableViews>
             </div>
           </div>}
-        {isTabletDevice && <div style={{ width: 350, minWidth: 350, height: "calc(100vh - 180px)", borderBottom: "1px solid #4a5764" }}>
+        {isTabletDevice && <div style={{ width: 435, minWidth: 435, height: "calc(100vh - 180px)", borderBottom: "1px solid #4a5764" }}>
           <TextField
             className={"px-10 py-5 w-100 " + classes.search}
             id="input-with-icon-textfield"
@@ -607,7 +666,7 @@ function Chat(props) {
             value={searchTerm}
             onChange={handleChange1}
           />
-          <Typography className={"px-10 m-0 " + classes.color} style={{ height: 25 }} variant="subtitle1" gutterBottom>
+          <Typography className={"px-10 m-0 " + classes.color} style={{ height: 25 }} variant="subtitle1" >
             CONVERSATIONS
           </Typography>
           {isTabletDevice && <List className={classes.listRoot} style={{ height: "calc((100% - 162px) / 2)", overflowY: "auto" }}>
@@ -646,55 +705,66 @@ function Chat(props) {
                     ))}
                   </ul> */}
           {isTabletDevice && <Divider light className="bg-white-o-60" style={{ marginTop: 35 }} />}
-          {isTabletDevice && <Typography className={" cursor-pointer px-10 " + classes.color} variant="subtitle1" onClick={adduser} style={{ marginTop: 8, marginBottom: 7, height: 22 }} gutterBottom>
+          {isTabletDevice && <Typography className={" cursor-pointer px-10 " + classes.color} variant="subtitle1" onClick={adduser} style={{ marginTop: 8, marginBottom: 7, height: 22 }} >
             GROUPES DE TRAVAIL <AddIcon fontSize="large" fontWeight={10}/>
             <AddChannelModal
-              show={modalShow}
-              onHide={modalClose}
+              show={addChannelModalShow}
+              onHide={() => {addChannelModalClose()}}
               onAddChannel={addChannel}
               users={users}
             />
           </Typography>}
+          { isTabletDevice &&
+              <UpdateChannelModal 
+              show={groupSetting}
+              onHide={() => {groupSettingModalClose()}}
+              onUpdateChannel={updateChannel}
+              // users={selectedGroup.users}
+              // groupname = {selectedGroup.groupname}
+              groupId = {selectedGroup}
+            />
+          }
             {isTabletDevice && <List className={classes.listRoot} style={{ height: "calc((100% - 162px) / 2)", overflowY: "auto", padding: "0" }}>
               {search_channel().map((group, i) => {
                 return (<ListItem className={clsx("groups cursor-pointer", group._id === currentId && classes.active)} key={i} onClick={() => groupitem(group._id, "channel")}>
-                  <Typography variant="subtitle1" gutterBottom>
-                    {group.name}
-                  </Typography>
-                  <div className="group-users" >
-                    {!!(group.users && group.users.length) && group.users.map((user, j, gUsers) => {
-                      if (gUsers.length >= 5) {
-                        if (j < 4) {
-                          return (
-                            <ListItemAvatar className="symbol symbol-circle" key={j} >
-                              <>
-                                <Avatar className="symbol-label" alt={user.username} src={toImageUrl(user.avatar)} />
-                                <i className={clsx("symbol-badge symbol-badge-bottom", { "bg-success": user.socketId, "bg-gray-700": !user.socketId })}></i>
-                              </>
-                            </ListItemAvatar>
-                          );
-                        } else if (j == 4) {
-                          let number = gUsers.length - 4;
-                          return (<ListItemAvatar key={j}>
-                            <div className={classes.plusUsersNumber}> + {number}</div>
-                          </ListItemAvatar>);
-                        }
-                        return "";
-                      } else {
-                        return (
-                          <ListItemAvatar className="symbol symbol-circle" key={j}>
-                            <>
-                              <Avatar className="symbol-label" alt={user.username} src={toImageUrl(user.avatar)} />
-                              <i className={clsx("symbol-badge symbol-badge-bottom", { "bg-success": user.socketId, "bg-gray-700": !user.socketId })}></i>
-                            </>
-                          </ListItemAvatar>
-                        );
-                      }
-                    })}
-                    {!(group.users && group.users.length) && <ListItemAvatar>
-                      <div className={classes.plusUsersNumber}> + {0}</div>
-                    </ListItemAvatar>}
-                  </div>
+                  <Box display="flex" justifyContent="space-between" className="pb-1">
+                    <Box display="flex">
+                      {/* <Avatar className="symbol-label" alt={user.username} src={toImageUrl("avatar/1.png")} style={{alignItems:"center"}} /> */}
+                      <Typography variant="subtitle1">
+                        {group.name}
+                      </Typography>
+                    </Box>
+                    <IconButton 
+                      className={classes.settingsButton}
+                      onClick={()=>{
+                        setGroupSetting(!groupSetting);
+                        // setSelectedGroup({users:group.users, groupname:group.name});
+                        setSelectedGroup(i);
+                      }}
+                    >
+                      <Settings />
+                    </IconButton>
+                  </Box>
+                    <Box display="flex" justifyContent="space-between">
+                      <Box>
+                      {!!(group.users && group.users.length) && group.users.map((user, j, gUsers) => {
+                        if(j < 4)
+                          return <ListItemAvatar className="symbol symbol-circle" key={j} >
+                          <>
+                            <Avatar className="symbol-label" alt={user.username} src={toImageUrl(user.avatar)} />
+                            <i className={clsx("symbol-badge symbol-badge-bottom", { "bg-success": user.socketId, "bg-gray-700": !user.socketId })}></i>
+                          </>
+                        </ListItemAvatar>
+                      })}
+                      </Box>
+                      {!!(group.users && group.users.length) && <ListItemAvatar>
+                        <div className={classes.plusUsersNumber} style={{background:`url(${toImageUrl('avatar/')}${group.avatar})`, backgroundSize: 75}}>
+                           <div className={classes.transBox}>
+                           + {Math.max(group.users.length-4, 0)}
+                           </div>
+                        </div>
+                      </ListItemAvatar>}
+                    </Box>
                 </ListItem>)
               })}
             </List>}
