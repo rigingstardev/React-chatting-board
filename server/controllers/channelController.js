@@ -46,9 +46,17 @@ exports.getAllChannels = async (req, res) => {
   res.json(channels);
 };
 
+exports.getAllAvatars = async(req, res) => {
+    const fs = require('fs');
+    const path = require('path');
+    const dir = path.join(__dirname, '../public/files/avatar');
+
+    const files = fs.readdirSync(dir);
+    res.json(files);
+}
 exports.updateChannel = async (req, res) => {
     const { type} = req.body;
-    const {name, deleteUser, newGroupName} = req.body.data;
+    const {name, deleteUser, newGroupName, newAvatarName} = req.body.data;
 
     switch(type){
       case "deleteUser":
@@ -72,6 +80,18 @@ exports.updateChannel = async (req, res) => {
           await channel.save();
           res.json({
             message:"Group name changed from " + name + " to " + newGroupName     
+          })
+        }catch(e){}
+        
+        break;
+      case "updateGroupAvatar":
+        try{ 
+          console.error(type, newAvatarName);
+          const channel = await Channel.findOne({name});
+          channel.avatar = newAvatarName;
+          await channel.save();
+          res.json({
+            message:"Group avatar changed from " + name + " to " + newGroupName     
           })
         }catch(e){}
         

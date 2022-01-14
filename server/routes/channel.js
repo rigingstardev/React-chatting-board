@@ -5,6 +5,7 @@ const channelController = require("../controllers/channelController");
 const auth = require("../middlewares/auth");
 
 router.get("/", auth, catchErrors(channelController.getAllChannels));
+router.get("/avatar", catchErrors(channelController.getAllAvatars));
 router.get(
   "/:id/sentiment",
   auth,
