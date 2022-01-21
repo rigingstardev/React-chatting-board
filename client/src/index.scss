@@ -1,0 +1,191 @@
+// 3rd-party Plugins
+// @import "~highlight.js/styles/googlecode.css";
+// @import "~perfect-scrollbar/css/perfect-scrollbar.css";
+
+// Theme Styles
+@import "./_metronic/_assets/sass/style.react.scss";
+
+// Default Layout themes
+@import "./_metronic/_assets/sass/themes/layout/header/base/light.scss";
+@import "./_metronic/_assets/sass/themes/layout/header/menu/light.scss";
+@import "./_metronic/_assets/sass/themes/layout/brand/dark.scss";
+@import "./_metronic/_assets/sass/themes/layout/aside/dark.scss";
+
+// Header themes
+// Light
+//@import "./_metronic/_assets/sass/themes/layout/header/base/light.scss";
+// Dark
+// @import "./_metronic/_assets/sass/themes/layout/header/base/dark.scss";
+  
+// Header Menu themes
+// Light
+//@import "./_metronic/_assets/sass/themes/layout/header/menu/light.scss";
+// Dark
+// @import "./_metronic/_assets/sass/themes/layout/header/menu/dark.scss";
+
+// Brand themes
+.brand-dark {
+  @import "./_metronic/_assets/sass/themes/layout/brand/dark.scss";
+}
+// Light
+.brand-light {
+  @import "./_metronic/_assets/sass/themes/layout/brand/light.scss";
+}
+
+// Aside themes
+// Dark
+//@import "./_metronic/_assets/sass/themes/layout/aside/dark.scss";
+// Light
+// @import "./_metronic/_assets/sass/themes/layout/aside/light.scss";
+
+// .example-highlight {
+//   padding: 0rem 1.5rem 1.75rem !important;
+// }
+
+.example-highlight > pre {
+  background: none transparent !important;
+  margin: 0 !important;
+  padding-top: 0.5rem; 
+  code { 
+      overflow-y: auto;
+      display: block;
+
+      span {
+        background: none transparent !important;
+      }
+  }
+}
+.btn:hover{
+  background-color: white;
+}
+.json > pre {
+  background: none #fff !important;
+
+}
+
+.example-code > .json {
+  background: none #fff !important;
+}
+
+.symbol.symbol-45 > svg {
+  width: 100%;
+  max-width: 45px;
+  height: 45px;
+}
+
+.react-bootstrap-table {
+  overflow-x: auto;
+}
+
+.react-bootstrap-table {
+  th {
+    outline: none;
+   
+    &.sortable {  
+      .svg-icon-sort {
+        opacity: 0;
+      }
+  
+      &:hover {
+        cursor: pointer;
+
+        .svg-icon-sort {
+          opacity: 1;
+        }
+      }
+    }    
+  }
+
+  .table.table-head-custom thead tr {
+    .sortable-active {
+        color: $primary !important;
+    }
+  }
+}
+
+.cursor-default {
+  cursor: default !important;
+}
+
+.display-block {
+  display: block;
+}
+
+.background-auth {
+  background-color: #93999F;
+}
+
+
+#kt_login_signup {
+  color: #112233;
+}
+
+input, button, a, textarea {
+  border-radius: 1px !important;
+  -webkit-border-radius: 1px !important;
+  -moz-border-radius: 1px !important;
+  -ms-border-radius: 1px !important;
+  -o-border-radius: 1px !important;
+}
+
+#register_btn {
+  background: url('/media/ui/register_1.png');
+  background-size: 100% 100%;
+  border: none;
+}
+
+#register_btn:hover {
+  background: url('/media/ui/register_2.png');
+  background-size: 100% 100%;
+}
+
+@media screen and (max-width: 991px) {
+  .background-auth {
+    background-color: #112233;
+  }
+
+  #kt_login_signin_form {
+    input {
+      background-color: #D9E1EA !important;
+      color: #000000 !important;
+    }
+
+    #kt_login_signin_submit {
+      background-color: #ffffffe6 !important;
+      color: #000000 !important;
+    }
+
+    #kt_login_forgot span{
+      color: #D9E1EA99 !important;
+    }
+  }
+
+  #kt_login_signup {
+  color: white;
+  }
+
+  #goto-signup {
+    background-color: #D9E1EA !important;
+    color: #000000 !important;
+  }
+}
+.modal-dialog {
+  button.btn {
+      background-color: #384553 !important;
+      color: #ACBEE2 !important;
+      border-color: #384553 !important;
+  }
+  
+  button.btn:hover {
+      background-color: #384553 !important;
+      border-color: transparent !important;
+  }
+
+  .dropdown-container {
+    border-radius: 1px;
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    -ms-border-radius: 1px;
+    -o-border-radius: 1px;
+}
+}

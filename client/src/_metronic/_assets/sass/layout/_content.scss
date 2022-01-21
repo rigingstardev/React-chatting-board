@@ -1,0 +1,42 @@
+//
+// Content
+//
+
+// Desktop Mode
+@include media-breakpoint-up(lg) {
+	.content {
+		padding: 80px 0 0;
+
+		// Fixed Footer Mode
+		.footer-fixed & {
+			padding-bottom: get($footer-config, fixed, height);
+		}
+	}
+}
+
+.register-content {
+	max-width: 700px;
+	background-color: #1D2D3F;
+
+}
+
+// Tablet & Mobile Modes
+@include media-breakpoint-down(md) {
+	
+	#kt_header {
+		height: 80px;
+	}
+
+	#kt_content {
+		padding-top: 0;
+	}
+
+	.content {
+		padding: get($page-padding, tablet-and-mobile) 0;
+
+		// Subheader Enabled & Subheader Transparent Modes
+		.subheader-enabled.subheader-transparent & {
+			padding-top: 0;
+		}
+	}
+}

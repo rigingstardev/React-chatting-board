@@ -1,0 +1,134 @@
+//
+// Login 1
+// Pages SASS files are compiled into separate css files
+//
+
+
+// Initialization of global variables, mixins and functions
+@import "../../../init";
+
+.login.login-1 {
+    // Form modes
+    .login-signin,
+    .login-signup,
+    .login-forgot {
+        display: none;
+    }
+
+    .login-forgot {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        input, button {
+            background-color: #384553;
+            color: #ACBEE2;
+            border-color: #384553;
+
+        }
+
+        button:hover {
+            background-color: #384553;
+            border-color: transparent !important;
+        }
+    }
+
+    &.login-signin-on {
+        .login-signup {
+            display: none;
+        }
+
+        .login-signin {
+            display: block;
+        }
+
+        .login-forgot {
+            display: none;
+        }
+    }
+
+    &.login-signup-on {
+        .login-signup {
+            display: block;
+        }
+
+        .login-signin {
+            display: none;
+        }
+
+        .login-forgot {
+            display: none;
+        }
+    }
+
+    &.login-forgot-on {
+        .login-signup {
+            display: none;
+        }
+
+        .login-signin {
+            display: none;
+        }
+
+        .login-forgot {
+            display: block;
+        }
+    }
+}
+
+// Desktop view
+@include media-breakpoint-up(lg) {
+    .login.login-1 {
+        .login-aside {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .login-form {
+            width: 100%;
+            max-width: 400px;
+        }
+    }
+}
+
+// Tablet and Mobile mode
+@include media-breakpoint-between(lg, xl) {
+    .login.login-1 {
+        .login-aside {
+            width: 100%;
+            max-width: 700px;
+        }
+    }
+}
+
+// Tablet mode
+@include media-breakpoint-down(md) {
+    .login.login-1 {
+        .login-form {
+            width: 100%;
+            max-width: 350px;
+        }
+    }
+    .login-forgot {
+
+        input, button {
+            background-color: #D9E1EA !important;
+            color: #000000 !important;
+        }
+
+        button:hover {
+            background-color: #D9E1EA !important;
+        }
+    }
+}
+
+// Mobile mode
+@include media-breakpoint-down(xs) {
+    .login.login-1 {
+        .login-form {
+            width: 100%;
+            max-width: 100%;
+        }
+    }
+}

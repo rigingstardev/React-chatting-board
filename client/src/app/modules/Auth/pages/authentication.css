@@ -1,0 +1,16 @@
+.btn:hover{
+    background-color: rgb(81, 92, 102) !important;
+    color:white !important;
+}
+.css-yk16xz-control{
+    border-radius: 0px !important;
+    background-color: rgb(232, 240, 254) !important;
+}
+
+.MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input {
+    padding: 4.5px 4px !important;
+}
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #17c191;
+    border-width: 0px !important;
+}

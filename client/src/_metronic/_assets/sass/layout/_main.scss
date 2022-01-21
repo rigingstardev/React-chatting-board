@@ -1,0 +1,122 @@
+//
+// Base
+//
+
+// Body
+body {
+	background: $page-bg;
+}
+
+// Desktop Mode
+@include media-breakpoint-up(lg) {
+	// Wrapper
+	.wrapper {
+		// Fixed Header
+		.header-fixed & {
+			padding-top: get($header-config, desktop, fixed, height);
+		}
+
+		// Fixed Content Head
+		.header-fixed.subheader-fixed.subheader-enabled & {
+			padding-top: get($header-config, desktop, fixed, height) + get($subheader-config, fixed, height);
+		}
+
+		// Fixed Aside
+		.aside-fixed & {
+			padding-left: get($aside-config, base, width);
+		}
+
+		// Minimize Aside
+		.aside-fixed.aside-minimize:not(.aside-minimize-hover) & {
+			padding-left: get($aside-config, base, minimized-width);
+		}
+	}
+
+	// Container
+	.container,
+	.container-fluid {
+		padding: 0 get($page-padding, desktop);
+	}
+}
+
+// Tablet & Mobile Modes
+@include media-breakpoint-down(md) {
+	// Wrapper
+	.wrapper {
+		// Fixed Header
+		.header-mobile-fixed & {
+			padding-top: get($header-config, tablet-and-mobile, fixed, height);
+		}
+
+		// Fixed Subheader
+		.header-mobile-fixed.subheader-mobile-fixed.subheader-enabled & {
+			padding-top: get($header-config, tablet-and-mobile, fixed, height) + get($subheader-config, fixed, height-mobile);
+		}
+	}
+
+	// Container
+	.container,
+	.container-fluid {
+		max-width: none;
+		padding: 70px get($page-padding, tablet-and-mobile) 0;
+		
+		&.person-list {
+			padding: 20px get($page-padding, tablet-and-mobile) 0;
+		}
+	}
+}
+
+@include media-breakpoint-down(sm) {
+	// Container
+	.container,
+	.container-fluid {
+		padding: 10px get($page-padding, tablet-and-mobile) 0;
+	}
+}
+
+// .container-contact {
+// 	width: ;
+// }
+
+.chat-view {
+	height: calc(100vh - 80px);
+	display: flex;
+	flex-direction: column;
+
+	& > .message-list {
+		background-color: #93999F;
+		padding: 10px 0;
+		flex: 1;
+		max-height: calc(100% - 100px);
+		// overflow-y: auto;
+	}
+
+	.message-input {
+		background-color: #3F5060;
+		height: 100px;
+		padding: 15px 20px;
+	}
+}
+
+div[data-swipeable] > .MuiTypography-root.MuiTypography-body1 {
+	padding: 24px 0 !important;
+}
+
+::-webkit-scrollbar {
+  width: .5em;
+}
+ 
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+	border-radius: 5px;	
+}
+ 
+::-webkit-scrollbar-thumb {
+	background-color: #3f5060;
+	border: 1px solid #112233CC;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-ms-border-radius: 5px;
+	-o-border-radius: 5px;
+}
