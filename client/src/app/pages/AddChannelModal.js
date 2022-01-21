@@ -36,7 +36,8 @@ export default function AddChannelModal({
     show,
     onHide,
     onAddChannel,
-    users
+    users,
+    avatars
 }) {
     const classes = useStyles();
     const [groupName, setGroupName] = useState("");
@@ -48,7 +49,6 @@ export default function AddChannelModal({
     const openAvatarSelect = Boolean(anchorEl);
     const id = openAvatarSelect ? 'simple-popover' : undefined;
 
-    const avatars = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '1.png', '2.png', '3.png', '4.png', '5.png', '6.png']
     useEffect(() => {
         setOptions(users.map(user => ({
             label: user.username,

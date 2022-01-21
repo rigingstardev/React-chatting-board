@@ -3,6 +3,7 @@ import { Button, makeStyles, TextField, Theme } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';
 import EditIcon from '@material-ui/icons/Edit';
+import { createBrowserHistory } from "history";
 
 import { Modal, Box, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Typography, Avatar, Link } from '@material-ui/core';
 import { Popover } from '@material-ui/core';
@@ -13,7 +14,9 @@ import clsx from "clsx";
 import editIcon from '../assets/editIcon.png';
 import addUserIcon from '../assets/addUserIcon.png';
 import imageIcon from '../assets/imageIcon.png';
-import { CreateChannel, GetChannel, GetMessage, GetAllUsers, ReadDirectMessage, UpdateChannel } from './_redux/chatCrud';
+import {GetChannel} from './_redux/chatCrud';
+
+const history = createBrowserHistory();
 
 const useStyles = makeStyles((theme) => ({
     group_option: {
@@ -110,20 +113,31 @@ const useStyles = makeStyles((theme) => ({
         "& > .MuiInput-underline": {
             borderBottom: '1px solid #fff',
         },
+    },
+    avatarContainer:{
+        width: 454,
+        padding:'10px',
+        display: 'flex',
+        justifyContent:'space-between',
+        flexWrap: 'wrap',
+        '& button:hover':{
+            border:'1px solid red',
+        }
+    },
+    border:{
+        border:'1px solid blue',
+    },
+    noborder:{
+        border:'none',
     }
 }));
 export default function UpdateChannelModal({
     show,
     onHide,
     onUpdateChannel,
-    groupId
-    // groupusers,
-    // groupName,
-    // users,
-    // groupname,
+    groupId,
+    avatars
 }) {
-    // const [users, setUsers] = useState(null);
-    // const [groupname, setGroupName] = useState(null);
     const classes = useStyles();
     const [newGroupName, setNewGroupName] = useState(null);
     const [editGroupName, setEditGroupName] = useState(false);
@@ -131,6 +145,7 @@ export default function UpdateChannelModal({
 
     const [anchorEl, setAnchorEl] = useState(null);
     const [anchorE2, setAnchorE2] = useState(null);
+    const [anchorE3, setAnchorE3] = useState(null);
 
     const openMenu = Boolean(anchorEl);
     const id = openMenu ? 'simple-popover' : undefined;
@@ -138,9 +153,15 @@ export default function UpdateChannelModal({
     const [openedAction, setOpenedAction] = useState(null);
     const actionId = openedAction ? 'simple-popover' : undefined;
 
+    const openedAvatar = Boolean(anchorE3);
+    const avatarId = openedAvatar ? 'simple-popover' : undefined;
+
     const [channels, setChannels] = useState([]);
     const [users, setUsers] = useState(null);
     const [groupname, setGroupName] = useState(null);
+    const [selectedAvatar, setSelectedAvatar] = useState([]);
+    
+    const [update, setUpdate] = useState(0);
 
     const getChannel = async () => {
         try {
@@ -151,21 +172,7 @@ export default function UpdateChannelModal({
             console.error(error);
         }
     }
-    const handleMenuOpen = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleActionOpen = (event, id, user) => {
-        setAnchorE2(event.currentTarget);
-        setOpenedAction(id);
-        setSelected(user);
-    };
-
-    // useEffect(()=>{
-    //     console.log("users",groupusers);
-    //     setUsers(groupusers);
-    //     setGroupName(groupName);
-    // }, [groupusers, groupName]);
-    useEffect(()=>{
+    const refreshChannel = () =>{
         getChannel();
         channels.map((group, i)=>{
             if(groupId == i){
@@ -173,31 +180,52 @@ export default function UpdateChannelModal({
                 setUsers(group.users);
             }
         })
-    }, [onUpdateChannel]);
+    }
+    const handleMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    
+    const handleAvatarOpen = (event) =>{
+        setAnchorE3(event.currentTarget);
+    }
+
+    
+    const handleActionOpen = (event, id, user) => {
+        setAnchorE2(event.currentTarget);
+        setOpenedAction(id);
+        setSelected(user);
+    };
+    
+    useEffect(()=>{
+        setUpdate(update+1);   
+        refreshChannel();
+        console.log("duplicated");
+    }, [onUpdateChannel, groupname, users, updateAvatar]);
     const handleActionClose = () => {
         setAnchorEl(null);
         setAnchorE2(null);
+        setAnchorE3(null);
         setOpenedAction(null);
         setSelected(null);
     };
-
+    
     const onCloseModal = () => {
         handleActionClose();
         setEditGroupName(false);
         onHide();
     }
-
+    
     const [searchTerm, setSearchTerm] = useState("");
-    const handleChange1 = e => {
+    const handleSetSearchText = e => {
         setSearchTerm(e.target.value);
     };
-
+    
     function search() {
         return users ? users.filter(person =>
             person.username.toLowerCase().includes(searchTerm)
         ) : [];
     }
-
+        
     const handleEdit = () =>{
         setEditGroupName(true);
         setAnchorEl(null);
@@ -212,8 +240,17 @@ export default function UpdateChannelModal({
         setGroupName(newGroupName);
         console.log(groupname, "changed");
     }
+    const updateAvatar = (avatarName, id) =>{
+        setSelectedAvatar({id:id, avatarName:avatarName});
+        handleActionClose();
+        const data = {
+            name: groupname,
+            newAvatarName: avatarName
+        }
+        onUpdateChannel("updateGroupAvatar", data);
+    }
+
     const addUser = (e) => {
-        // onUpdateChannel("addUser", groupname, user);
     }
     const deleteUser = (deleteUser) => {
         const data = {
@@ -222,11 +259,20 @@ export default function UpdateChannelModal({
         }
         handleActionClose();
         onUpdateChannel("deleteUser", data);
+        channels.map((group, i)=>{
+            if(groupId == i){
+                setGroupName(group.name);
+                setUsers(group.users);
+            }
+        })
     }
 
     const accessUserProfile = (user) => {
-        this.props.history.push(`/user-profile/profile-overview/${selected.username}`)
+        onHide();
+        history.push(`/user-profile/profile-overview/${selected.username}`)
+        window.location.reload();
     }
+
     return (
         <Modal
             open={show}
@@ -250,6 +296,7 @@ export default function UpdateChannelModal({
                                         if (e.key== 'Enter')
                                             updateGroupName();
                                     }}
+                                    defaultValue={groupname}
                                 />
                         }
                     </Box>
@@ -268,13 +315,35 @@ export default function UpdateChannelModal({
                             horizontal: 'right',
                         }}
                         className={classes.paper}
-                        container={document.getElementById("body")}
                     >
                         <Box className={classes.menuContainer}>
                             <Button onClick={handleEdit}><img src={editIcon} />Renommer le groupe</Button>
-                            <Button><img src={imageIcon} />Changer I'image</Button>
+                            <Button onClick={handleAvatarOpen}><img src={imageIcon} />Changer I'image</Button>
                             <Button onClick={addUser}><img src={addUserIcon} />Ajouter un participant</Button>
                         </Box>
+                        <Popover
+                            id={avatarId}
+                            open={openedAvatar}
+                            anchorEl={anchorE3}
+                            onClose={handleActionClose}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'right',
+                            }}
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            className={classes.paper}
+                        >
+                            <Box className={classes.avatarContainer}>
+                                {avatars.map((avatarName, i) => (
+                                    <IconButton key={i} className={clsx(selectedAvatar.id == i ? classes.border : classes.noborder)} onClick={()=>updateAvatar(avatarName, i)}>
+                                        <Avatar src={`${toImageUrl('avatar/')}${avatarName}`}/>
+                                    </IconButton>
+                                ))}
+                            </Box>
+                        </Popover>
                     </Popover>
                 </Box>
                 <Box className={classes.modalContent}>
@@ -295,7 +364,7 @@ export default function UpdateChannelModal({
                             ),
                         }}
                         value={searchTerm}
-                        onChange={handleChange1}
+                        onChange={handleSetSearchText}
                     />
                     <List className={classes.userList}>
                         {search().map((user, i) => (
@@ -336,12 +405,10 @@ export default function UpdateChannelModal({
                                     horizontal: 'right',
                                 }}
                                 className={classes.paper}
-                                container={document.getElementById("body")}
                             >
                                 <Box className={classes.menuContainer}>
                                     <Button onClick={() => {deleteUser(selected)}}>Soustraire</Button>    
                                         <Link to={`/user-profile/profile-overview/${selected.username}`}>
-                                    {/* <Button component={Link} to={`/user-profile/profile-overview/${selected.username}`}> */}
                                     <Button onClick={()=>accessUserProfile(selected)}>
                                         Accéder au profil de {selected.username}
                                     </Button>
@@ -350,7 +417,7 @@ export default function UpdateChannelModal({
                                     <Button>Envoyez un message à {selected.username}</Button>
                                 </Box>
                             </Popover>
-                        }
+                        }   
                     </List>
                 </Box>
             </Box>

@@ -17,7 +17,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import AddChannelModal from './AddChannelModal';
 import UpdateChannelModal from './UpdateChannelModal';
-import { CreateChannel, GetChannel, GetMessage, GetAllUsers, ReadDirectMessage, UpdateChannel } from './_redux/chatCrud';
+import { CreateChannel, GetChannel, GetMessage, GetAllUsers, ReadDirectMessage, UpdateChannel, GetAllAvatar} from './_redux/chatCrud';
 import { WindowsNotify } from "../../helpers/WinNotify";
 import { Badge } from 'react-bootstrap';
 
@@ -142,6 +142,7 @@ function Chat(props) {
   const [message, setMessage] = useState("");
   const [users, setUsers] = useState([]);
   const [channels, setChannels] = useState([]);
+  const [avatars, setAvatars] = useState([]);
   const [currentId, setCurrentId] = useState("");
   const [messageType, setMessageType] = useState('private');
   const [messageData, setMessageData] = useState([]);
@@ -154,15 +155,10 @@ function Chat(props) {
   const [searchResults, setSearchResults] = useState(
     aaa.results
   );
+
   const handleChange1 = e => {
     setSearchTerm(e.target.value);
   };
-  // useEffect(() => {
-  //   const results = aaa.results.filter(person =>
-  //     person.name.toLowerCase().includes(searchTerm)
-  //   );
-  //   setSearchResults(results);
-  // }, [searchTerm]);
 
   function handleChangetab(event, newValue) {
     setValue(newValue);
@@ -187,7 +183,6 @@ function Chat(props) {
   };
 
   const clear = () => {
-    // setData(null);
     setSearchValue("");
   };
 
@@ -256,14 +251,6 @@ function Chat(props) {
     await getMessage(id, type);
   }
 
-  // useEffect(() => {
-  //   let cur = channels.filter(channel => channel._id === currentGroup._id)[0];
-  //   if (cur && cur.users) {
-  //     setUsers(cur.users);
-  //     setCurrentGroup(cur);
-  //   }
-  // }, [currentGroup._id, channels])
-
   const addChannelModalClose = async () => {
     await setUpdate(update + 1);
     setModalShow(false);
@@ -276,13 +263,13 @@ function Chat(props) {
     console.log(avatar);
     try {
       await CreateChannel(name, selUsers, avatar);
+      getChannel();
       if (socket) {
         socket.emit("newChannel", { channelName: name });
       }
       addChannelModalClose();
     } catch (error) {
       console.error(error);
-      // addChannelModalClose();
     }
   };
 
@@ -294,7 +281,6 @@ function Chat(props) {
       if(socket){
         socket.emit("updatedChannel", { channelName: data.name });
       }
-      groupSettingModalClose();
     } catch (error) {
       console.log(error);
     }
@@ -305,7 +291,6 @@ function Chat(props) {
     try {
       const { data } = await GetChannel();
       setChannels(data);
-      // return data;
     } catch (error) {
       console.error(error);
     }
@@ -315,12 +300,19 @@ function Chat(props) {
     try {
       const { data } = await GetAllUsers();
       setUsers(data);
-      // return data;
     } catch (error) {
       console.error(error);
     }
   }
 
+  const getAllAvatars = async () => {
+    try{
+      const {data} = await GetAllAvatar();
+      setAvatars(data);
+    } catch(err){
+      console.error(err);
+    }
+  }
   const getMessage = async (id, type = "private") => {
     try {
       const { data } = await GetMessage(id, type);
@@ -363,6 +355,7 @@ function Chat(props) {
     });
     getChannel();
     getAllUsers();
+    getAllAvatars();
   }, []);
 
   useEffect(() => {
@@ -529,21 +522,21 @@ function Chat(props) {
                   </List>
                 </TabContainer>
                 <TabContainer dir={theme.direction}>
-                  <Typography className={"cursor-pointer px-10 mt-5 " + classes.color} onClick={adduser} variant="subtitle1"  >
-                    GROUPES DE TRAVAIL <AddIcon fontSize="large"/>
+                  <Typography className="cursor-pointer px-10 mt-5 " variant="subtitle1"  >
+                    GROUPES DE TRAVAIL <IconButton className={classes.color} onClick={adduser}><AddIcon fontSize="large"/></IconButton>
                     <AddChannelModal
                       show={addChannelModalShow}
                       onHide={addChannelModalClose}
                       onAddChannel={addChannel}
                       users={users}
+                      avatars={avatars}
                     />
                     <UpdateChannelModal 
                       show={groupSetting}
                       onHide={() => {groupSettingModalClose()}}
-                      onAddChannel={addChannel}
-                      // users={selectedGroup.users}
-                      // groupname={selectedGroup.groupname}
+                      onUpdateChannel={updateChannel}
                       groupId = {selectedGroup}
+                      avatars = {avatars}
                     />
                   </Typography>
                   <List className={classes.listRoot} style={{ overflowY: "auto", marginTop: "10px" }}>
@@ -558,47 +551,33 @@ function Chat(props) {
                             onClick={()=>{
                               setGroupSetting(!groupSetting);
                               console.log(group.users);
-                              // setSelectedGroup({users:group.users, groupname:group.name});
                               setSelectedGroup(i);
                             }}
                           >
                             <Settings />
                           </IconButton>
                         </Box>
-                        <div className="group-users">
-                          {!!(group.users && group.users.length) && group.users.map((user, j, gUsers) => {
-                            if (gUsers.length >= 5) {
-                              if (j < 4) {
-                                return (
-                                  <ListItemAvatar className="symbol symbol-circle" key={j}>
-                                    <>
-                                      <Avatar className="symbol-label" alt={user.username} src={toImageUrl(user.avatar)} />
-                                      <i className={clsx("symbol-badge symbol-badge-bottom", { "bg-success": user.socketId, "bg-gray-700": !user.socketId })}></i>
-                                    </>
-                                  </ListItemAvatar>
-                                );
-                              } else if (j == 4) {
-                                let number = gUsers.length - 4;
-                                return (<ListItemAvatar key={j}>
-                                  <div className={classes.plusUsersNumber}> + {number}</div>
-                                </ListItemAvatar>);
-                              }
-                              return "";
-                            } else {
-                              return (
-                                <ListItemAvatar className="symbol symbol-circle" key={j}>
-                                  <>
-                                    <Avatar className="symbol-label" alt={user.username} src={toImageUrl(user.avatar)} />
-                                    <i className={clsx("symbol-badge symbol-badge-bottom", { "bg-success": user.socketId, "bg-gray-700": !user.socketId })}></i>
-                                  </>
-                                </ListItemAvatar>
-                              );
-                            }
-                          })}
-                          {!(group.users && group.users.length) && (<ListItemAvatar>
-                            <div className={classes.plusUsersNumber}> + {0}</div>
-                          </ListItemAvatar>)}
-                        </div>
+                        
+                        <Box className="group-users" display='flex' justifyContent='space-between'>
+                          <Box>
+                            {!!(group.users && group.users.length) && group.users.map((user, j, gUsers) => {
+                              if(j < 4)
+                                return <ListItemAvatar className="symbol symbol-circle" key={j} >
+                                <>
+                                  <Avatar className="symbol-label" alt={user.username} src={toImageUrl(user.avatar)} />
+                                  <i className={clsx("symbol-badge symbol-badge-bottom", { "bg-success": user.socketId, "bg-gray-700": !user.socketId })}></i>
+                                </>
+                              </ListItemAvatar>
+                            })}
+                          </Box>
+                          {!!(group.users && group.users.length) && <ListItemAvatar>
+                            <div className={classes.plusUsersNumber} style={{background:`url(${toImageUrl('avatar/')}${group.avatar})`, backgroundSize: 75}}>
+                              <div className={classes.transBox}>
+                              + {Math.max(group.users.length-4, 0)}
+                              </div>
+                            </div>
+                          </ListItemAvatar>}
+                        </Box>
                       </ListItem>)
                     })}
                   </List>
@@ -699,11 +678,6 @@ function Chat(props) {
               </ListItem>
             ))}
           </List>}
-          {/* <ul>
-                    {searchResults.map((item, i) => (
-                      <li key={i} >{`${item.name}`}</li>
-                    ))}
-                  </ul> */}
           {isTabletDevice && <Divider light className="bg-white-o-60" style={{ marginTop: 35 }} />}
           {isTabletDevice && <Typography className={" cursor-pointer px-10 " + classes.color} variant="subtitle1" onClick={adduser} style={{ marginTop: 8, marginBottom: 7, height: 22 }} >
             GROUPES DE TRAVAIL <AddIcon fontSize="large" fontWeight={10}/>
@@ -712,6 +686,7 @@ function Chat(props) {
               onHide={() => {addChannelModalClose()}}
               onAddChannel={addChannel}
               users={users}
+              avatars={avatars}
             />
           </Typography>}
           { isTabletDevice &&
@@ -719,9 +694,8 @@ function Chat(props) {
               show={groupSetting}
               onHide={() => {groupSettingModalClose()}}
               onUpdateChannel={updateChannel}
-              // users={selectedGroup.users}
-              // groupname = {selectedGroup.groupname}
               groupId = {selectedGroup}
+              avatars = {avatars}
             />
           }
             {isTabletDevice && <List className={classes.listRoot} style={{ height: "calc((100% - 162px) / 2)", overflowY: "auto", padding: "0" }}>
@@ -738,7 +712,6 @@ function Chat(props) {
                       className={classes.settingsButton}
                       onClick={()=>{
                         setGroupSetting(!groupSetting);
-                        // setSelectedGroup({users:group.users, groupname:group.name});
                         setSelectedGroup(i);
                       }}
                     >

@@ -81,7 +81,7 @@ function Login(props) {
             console.log(err.response)
             disableLoading();
             setSubmitting(false);
-            setErrors(err.response.data.errors);
+            setErrors(err.response.errors);
             setStatus(
               intl.formatMessage({
                 id: "AUTH.VALIDATION.INVALID_LOGIN",

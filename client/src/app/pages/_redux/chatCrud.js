@@ -2,6 +2,7 @@ import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 export const CHANNELADDGET_URL = BACKEND_URL + "channel";
+export const CHANNELAVATARGET_URL = BACKEND_URL + "channel/avatar";
 export const MESSAGEGET_URL = BACKEND_URL + "messages/";
 export const GETALLUSER_URL = BACKEND_URL + "user/";
 export const CHANNELUPDATE_URL = BACKEND_URL + "channel/update";
@@ -33,4 +34,8 @@ export function ReadDirectMessage(id) {
 
 export function GetAllUsers() {
   return axios.get(GETALLUSER_URL);
+}
+
+export function GetAllAvatar() {
+  return axios.get(CHANNELAVATARGET_URL);
 }
